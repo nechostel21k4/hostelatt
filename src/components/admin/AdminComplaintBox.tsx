@@ -26,7 +26,9 @@ const AdminComplaintBox = () => {
         { label: 'All Colleges', value: 'ALL' },
         { label: 'NEC', value: 'NEC' },
         { label: 'NIT', value: 'NIT' },
-        { label: 'NIPS', value: 'NIPS' }
+        { label: 'NIPS', value: 'NIPS' },
+        { label: 'BH1', value: 'BH1' },
+        { label: 'GH1', value: 'GH1' }
     ];
 
     const statuses = [
