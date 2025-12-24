@@ -6,8 +6,8 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { getComplaints, updateComplaintStatus, deleteComplaint } from '../../services/InchargeService';
+
+import { getComplaints, updateComplaintStatus } from '../../services/InchargeService';
 import { InchargeContext } from './InchargeHome';
 import { formatDateWithTime } from '../interfaces/Date';
 
@@ -59,23 +59,6 @@ const InchargeComplaintBox = () => {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        confirmDialog({
-            message: 'Are you sure you want to delete this complaint?',
-            header: 'Delete Confirmation',
-            icon: 'pi pi-info-circle',
-            acceptClassName: 'p-button-danger',
-            accept: async () => {
-                const result = await deleteComplaint(id);
-                if (result && result.success) {
-                    toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Complaint deleted' });
-                    fetchComplaints();
-                } else {
-                    toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete complaint' });
-                }
-            }
-        });
-    };
 
     const statusBodyTemplate = (rowData: any) => {
         const severity = getSeverity(rowData.status);
@@ -96,15 +79,6 @@ const InchargeComplaintBox = () => {
             return (
                 <div className="flex align-items-center gap-2">
                     <span className="mr-2">{rowData.status === 'Issue Canceled' ? 'Canceled by' : 'Resolved by'} {rowData.resolvedBy}</span>
-                    <Button
-                        severity="danger"
-                        tooltip="Delete"
-                        onClick={() => handleDelete(rowData._id)}
-                        rounded
-                        text
-                    >
-                        <i className="pi pi-trash" />
-                    </Button>
                 </div>
             );
         }
@@ -135,14 +109,6 @@ const InchargeComplaintBox = () => {
                     rounded
                     text
                 />
-                <Button
-                    icon="pi pi-trash"
-                    severity="danger"
-                    tooltip="Delete"
-                    onClick={() => handleDelete(rowData._id)}
-                    rounded
-                    text
-                />
             </div>
         );
     };
@@ -154,7 +120,7 @@ const InchargeComplaintBox = () => {
     return (
         <div className="card">
             <Toast ref={toast} />
-            <ConfirmDialog />
+
             <Card title="Complaint Box" className="mb-3">
                 <div className="flex gap-3 mb-3">
                     <Dropdown
