@@ -165,6 +165,21 @@ function AdminHome() {
                     </li>
                     <li>
                       <NavLink
+                        to="attendance"
+                        className={({ isActive }) => {
+                          let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                            ? "text-primary surface-100 text-primary"
+                            : "text-white"
+                            }`;
+                          return result;
+                        }}
+                      >
+                        <i className="pi pi-check-circle mr-2"></i>
+                        <span className="font-medium">Attendance</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
                         to="complaint"
                         className={({ isActive }) => {
                           let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
@@ -376,6 +391,21 @@ function AdminHome() {
                           >
                             <i className="pi pi-box mr-2"></i>
                             <span className="font-medium">Dashboard</span>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to="attendance"
+                            className={({ isActive }) => {
+                              let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                                ? "text-primary surface-100 text-primary"
+                                : "text-white"
+                                }`;
+                              return result;
+                            }}
+                          >
+                            <i className="pi pi-check-circle mr-2"></i>
+                            <span className="font-medium">Attendance</span>
                           </NavLink>
                         </li>
                         <li>

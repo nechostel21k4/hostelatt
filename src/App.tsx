@@ -79,6 +79,7 @@ import StudentComplaintBox from "./components/student/StudentComplaintBox";
 import AdminComplaintBox from "./components/admin/AdminComplaintBox";
 import InchargeComplaintBox from "./components/incharge/InchargeComplaintBox";
 import FacultyComplaintBox from "./components/faculty/FacultyComplaintBox";
+import AttendanceDashboard from "./components/admin/AttendanceDashboard";
 
 function App() {
   return (
@@ -263,6 +264,10 @@ function App() {
                       <Route
                         path="complaint"
                         element={<AdminComplaintBox />}
+                      />
+                      <Route
+                        path="attendance"
+                        element={<AttendanceDashboard />}
                       />
                     </Route>
                   </Route>
