@@ -140,9 +140,19 @@ const AttendanceDashboard = () => {
         link.click();
     };
 
+    // Refresh Logic
+    const refreshData = () => {
+        fetchAttendance();
+        fetchRegistrationStatus();
+    };
+
     return (
         <div className="p-4 card">
-            <h2>Attendance & Bio-Metric Dashboard</h2>
+            <div className="flex justify-between items-center mb-4">
+                <h2>Attendance & Bio-Metric Dashboard</h2>
+                <Button icon="pi pi-refresh" rounded text aria-label="Refresh" onClick={refreshData} />
+            </div>
+
             <div className="flex gap-4 mb-4">
                 <Dropdown value={selectedHostelType} options={hostels} onChange={(e) => setSelectedHostelType(e.value)} placeholder="Filter by Hostel" showClear />
             </div>
