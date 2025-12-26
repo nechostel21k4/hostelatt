@@ -7,6 +7,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
+import { API_BASE_URL } from '../../config';
 
 const AttendanceDashboard = () => {
     // State
@@ -34,7 +35,7 @@ const AttendanceDashboard = () => {
         if (!selectedDate) return;
         try {
             const dateStr = formatDate(selectedDate);
-            let url = `http://localhost:5000/attendance/daily?date=${dateStr}`;
+            let url = `${API_BASE_URL}/attendance/daily?date=${dateStr}`;
             if (selectedHostelType) {
                 url += `&hostelId=${selectedHostelType}`;
             }
@@ -47,7 +48,7 @@ const AttendanceDashboard = () => {
 
     const fetchRegistrationStatus = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/attendance/registration-status');
+            const res = await axios.get(`${API_BASE_URL}/attendance/registration-status`);
             const data = res.data;
             if (selectedHostelType) {
                 setRegistrationData(data.filter((d: any) => d.hostelId === selectedHostelType));
