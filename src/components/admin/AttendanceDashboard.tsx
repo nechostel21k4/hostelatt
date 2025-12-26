@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
@@ -156,18 +155,27 @@ const AttendanceDashboard = () => {
                     </div>
 
                     <div className="flex gap-4 mb-4">
-                        <Card title="Total Present" className={`flex-1 cursor-pointer ${viewMode === 'present' ? 'bg-green-100 border-green-500 border-2' : 'bg-green-50'}`} onClick={() => setViewMode('present')}>
-                            <div className="text-4xl text-green-600 font-bold">{attendanceData.length}</div>
-                        </Card>
-                        <Card title="Total Absent" className={`flex-1 cursor-pointer ${viewMode === 'absent' ? 'bg-red-100 border-red-500 border-2' : 'bg-red-50'}`} onClick={() => setViewMode('absent')}>
-                            <div className="text-4xl text-red-600 font-bold">{absentStudents.length}</div>
-                        </Card>
+                        <div
+                            className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'present' ? 'bg-green-50 border-green-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setViewMode('present')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Present</h3>
+                            <div className="text-3xl text-green-600 font-bold">{attendanceData.length}</div>
+                        </div>
+
+                        <div
+                            className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'absent' ? 'bg-red-50 border-red-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setViewMode('absent')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Absent</h3>
+                            <div className="text-3xl text-red-600 font-bold">{absentStudents.length}</div>
+                        </div>
                     </div>
 
-                    <div className="mb-2 flex items-center gap-4">
-                        <Tag value={viewMode === 'present' ? "Showing: Present Students" : "Showing: Absent Students"} severity={viewMode === 'present' ? 'success' : 'danger'} style={{ fontSize: '1rem', padding: '10px' }} />
+                    <div className="mb-2 flex items-center gap-2">
+                        <Tag value={viewMode === 'present' ? "Present Students" : "Absent Students"} severity={viewMode === 'present' ? 'success' : 'danger'} />
                         {viewMode === 'absent' && (
-                            <Button label="Export Absentees to Excel" icon="pi pi-file-excel" className="p-button-danger" onClick={exportExcel} />
+                            <Button label="Export Excel" icon="pi pi-file-excel" className="p-button-danger p-button-sm" onClick={exportExcel} />
                         )}
                     </div>
 
