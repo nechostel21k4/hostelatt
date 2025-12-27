@@ -12,11 +12,12 @@ import { API_BASE_URL } from '../../config';
 
 const AttendanceDashboard = () => {
     // State
-    const [attendanceData, setAttendanceData] = useState([]);
-    const [registrationData, setRegistrationData] = useState([]);
+    const [attendanceData, setAttendanceData] = useState<any[]>([]);
+    const [registrationData, setRegistrationData] = useState<any[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [selectedHostelType, setSelectedHostelType] = useState(null);
     const [viewMode, setViewMode] = useState('present'); // 'present' | 'absent'
+    const [registrationView, setRegistrationView] = useState('registered'); // 'registered' | 'not_registered'
 
     const hostels = [
         { label: 'Boys Hostel (BH1)', value: 'BH1' },
@@ -94,20 +95,44 @@ const AttendanceDashboard = () => {
 
     // Export Logic
     const exportExcel = () => {
+        const isPresentView = viewMode === 'present';
+        const dataToExport = isPresentView ? attendanceData : absentStudents;
+        const statusLabel = isPresentView ? 'Present' : 'Absent';
+
         const workbook = XLSX.utils.book_new();
 
         // Helper to create sheet data
-        const createSheetData = (students: any[]) => students.map((s: any) => ({
-            'Roll No': s.rollNo,
-            'Name': s.name,
-            'Hostel': s.hostelId,
-            'Status': 'Absent',
-            'Date': selectedDate ? formatDate(selectedDate) : ''
-        }));
+        const createSheetData = (students: any[]) => students.map((s: any) => {
+            const rollNo = s.studentId || s.rollNo;
+            // Lookup hostel from registrationData if not present in record
+            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
+            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : 'Unknown');
+
+            return {
+                'Roll No': rollNo,
+                'Name': s.name,
+                'Hostel': hostel,
+                'Status': statusLabel,
+                'Date': selectedDate ? formatDate(selectedDate) : '',
+                'Time': s.time || '-',
+                'Match Score': s.matchScore ? `${Math.max(0, (1 - s.matchScore) * 100).toFixed(1)}%` : '-'
+            };
+        });
 
         // Group by Hostel
-        const bh1Students = absentStudents.filter((s: any) => s.hostelId === 'BH1');
-        const gh1Students = absentStudents.filter((s: any) => s.hostelId === 'GH1');
+        const bh1Students = dataToExport.filter((s: any) => {
+            const rollNo = s.studentId || s.rollNo;
+            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
+            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : '');
+            return hostel === 'BH1';
+        });
+
+        const gh1Students = dataToExport.filter((s: any) => {
+            const rollNo = s.studentId || s.rollNo;
+            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
+            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : '');
+            return hostel === 'GH1';
+        });
 
         if (bh1Students.length > 0) {
             const worksheetBH1 = XLSX.utils.json_to_sheet(createSheetData(bh1Students));
@@ -119,20 +144,29 @@ const AttendanceDashboard = () => {
             XLSX.utils.book_append_sheet(workbook, worksheetGH1, 'GH1');
         }
 
-        // If filtering by something else or data inconsistencies, maybe a 'Others' or just put all if empty?
-        // If neither, maybe selectedHostelType logic applies. 
-        // If selectedHostelType is BH1, gh1Students is empty.
+        // Catch-all for others or if no specific hostel found
+        const otherStudents = dataToExport.filter((s: any) => {
+            const rollNo = s.studentId || s.rollNo;
+            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
+            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : '');
+            return hostel !== 'BH1' && hostel !== 'GH1';
+        });
 
-        // Handling case where no specific BH1/GH1 found (unlikely based on hardcoded types but good for safety)
-        if (bh1Students.length === 0 && gh1Students.length === 0 && absentStudents.length > 0) {
-            const worksheetAll = XLSX.utils.json_to_sheet(createSheetData(absentStudents));
-            XLSX.utils.book_append_sheet(workbook, worksheetAll, 'Absent Students');
+        if (otherStudents.length > 0) {
+            const worksheetOthers = XLSX.utils.json_to_sheet(createSheetData(otherStudents));
+            XLSX.utils.book_append_sheet(workbook, worksheetOthers, 'Others');
+        }
+
+        // If completely empty but lists exist (safety fallback)
+        if (workbook.SheetNames.length === 0 && dataToExport.length > 0) {
+            const worksheetAll = XLSX.utils.json_to_sheet(createSheetData(dataToExport));
+            XLSX.utils.book_append_sheet(workbook, worksheetAll, 'All Students');
         }
 
         // Save file
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-        const fileName = `Absent_Students_${selectedDate ? formatDate(selectedDate) : ''}.xlsx`;
+        const fileName = `${statusLabel}_Students_${selectedDate ? formatDate(selectedDate) : ''}.xlsx`;
 
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(data);
@@ -184,9 +218,12 @@ const AttendanceDashboard = () => {
 
                     <div className="mb-2 flex items-center gap-2">
                         <Tag value={viewMode === 'present' ? "Present Students" : "Absent Students"} severity={viewMode === 'present' ? 'success' : 'danger'} />
-                        {viewMode === 'absent' && (
-                            <Button label="Export Excel" icon="pi pi-file-excel" className="p-button-danger p-button-sm" onClick={exportExcel} />
-                        )}
+                        <Button
+                            label="Export Excel"
+                            icon="pi pi-file-excel"
+                            className={`p-button-sm ${viewMode === 'present' ? 'p-button-success' : 'p-button-danger'}`}
+                            onClick={exportExcel}
+                        />
                     </div>
 
                     {viewMode === 'present' ? (
@@ -211,13 +248,51 @@ const AttendanceDashboard = () => {
                 </TabPanel>
 
                 <TabPanel header="Face Registration Status">
-                    <p>List of all students and their Face ID registration status.</p>
-                    <DataTable value={registrationData} paginator rows={10} stripedRows emptyMessage="No students found.">
-                        <Column field="rollNo" header="Roll No" sortable filter filterPlaceholder="Search Roll No"></Column>
-                        <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
-                        <Column field="hostelId" header="Hostel" sortable></Column>
-                        <Column field="isRegistered" header="Face Status" body={registeredBodyTemplate} sortable></Column>
-                    </DataTable>
+                    {/* Summary Cards */}
+                    <div className="flex gap-4 mb-4">
+                        <div
+                            className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all ${registrationView === 'registered' ? 'bg-green-50 border-green-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setRegistrationView('registered')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Registered Students</h3>
+                            <div className="text-3xl text-green-600 font-bold">{registrationData.filter((s: any) => s.isRegistered).length}</div>
+                        </div>
+
+                        <div
+                            className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all ${registrationView === 'not_registered' ? 'bg-orange-50 border-orange-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setRegistrationView('not_registered')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Not Registered</h3>
+                            <div className="text-3xl text-orange-600 font-bold">{registrationData.filter((s: any) => !s.isRegistered).length}</div>
+                        </div>
+                    </div>
+
+                    {/* Table View */}
+                    {registrationView === 'registered' ? (
+                        <>
+                            <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+                                <h3 className="text-xl font-bold text-green-600 m-0">Registered Students</h3>
+                            </div>
+                            <DataTable value={registrationData.filter((s: any) => s.isRegistered)} paginator rows={10} stripedRows emptyMessage="No registered students found." className="p-datatable-sm" responsiveLayout="scroll">
+                                <Column field="rollNo" header="Roll No" sortable filter filterPlaceholder="Search Roll No" style={{ minWidth: '120px' }}></Column>
+                                <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name" style={{ minWidth: '180px' }}></Column>
+                                <Column field="hostelId" header="Hostel" sortable style={{ minWidth: '100px' }}></Column>
+                                <Column field="isRegistered" header="Status" body={registeredBodyTemplate} sortable style={{ minWidth: '120px' }}></Column>
+                            </DataTable>
+                        </>
+                    ) : (
+                        <>
+                            <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+                                <h3 className="text-xl font-bold text-orange-600 m-0">Not Registered Students</h3>
+                            </div>
+                            <DataTable value={registrationData.filter((s: any) => !s.isRegistered)} paginator rows={10} stripedRows emptyMessage="No pending students found." className="p-datatable-sm" responsiveLayout="scroll">
+                                <Column field="rollNo" header="Roll No" sortable filter filterPlaceholder="Search Roll No" style={{ minWidth: '120px' }}></Column>
+                                <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name" style={{ minWidth: '180px' }}></Column>
+                                <Column field="hostelId" header="Hostel" sortable style={{ minWidth: '100px' }}></Column>
+                                <Column field="isRegistered" header="Status" body={registeredBodyTemplate} sortable style={{ minWidth: '120px' }}></Column>
+                            </DataTable>
+                        </>
+                    )}
                 </TabPanel>
             </TabView>
         </div>
