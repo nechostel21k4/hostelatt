@@ -10,6 +10,10 @@ import { Button } from 'primereact/button';
 import * as XLSX from 'xlsx';
 import { API_BASE_URL } from '../../config';
 
+import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
+import AttendanceSettingsModal from './AttendanceSettingsModal';
+
 const AttendanceDashboard = () => {
     // State
     const [attendanceData, setAttendanceData] = useState<any[]>([]);
@@ -19,9 +23,17 @@ const AttendanceDashboard = () => {
     const [viewMode, setViewMode] = useState('present'); // 'present' | 'absent'
     const [registrationView, setRegistrationView] = useState('registered'); // 'registered' | 'not_registered'
 
+    // Settings State
+    const [showSettings, setShowSettings] = useState(false);
+    const [settingsHostel, setSettingsHostel] = useState(null);
+    const [attendanceStartTime, setAttendanceStartTime] = useState("09:00");
+    const [attendanceEndTime, setAttendanceEndTime] = useState("22:00");
+    const toast = React.useRef<Toast>(null);
+
     const hostels = [
         { label: 'Boys Hostel (BH1)', value: 'BH1' },
-        { label: 'Girls Hostel (GH1)', value: 'GH1' }
+        { label: 'Girls Hostel (GH1)', value: 'GH1' },
+        { label: 'All Hostels', value: 'BOTH' }
     ];
 
     // Helper to format date as YYYY-MM-DD
@@ -37,7 +49,8 @@ const AttendanceDashboard = () => {
         try {
             const dateStr = formatDate(selectedDate);
             let url = `${API_BASE_URL}/attendance/daily?date=${dateStr}`;
-            if (selectedHostelType) {
+            // Only filter by hostel if it's not BOTH and not null
+            if (selectedHostelType && selectedHostelType !== 'BOTH') {
                 url += `&hostelId=${selectedHostelType}`;
             }
             const res = await axios.get(url);
@@ -51,7 +64,7 @@ const AttendanceDashboard = () => {
         try {
             const res = await axios.get(`${API_BASE_URL}/attendance/registration-status`);
             const data = res.data;
-            if (selectedHostelType) {
+            if (selectedHostelType && selectedHostelType !== 'BOTH') {
                 setRegistrationData(data.filter((d: any) => d.hostelId === selectedHostelType));
             } else {
                 setRegistrationData(data);
@@ -174,6 +187,85 @@ const AttendanceDashboard = () => {
         link.click();
     };
 
+    // Settings Logic
+    const getAuthHeaders = () => {
+        const tokenString = localStorage.getItem("adminToken");
+        const token = tokenString ? JSON.parse(tokenString) : null;
+        return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    };
+
+    const fetchSettingsForHostel = async (hostelCode: string) => {
+        // If BOTH is selected, we might just default to standard times or fetch from one as reference
+        // For now, if BOTH, we don't fetch specific settings, or maybe fetch BH1 as default
+        const targetCode = hostelCode === 'BOTH' ? 'BH1' : hostelCode;
+
+        try {
+            // Fetch current settings for this hostel
+            const res = await axios.get(`${API_BASE_URL}/schemas/getHostels`, getAuthHeaders());
+            const hostelsList = res.data.hostels;
+            const currentHostel = hostelsList.find((h: any) => h.code === targetCode);
+
+            if (currentHostel) {
+                setAttendanceStartTime(currentHostel.attendanceStartTime || "00:00");
+                setAttendanceEndTime(currentHostel.attendanceEndTime || "23:59");
+            }
+        } catch (error) {
+            console.error("Failed to fetch hostel settings", error);
+            alert("Failed to load settings.");
+        }
+    }
+
+    const openSettings = async () => {
+        if (selectedHostelType) {
+            setSettingsHostel(selectedHostelType);
+            fetchSettingsForHostel(selectedHostelType);
+        } else {
+            setSettingsHostel(null);
+            setAttendanceStartTime("09:00"); // Default
+            setAttendanceEndTime("22:00");
+        }
+        setShowSettings(true);
+    };
+
+    const onSettingsHostelChange = (e: any) => {
+        const val = e.value;
+        setSettingsHostel(val);
+        if (val) {
+            fetchSettingsForHostel(val);
+        }
+    };
+
+    const saveSettings = async () => {
+        try {
+            const config = getAuthHeaders();
+            if (settingsHostel === 'BOTH') {
+                // Update BH1
+                await axios.post(`${API_BASE_URL}/schemas/updateHostelSettings`, {
+                    hostelCode: 'BH1',
+                    attendanceStartTime,
+                    attendanceEndTime
+                }, config);
+                // Update GH1
+                await axios.post(`${API_BASE_URL}/schemas/updateHostelSettings`, {
+                    hostelCode: 'GH1',
+                    attendanceStartTime,
+                    attendanceEndTime
+                }, config);
+            } else {
+                await axios.post(`${API_BASE_URL}/schemas/updateHostelSettings`, {
+                    hostelCode: settingsHostel,
+                    attendanceStartTime,
+                    attendanceEndTime
+                }, config);
+            }
+            setShowSettings(false);
+            alert("Settings updated successfully!");
+        } catch (error) {
+            console.error("Failed to save settings", error);
+            alert("Failed to save settings.");
+        }
+    };
+
     // Refresh Logic
     const refreshData = () => {
         fetchAttendance();
@@ -182,9 +274,12 @@ const AttendanceDashboard = () => {
 
     return (
         <div className="p-4 card">
-            <div className="flex justify-between items-center mb-4">
-                <h2>Attendance & Bio-Metric Dashboard</h2>
-                <Button icon="pi pi-refresh" rounded text aria-label="Refresh" onClick={refreshData} />
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 m-0">Attendance & Bio-Metric Dashboard</h2>
+                <div className="flex gap-2">
+                    <Button icon="pi pi-cog" rounded outlined severity="secondary" aria-label="Settings" onClick={openSettings} tooltip="Configure Time" tooltipOptions={{ position: 'bottom' }} />
+                    <Button icon="pi pi-refresh" rounded outlined severity="secondary" aria-label="Refresh" onClick={refreshData} tooltip="Refresh Data" tooltipOptions={{ position: 'bottom' }} />
+                </div>
             </div>
 
             <div className="flex gap-4 mb-4">
@@ -234,7 +329,7 @@ const AttendanceDashboard = () => {
                             <Column field="time" header="Time" sortable></Column>
                             <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
                             <Column field="matchScore" header="Match Accuracy" body={matchScoreTemplate} sortable></Column>
-                            <Column field="ipAddress" header="IP Address" sortable></Column>
+
                         </DataTable>
                     ) : (
                         <DataTable value={absentStudents} paginator rows={10} stripedRows emptyMessage="No absent students found (Everyone is present!).">
@@ -295,6 +390,20 @@ const AttendanceDashboard = () => {
                     )}
                 </TabPanel>
             </TabView>
+            {/* Settings Dialog */}
+            {/* Settings Modal */}
+            <AttendanceSettingsModal
+                visible={showSettings}
+                onClose={() => setShowSettings(false)}
+                hostels={hostels}
+                selectedHostel={settingsHostel}
+                onHostelChange={onSettingsHostelChange}
+                startTime={attendanceStartTime}
+                endTime={attendanceEndTime}
+                onStartTimeChange={setAttendanceStartTime}
+                onEndTimeChange={setAttendanceEndTime}
+                onSave={saveSettings}
+            />
         </div>
     );
 };
