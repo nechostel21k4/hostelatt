@@ -12,191 +12,140 @@ import { API_BASE_URL } from '../../config';
 
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
+import { saveAs } from 'file-saver';
 import AttendanceSettingsModal from './AttendanceSettingsModal';
+
+const hostels = [
+    { label: 'Boys Hostel (BH1)', value: 'BH1' },
+    { label: 'Girls Hostel (GH1)', value: 'GH1' },
+    { label: 'All Hostels', value: 'BOTH' }
+];
 
 const AttendanceDashboard = () => {
     // State
     const [attendanceData, setAttendanceData] = useState<any[]>([]);
     const [registrationData, setRegistrationData] = useState<any[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-    const [selectedHostelType, setSelectedHostelType] = useState(null);
+    const [selectedHostelType, setSelectedHostelType] = useState<string | null>(null);
     const [viewMode, setViewMode] = useState('present'); // 'present' | 'absent'
     const [registrationView, setRegistrationView] = useState('registered'); // 'registered' | 'not_registered'
 
     // Settings State
     const [showSettings, setShowSettings] = useState(false);
-    const [settingsHostel, setSettingsHostel] = useState(null);
+    const [settingsHostel, setSettingsHostel] = useState<string | null>(null);
     const [attendanceStartTime, setAttendanceStartTime] = useState("09:00");
     const [attendanceEndTime, setAttendanceEndTime] = useState("22:00");
+    // Geo State
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+    const [radius, setRadius] = useState<number | null>(200);
+
     const toast = React.useRef<Toast>(null);
 
-    const hostels = [
-        { label: 'Boys Hostel (BH1)', value: 'BH1' },
-        { label: 'Girls Hostel (GH1)', value: 'GH1' },
-        { label: 'All Hostels', value: 'BOTH' }
-    ];
 
-    // Helper to format date as YYYY-MM-DD
-    const formatDate = (date: Date) => {
-        if (!date) return '';
+
+    // Helper
+    const formatDateHelper = (date: Date) => {
         const offset = date.getTimezoneOffset();
-        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
-        return localDate.toISOString().split('T')[0];
+        const d = new Date(date.getTime() - (offset * 60 * 1000));
+        return d.toISOString().split('T')[0];
     };
 
     const fetchAttendance = async () => {
-        if (!selectedDate) return;
         try {
-            const dateStr = formatDate(selectedDate);
-            let url = `${API_BASE_URL}/attendance/daily?date=${dateStr}`;
-            // Only filter by hostel if it's not BOTH and not null
+            if (!selectedDate) return;
+            const dateStr = formatDateHelper(selectedDate);
+            const res = await axios.get(`${API_BASE_URL}/attendance/daily?date=${dateStr}`, getAuthHeaders());
+            let data = res.data.data || [];
             if (selectedHostelType && selectedHostelType !== 'BOTH') {
-                url += `&hostelId=${selectedHostelType}`;
+                data = data.filter((d: any) => d.hostelId === selectedHostelType);
             }
-            const res = await axios.get(url);
-            setAttendanceData(res.data);
+            setAttendanceData(data);
         } catch (error) {
-            console.error("Error fetching attendance", error);
+            console.error(error);
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to fetch attendance' });
         }
     };
 
     const fetchRegistrationStatus = async () => {
         try {
-            const res = await axios.get(`${API_BASE_URL}/attendance/registration-status`);
-            const data = res.data;
+            const res = await axios.get(`${API_BASE_URL}/attendance/registration-status`, getAuthHeaders());
+            // Backend returns array directly with isRegistered pre-calculated
+            let students = res.data || [];
+
             if (selectedHostelType && selectedHostelType !== 'BOTH') {
-                setRegistrationData(data.filter((d: any) => d.hostelId === selectedHostelType));
-            } else {
-                setRegistrationData(data);
+                students = students.filter((s: any) => s.hostelId === selectedHostelType);
             }
+            setRegistrationData(students);
         } catch (error) {
-            console.error("Error fetching registration status", error);
+            console.error(error);
         }
     };
 
     useEffect(() => {
-        fetchAttendance();
+        refreshData();
     }, [selectedDate, selectedHostelType]);
 
-    useEffect(() => {
-        fetchRegistrationStatus();
-    }, [selectedHostelType]);
-
-    // Derived State: Absent Students
-    const absentStudents = registrationData.filter((student: any) => {
-        // Check if studentId exists in attendanceData
-        const isPresent = attendanceData.some((record: any) => record.studentId === student.rollNo);
-        return !isPresent;
-    }).map((s: any) => ({ ...s, status: 'Absent' }));
+    // Derived State
+    const presentIds = new Set(attendanceData.map((a: any) => a.studentId));
+    const absentStudents = registrationData.filter((s: any) => !presentIds.has(s.rollNo));
 
     // Templates
     const statusBodyTemplate = (rowData: any) => {
-        const severity = rowData.status === 'Present' ? 'success' :
-            rowData.status === 'Absent' ? 'danger' : 'warning';
-        return <Tag value={rowData.status} severity={severity} />;
+        return <Tag value={rowData.status} severity={getSeverity(rowData.status)} />;
+    };
+
+    const getSeverity = (status: string) => {
+        switch (status) {
+            case 'Present': return 'success';
+            case 'Absent': return 'danger';
+            case 'Late': return 'warning';
+            default: return 'info';
+        }
     };
 
     const matchScoreTemplate = (rowData: any) => {
-        if (!rowData.matchScore) return '-';
-        const percentage = Math.max(0, (1 - rowData.matchScore) * 100).toFixed(1);
-        return `${percentage}%`;
-    }
+        return rowData.matchScore ? `${(rowData.matchScore * 100).toFixed(1)}%` : '-';
+    };
 
     const registeredBodyTemplate = (rowData: any) => {
         return <Tag value={rowData.isRegistered ? 'Registered' : 'Pending'} severity={rowData.isRegistered ? 'success' : 'warning'} />;
     };
 
-    // Export Logic
     const exportExcel = () => {
-        const isPresentView = viewMode === 'present';
-        const dataToExport = isPresentView ? attendanceData : absentStudents;
-        const statusLabel = isPresentView ? 'Present' : 'Absent';
-
-        const workbook = XLSX.utils.book_new();
-
-        // Helper to create sheet data
-        const createSheetData = (students: any[]) => students.map((s: any) => {
-            const rollNo = s.studentId || s.rollNo;
-            // Lookup hostel from registrationData if not present in record
-            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
-            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : 'Unknown');
-
-            return {
-                'Roll No': rollNo,
-                'Name': s.name,
-                'Hostel': hostel,
-                'Status': statusLabel,
-                'Date': selectedDate ? formatDate(selectedDate) : '',
-                'Time': s.time || '-',
-                'Match Score': s.matchScore ? `${Math.max(0, (1 - s.matchScore) * 100).toFixed(1)}%` : '-'
-            };
+        import('xlsx').then((xlsx) => {
+            const dataToExport = viewMode === 'present' ? attendanceData : absentStudents;
+            const worksheet = xlsx.utils.json_to_sheet(dataToExport);
+            const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+            const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+            saveAsExcelFile(excelBuffer, `attendance_${formatDateHelper(selectedDate || new Date())}`);
         });
+    };
 
-        // Group by Hostel
-        const bh1Students = dataToExport.filter((s: any) => {
-            const rollNo = s.studentId || s.rollNo;
-            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
-            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : '');
-            return hostel === 'BH1';
-        });
-
-        const gh1Students = dataToExport.filter((s: any) => {
-            const rollNo = s.studentId || s.rollNo;
-            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
-            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : '');
-            return hostel === 'GH1';
-        });
-
-        if (bh1Students.length > 0) {
-            const worksheetBH1 = XLSX.utils.json_to_sheet(createSheetData(bh1Students));
-            XLSX.utils.book_append_sheet(workbook, worksheetBH1, 'BH1');
-        }
-
-        if (gh1Students.length > 0) {
-            const worksheetGH1 = XLSX.utils.json_to_sheet(createSheetData(gh1Students));
-            XLSX.utils.book_append_sheet(workbook, worksheetGH1, 'GH1');
-        }
-
-        // Catch-all for others or if no specific hostel found
-        const otherStudents = dataToExport.filter((s: any) => {
-            const rollNo = s.studentId || s.rollNo;
-            const regRecord = registrationData.find((r: any) => r.rollNo === rollNo);
-            const hostel = s.hostelId || (regRecord ? regRecord.hostelId : '');
-            return hostel !== 'BH1' && hostel !== 'GH1';
-        });
-
-        if (otherStudents.length > 0) {
-            const worksheetOthers = XLSX.utils.json_to_sheet(createSheetData(otherStudents));
-            XLSX.utils.book_append_sheet(workbook, worksheetOthers, 'Others');
-        }
-
-        // If completely empty but lists exist (safety fallback)
-        if (workbook.SheetNames.length === 0 && dataToExport.length > 0) {
-            const worksheetAll = XLSX.utils.json_to_sheet(createSheetData(dataToExport));
-            XLSX.utils.book_append_sheet(workbook, worksheetAll, 'All Students');
-        }
-
-        // Save file
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-        const fileName = `${statusLabel}_Students_${selectedDate ? formatDate(selectedDate) : ''}.xlsx`;
-
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(data);
-        link.download = fileName;
-        link.click();
+    const saveAsExcelFile = (buffer: any, fileName: string) => {
+        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        let EXCEL_EXTENSION = '.xlsx';
+        const data = new Blob([buffer], { type: EXCEL_TYPE });
+        saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
     };
 
     // Settings Logic
     const getAuthHeaders = () => {
         const tokenString = localStorage.getItem("adminToken");
-        const token = tokenString ? JSON.parse(tokenString) : null;
-        return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+        if (!tokenString) return {};
+
+        let token = tokenString;
+        try {
+            // Attempt to parse if it's a JSON string
+            token = JSON.parse(tokenString);
+        } catch (e) {
+            // If parse fails, use the string as is
+        }
+        return { headers: { Authorization: `Bearer ${token}` } };
     };
 
     const fetchSettingsForHostel = async (hostelCode: string) => {
-        // If BOTH is selected, we might just default to standard times or fetch from one as reference
-        // For now, if BOTH, we don't fetch specific settings, or maybe fetch BH1 as default
+        // If BOTH is selected, we fetch BH1 as reference
         const targetCode = hostelCode === 'BOTH' ? 'BH1' : hostelCode;
 
         try {
@@ -208,6 +157,14 @@ const AttendanceDashboard = () => {
             if (currentHostel) {
                 setAttendanceStartTime(currentHostel.attendanceStartTime || "00:00");
                 setAttendanceEndTime(currentHostel.attendanceEndTime || "23:59");
+                // Geo
+                if (currentHostel.geoCoordinates) {
+                    setLatitude(currentHostel.geoCoordinates.latitude);
+                    setLongitude(currentHostel.geoCoordinates.longitude);
+                    setRadius(currentHostel.geoCoordinates.radius || 200);
+                } else {
+                    setLatitude(null); setLongitude(null); setRadius(200);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch hostel settings", error);
@@ -216,14 +173,11 @@ const AttendanceDashboard = () => {
     }
 
     const openSettings = async () => {
-        if (selectedHostelType) {
-            setSettingsHostel(selectedHostelType);
-            fetchSettingsForHostel(selectedHostelType);
-        } else {
-            setSettingsHostel(null);
-            setAttendanceStartTime("09:00"); // Default
-            setAttendanceEndTime("22:00");
-        }
+        let codeToFetch: string = selectedHostelType || 'BH1';
+        // Note: fetchSettingsForHostel handles 'BOTH' internally by fetching defaults from BH1
+
+        setSettingsHostel(codeToFetch);
+        await fetchSettingsForHostel(codeToFetch);
         setShowSettings(true);
     };
 
@@ -235,34 +189,63 @@ const AttendanceDashboard = () => {
         }
     };
 
+    const getCurrentLocation = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setLatitude(position.coords.latitude);
+                setLongitude(position.coords.longitude);
+                alert("Location detected!");
+            }, (error) => {
+                console.error("Geo Error", error);
+                alert("Failed to detect location. Please allow permissions.");
+            });
+        } else {
+            alert("Geolocation not supported by this browser.");
+        }
+    };
+
     const saveSettings = async () => {
         try {
             const config = getAuthHeaders();
+            const payload = {
+                attendanceStartTime,
+                attendanceEndTime,
+                latitude,
+                longitude,
+                radius
+            };
+
             if (settingsHostel === 'BOTH') {
+                console.log("Saving for BOTH hostels...");
                 // Update BH1
                 await axios.post(`${API_BASE_URL}/schemas/updateHostelSettings`, {
                     hostelCode: 'BH1',
-                    attendanceStartTime,
-                    attendanceEndTime
+                    ...payload
                 }, config);
+                console.log("Saved BH1");
+
                 // Update GH1
                 await axios.post(`${API_BASE_URL}/schemas/updateHostelSettings`, {
                     hostelCode: 'GH1',
-                    attendanceStartTime,
-                    attendanceEndTime
+                    ...payload
                 }, config);
+                console.log("Saved GH1");
+
+                toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Settings saved for ALL Hostels (BH1 & GH1)' });
             } else {
+                console.log(`Saving for single hostel: ${settingsHostel}`);
                 await axios.post(`${API_BASE_URL}/schemas/updateHostelSettings`, {
                     hostelCode: settingsHostel,
-                    attendanceStartTime,
-                    attendanceEndTime
+                    ...payload
                 }, config);
+
+                toast.current?.show({ severity: 'success', summary: 'Success', detail: `Settings saved for ${settingsHostel}` });
             }
             setShowSettings(false);
-            alert("Settings updated successfully!");
-        } catch (error) {
+        } catch (error: any) {
             console.error("Failed to save settings", error);
-            alert("Failed to save settings.");
+            console.error("Error Response:", error.response);
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: `Failed to save: ${error.response?.data?.message || error.message}` });
         }
     };
 
@@ -283,7 +266,7 @@ const AttendanceDashboard = () => {
             </div>
 
             <div className="flex gap-4 mb-4">
-                <Dropdown value={selectedHostelType} options={hostels} onChange={(e) => setSelectedHostelType(e.value)} placeholder="Filter by Hostel" showClear />
+                <Dropdown value={selectedHostelType} options={hostels} optionValue="value" onChange={(e) => setSelectedHostelType(e.value)} placeholder="Filter by Hostel" showClear />
             </div>
 
             <TabView>
@@ -402,9 +385,17 @@ const AttendanceDashboard = () => {
                 endTime={attendanceEndTime}
                 onStartTimeChange={setAttendanceStartTime}
                 onEndTimeChange={setAttendanceEndTime}
+                // Geo
+                latitude={latitude}
+                longitude={longitude}
+                radius={radius}
+                onLatitudeChange={setLatitude}
+                onLongitudeChange={setLongitude}
+                onRadiusChange={setRadius}
+                onGetCurrentLocation={getCurrentLocation}
                 onSave={saveSettings}
             />
-        </div>
+        </div >
     );
 };
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import { X } from 'lucide-react';
+import { InputNumber } from 'primereact/inputnumber';
+import { X, MapPin } from 'lucide-react';
 
 interface AttendanceSettingsModalProps {
     visible: boolean;
@@ -13,6 +14,14 @@ interface AttendanceSettingsModalProps {
     endTime: string;
     onStartTimeChange: (e: any) => void;
     onEndTimeChange: (e: any) => void;
+    // Geo Props
+    latitude: number | null;
+    longitude: number | null;
+    radius: number | null;
+    onLatitudeChange: (val: any) => void;
+    onLongitudeChange: (val: any) => void;
+    onRadiusChange: (val: any) => void;
+    onGetCurrentLocation: () => void;
     onSave: () => void;
 }
 
@@ -26,6 +35,14 @@ const AttendanceSettingsModal: React.FC<AttendanceSettingsModalProps> = ({
     endTime,
     onStartTimeChange,
     onEndTimeChange,
+    // Geo Props
+    latitude,
+    longitude,
+    radius,
+    onLatitudeChange,
+    onLongitudeChange,
+    onRadiusChange,
+    onGetCurrentLocation,
     onSave
 }) => {
     if (!visible) return null;
@@ -136,11 +153,20 @@ const AttendanceSettingsModal: React.FC<AttendanceSettingsModalProps> = ({
                                 value={selectedHostel}
                                 options={hostels}
                                 onChange={onHostelChange}
+                                optionValue="value"
                                 placeholder="Select a Hostel"
                                 style={{ width: '100%', borderRadius: '8px' }}
                                 appendTo="self"
                             />
                         </div>
+                        {selectedHostel === 'BOTH' && (
+                            <div style={{ padding: '0 4px', marginTop: '-12px', marginBottom: '12px' }}>
+                                <small style={{ color: '#4f46e5', fontWeight: '500' }}>
+                                    Note: Changes will be applied to <strong>BOTH</strong> Boys and Girls Hostels.
+                                </small>
+                            </div>
+                        )}
+
 
                         {/* Time Selection Grid */}
                         <div className="asm-grid">
@@ -170,32 +196,90 @@ const AttendanceSettingsModal: React.FC<AttendanceSettingsModalProps> = ({
                                 />
                             </div>
                         </div>
-                    </div>
 
-                    {/* Footer */}
-                    <div className="asm-footer">
-                        <button
-                            onClick={onClose}
-                            style={{
-                                padding: '8px 16px', color: '#4b5563', fontWeight: '500',
-                                backgroundColor: 'transparent', border: '1px solid transparent',
-                                borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem'
-                            }}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            onClick={onSave}
-                            style={{
-                                padding: '8px 24px', backgroundColor: '#4f46e5', color: 'white',
-                                fontWeight: 'bold', border: 'none', borderRadius: '8px',
-                                cursor: 'pointer', fontSize: '0.875rem',
-                                display: 'flex', alignItems: 'center', gap: '8px',
-                                boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.2)'
-                            }}
-                        >
-                            Save Configuration
-                        </button>
+                        {/* Geo-Fencing Section */}
+                        <div style={{ padding: '20px 0', borderTop: '1px solid #f3f4f6' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#1f2937' }}>Geo-Fencing Config</h4>
+                                <button
+                                    onClick={onGetCurrentLocation}
+                                    style={{
+                                        border: 'none', background: '#e0e7ff', color: '#4f46e5',
+                                        fontSize: '0.75rem', fontWeight: '600', padding: '6px 12px', borderRadius: '20px',
+                                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px'
+                                    }}
+                                >
+                                    <MapPin size={14} /> Detect Location
+                                </button>
+                            </div>
+                            <div className="asm-grid">
+                                <div>
+                                    <label className="asm-label">Latitude</label>
+                                    <InputNumber
+                                        value={latitude}
+                                        onValueChange={(e) => onLatitudeChange(e.value)}
+                                        mode="decimal"
+                                        minFractionDigits={6}
+                                        maxFractionDigits={8}
+                                        useGrouping={false}
+                                        style={{ width: '100%' }}
+                                        inputStyle={{ width: '100%', padding: '10px', borderRadius: '6px', borderColor: '#d1d5db' }}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="asm-label">Longitude</label>
+                                    <InputNumber
+                                        value={longitude}
+                                        onValueChange={(e) => onLongitudeChange(e.value)}
+                                        mode="decimal"
+                                        minFractionDigits={6}
+                                        maxFractionDigits={8}
+                                        useGrouping={false}
+                                        style={{ width: '100%' }}
+                                        inputStyle={{ width: '100%', padding: '10px', borderRadius: '6px', borderColor: '#d1d5db' }}
+                                    />
+                                </div>
+                                <div style={{ gridColumn: '1 / -1' }}>
+                                    <label className="asm-label">Radius (Meters)</label>
+                                    <InputNumber
+                                        value={radius}
+                                        onValueChange={(e) => onRadiusChange(e.value)}
+                                        mode="decimal"
+                                        min={5}
+                                        max={5000}
+                                        suffix=" m"
+                                        style={{ width: '100%' }}
+                                        inputStyle={{ width: '100%', padding: '10px', borderRadius: '6px', borderColor: '#d1d5db' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="asm-footer">
+                            <button
+                                onClick={onClose}
+                                style={{
+                                    padding: '8px 16px', color: '#4b5563', fontWeight: '500',
+                                    backgroundColor: 'transparent', border: '1px solid transparent',
+                                    borderRadius: '8px', cursor: 'pointer', fontSize: '0.875rem'
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={onSave}
+                                style={{
+                                    padding: '8px 24px', backgroundColor: '#4f46e5', color: 'white',
+                                    fontWeight: 'bold', border: 'none', borderRadius: '8px',
+                                    cursor: 'pointer', fontSize: '0.875rem',
+                                    display: 'flex', alignItems: 'center', gap: '8px',
+                                    boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.2)'
+                                }}
+                            >
+                                Save Configuration
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
