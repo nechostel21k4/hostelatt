@@ -87,8 +87,40 @@ const AttendanceDashboard = () => {
     }, [selectedDate, selectedHostelType]);
 
     // Derived State
-    const presentIds = new Set(attendanceData.map((a: any) => a.studentId));
-    const absentStudents = registrationData.filter((s: any) => !presentIds.has(s.rollNo));
+    const allAttendanceIds = new Set(attendanceData.map((a: any) => a.studentId));
+
+    // 1. Present List: Status is Present, Late, or Permission
+    const presentRecords = attendanceData.filter((a: any) =>
+        a.status === 'Present' || a.status === 'Late' || a.status === 'Permission'
+    );
+
+    // 2. Marked Absent List: Status is Absent or Leave
+    const markedAbsentRecords = attendanceData.filter((a: any) =>
+        a.status === 'Absent' || a.status === 'Leave'
+    );
+
+    // 3. No Show List: Students who haven't marked attendance at all
+    const noShowStudents = registrationData.filter((s: any) => !allAttendanceIds.has(s.rollNo));
+
+    // Combine for Absent View
+    const absentListCombined = [
+        ...markedAbsentRecords.map((r: any) => ({
+            rollNo: r.studentId,
+            name: r.name,
+            hostelId: r.hostelId,
+            status: r.status,
+            isRegistered: true,
+            remarks: r.remarks || 'Marked Absent'
+        })),
+        ...noShowStudents.map((s: any) => ({
+            rollNo: s.rollNo,
+            name: s.name,
+            hostelId: s.hostelId,
+            status: 'No Show',
+            isRegistered: s.isRegistered,
+            remarks: 'Did not mark attendance'
+        }))
+    ];
 
     // Templates
     const statusBodyTemplate = (rowData: any) => {
@@ -99,7 +131,10 @@ const AttendanceDashboard = () => {
         switch (status) {
             case 'Present': return 'success';
             case 'Absent': return 'danger';
+            case 'No Show': return 'danger';
             case 'Late': return 'warning';
+            case 'Leave': return 'info';
+            case 'Permission': return 'info';
             default: return 'info';
         }
     };
@@ -114,7 +149,7 @@ const AttendanceDashboard = () => {
 
     const exportExcel = () => {
         import('xlsx').then((xlsx) => {
-            const dataToExport = viewMode === 'present' ? attendanceData : absentStudents;
+            const dataToExport = viewMode === 'present' ? presentRecords : absentListCombined;
             const worksheet = xlsx.utils.json_to_sheet(dataToExport);
             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
             const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -282,7 +317,7 @@ const AttendanceDashboard = () => {
                             onClick={() => setViewMode('present')}
                         >
                             <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Present</h3>
-                            <div className="text-3xl text-green-600 font-bold">{attendanceData.length}</div>
+                            <div className="text-3xl text-green-600 font-bold">{presentRecords.length}</div>
                         </div>
 
                         <div
@@ -290,7 +325,7 @@ const AttendanceDashboard = () => {
                             onClick={() => setViewMode('absent')}
                         >
                             <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Absent</h3>
-                            <div className="text-3xl text-red-600 font-bold">{absentStudents.length}</div>
+                            <div className="text-3xl text-red-600 font-bold">{absentListCombined.length}</div>
                         </div>
                     </div>
 
@@ -305,7 +340,7 @@ const AttendanceDashboard = () => {
                     </div>
 
                     {viewMode === 'present' ? (
-                        <DataTable value={attendanceData} paginator rows={10} stripedRows emptyMessage="No attendance records found for this date.">
+                        <DataTable value={presentRecords} paginator rows={10} stripedRows emptyMessage="No present students found for this date.">
                             <Column field="studentId" header="Roll No" sortable filter></Column>
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
                             <Column field="date" header="Date"></Column>
@@ -315,11 +350,12 @@ const AttendanceDashboard = () => {
 
                         </DataTable>
                     ) : (
-                        <DataTable value={absentStudents} paginator rows={10} stripedRows emptyMessage="No absent students found (Everyone is present!).">
+                        <DataTable value={absentListCombined} paginator rows={10} stripedRows emptyMessage="No absent students found (Everyone is present!).">
                             <Column field="rollNo" header="Roll No" sortable filter></Column>
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
                             <Column field="hostelId" header="Hostel" sortable></Column>
                             <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
+                            <Column field="remarks" header="Remarks" sortable></Column>
                             <Column field="isRegistered" header="Face Registered?" body={registeredBodyTemplate} sortable></Column>
                         </DataTable>
                     )}
