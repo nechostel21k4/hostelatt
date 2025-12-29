@@ -56,7 +56,14 @@ const AttendanceDashboard = () => {
             if (!selectedDate) return;
             const dateStr = formatDateHelper(selectedDate);
             const res = await axios.get(`${API_BASE_URL}/attendance/daily?date=${dateStr}`, getAuthHeaders());
-            let data = res.data.data || [];
+            // Backend returns the array directly in res.data
+            let data = res.data || [];
+
+            // Fallback if it is wrapped in data property (for robustness)
+            if (!Array.isArray(data) && data.data) {
+                data = data.data;
+            }
+
             if (selectedHostelType && selectedHostelType !== 'BOTH') {
                 data = data.filter((d: any) => d.hostelId === selectedHostelType);
             }
@@ -345,6 +352,8 @@ const AttendanceDashboard = () => {
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
                             <Column field="date" header="Date"></Column>
                             <Column field="time" header="Time" sortable></Column>
+                            <Column field="distance" header="Dist (m)" sortable body={(r) => `${r.distance || 0}m`}></Column>
+                            <Column header="Location" body={(r) => r.location ? `${r.location.latitude?.toFixed(4)}, ${r.location.longitude?.toFixed(4)}` : '-'}></Column>
                             <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
                             <Column field="matchScore" header="Match Accuracy" body={matchScoreTemplate} sortable></Column>
 
@@ -354,6 +363,7 @@ const AttendanceDashboard = () => {
                             <Column field="rollNo" header="Roll No" sortable filter></Column>
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
                             <Column field="hostelId" header="Hostel" sortable></Column>
+                            <Column field="distance" header="Dist (m)" sortable body={(r) => r.distance ? `${r.distance}m` : '-'}></Column>
                             <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
                             <Column field="remarks" header="Remarks" sortable></Column>
                             <Column field="isRegistered" header="Face Registered?" body={registeredBodyTemplate} sortable></Column>
