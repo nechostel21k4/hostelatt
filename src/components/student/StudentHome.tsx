@@ -244,6 +244,36 @@ function StudentHome() {
                     </li>
                     <li>
                       <NavLink
+                        to="announcement"
+                        className={({ isActive }) => {
+                          let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                            ? "text-primary surface-100 text-primary"
+                            : "text-white"
+                            }`;
+                          return result;
+                        }}
+                      >
+                        <i className="pi pi-megaphone mr-2"></i>
+                        <span className="font-medium">Announcements</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="announcement"
+                        className={({ isActive }) => {
+                          let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                            ? "text-primary surface-100 text-primary"
+                            : "text-white"
+                            }`;
+                          return result;
+                        }}
+                      >
+                        <i className="pi pi-megaphone mr-2"></i>
+                        <span className="font-medium">Announcements</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
                         to="roomies"
                         className={({ isActive }) => {
                           let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive

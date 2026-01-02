@@ -70,6 +70,7 @@ import AdminFaculty from "./components/admin/AdminFaculty";
 import FacultyStudentList from "./components/faculty/FacultyStudentList";
 import AdminForgotPassword from "./components/AdminForgotPassword";
 import AdminHolidayMessage from "./components/admin/AdminHolidayMessage";
+import AdminMarquee from "./components/admin/AdminMarquee";
 import { Button } from "primereact/button";
 import DeveloperCard from "./components/DeveloperCard";
 import PageNotFound from "./components/PageNotFound";
@@ -81,6 +82,11 @@ import AdminComplaintBox from "./components/admin/AdminComplaintBox";
 import InchargeComplaintBox from "./components/incharge/InchargeComplaintBox";
 import FacultyComplaintBox from "./components/faculty/FacultyComplaintBox";
 import AttendanceDashboard from "./components/admin/AttendanceDashboard";
+import AdminAnnouncements from "./components/admin/AdminAnnouncements";
+import InchargeAnnouncements from "./components/incharge/InchargeAnnouncements";
+import StudentAnnouncements from "./components/student/StudentAnnouncements";
+import FacultyAnnouncements from "./components/faculty/FacultyAnnouncements";
+import FacultyAttendance from "./components/faculty/FacultyAttendance";
 
 function App() {
   return (
@@ -127,6 +133,7 @@ function App() {
                       <Route path="incharge" element={<StudentIncharge />} />
                       <Route path="roomies" element={<StudentRoomies />} />
                       <Route path="complaint" element={<StudentComplaintBox />} />
+                      <Route path="announcement" element={<StudentAnnouncements />} />
                     </Route>
                   </Route>
                   {/* student routes end */}
@@ -170,6 +177,10 @@ function App() {
                       <Route
                         path="attendance"
                         element={<InchargeAttendance />}
+                      />
+                      <Route
+                        path="announcement"
+                        element={<InchargeAnnouncements />}
                       />
                     </Route>
                   </Route>
@@ -263,6 +274,10 @@ function App() {
                         element={<AdminHolidayMessage />}
                       />
                       <Route
+                        path="marquee"
+                        element={<AdminMarquee />}
+                      />
+                      <Route
                         path="schema"
                         element={<AdminSchemas />}
                       />
@@ -273,6 +288,10 @@ function App() {
                       <Route
                         path="attendance"
                         element={<AttendanceDashboard />}
+                      />
+                      <Route
+                        path="announcement"
+                        element={<AdminAnnouncements />}
                       />
                     </Route>
                   </Route>
@@ -306,6 +325,14 @@ function App() {
                       <Route
                         path="complaint"
                         element={<FacultyComplaintBox />}
+                      />
+                      <Route
+                        path="announcement"
+                        element={<FacultyAnnouncements />}
+                      />
+                      <Route
+                        path="attendance"
+                        element={<FacultyAttendance />}
                       />
                     </Route>
                   </Route>

@@ -172,7 +172,34 @@ function FacultyHome() {
                       <span className="font-medium">Complaint Box</span>
                     </NavLink>
                   </li>
-
+                  <li>
+                    <NavLink
+                      to="announcement"
+                      className={({ isActive }) => {
+                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                          ? "text-primary surface-100 text-primary"
+                          : "text-white"
+                          }`;
+                        return result;
+                      }}                    >
+                      <i className="pi pi-megaphone mr-2"></i>
+                      <span className="font-medium">Announcements</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="attendance"
+                      className={({ isActive }) => {
+                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                          ? "text-primary surface-100 text-primary"
+                          : "text-white"
+                          }`;
+                        return result;
+                      }}                    >
+                      <i className="pi pi-calendar-plus mr-2"></i>
+                      <span className="font-medium">Attendance</span>
+                    </NavLink>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -267,6 +294,48 @@ function FacultyHome() {
                           }}                    >
                           <i className="pi pi-users mr-2"></i>
                           <span className="font-medium">Incharge List</span>
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="complaint"
+                          className={({ isActive }) => {
+                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                              ? "text-primary surface-100 text-primary"
+                              : "text-white"
+                              }`;
+                            return result;
+                          }}                    >
+                          <i className="pi pi-envelope mr-2"></i>
+                          <span className="font-medium">Complaint Box</span>
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="announcement"
+                          className={({ isActive }) => {
+                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                              ? "text-primary surface-100 text-primary"
+                              : "text-white"
+                              }`;
+                            return result;
+                          }}                    >
+                          <i className="pi pi-megaphone mr-2"></i>
+                          <span className="font-medium">Announcements</span>
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="attendance"
+                          className={({ isActive }) => {
+                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                              ? "text-primary surface-100 text-primary"
+                              : "text-white"
+                              }`;
+                            return result;
+                          }}                    >
+                          <i className="pi pi-calendar-plus mr-2"></i>
+                          <span className="font-medium">Attendance</span>
                         </NavLink>
                       </li>
                     </ul>

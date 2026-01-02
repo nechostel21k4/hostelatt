@@ -2,6 +2,7 @@ import styles from "../styles/home.module.css";
 import { createContext, useEffect, useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import {
   NavLink,
   Outlet,
@@ -117,6 +118,7 @@ function InchargeHome() {
             />
           </div>
           <div className={styles.body}>
+            <ConfirmDialog />
             <div
               className={`${styles.content} flex flex-row align-items-start`}
             >
@@ -308,6 +310,21 @@ function InchargeHome() {
                       >
                         <i className="pi pi-calendar-times mr-2"></i>
                         <span className="font-medium">Attendance</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="announcement"
+                        className={({ isActive }) => {
+                          let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                            ? "text-primary surface-100 text-primary"
+                            : "text-white"
+                            }`;
+                          return result;
+                        }}
+                      >
+                        <i className="pi pi-megaphone mr-2"></i>
+                        <span className="font-medium">Announcements</span>
                       </NavLink>
                     </li>
                   </ul>
@@ -513,6 +530,21 @@ function InchargeHome() {
                           >
                             <i className="pi pi-calendar-times mr-2"></i>
                             <span className="font-medium">Attendance</span>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to="announcement"
+                            className={({ isActive }) => {
+                              let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
+                                ? "text-primary surface-100 text-primary"
+                                : "text-white"
+                                }`;
+                              return result;
+                            }}
+                          >
+                            <i className="pi pi-megaphone mr-2"></i>
+                            <span className="font-medium">Announcements</span>
                           </NavLink>
                         </li>
                       </ul>

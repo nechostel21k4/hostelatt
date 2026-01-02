@@ -239,4 +239,22 @@ export const deleteComplaint = async (id: string) => {
   }
 };
 
+export const getMarqueeSettings = async () => {
+  try {
+    const response = await api.get('/marquee');
+    return response.data;
+  } catch (err) {
+    console.log("Error : while getting marquee settings", err);
+  }
+};
+
+export const updateMarqueeSettings = async (text: string, isEnabled: boolean) => {
+  try {
+    const response = await api.post('/marquee/update', { text, isEnabled });
+    return response.data;
+  } catch (err) {
+    console.log("Error : while updating marquee settings", err);
+  }
+};
+
 export { };

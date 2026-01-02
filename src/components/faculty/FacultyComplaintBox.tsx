@@ -6,8 +6,7 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { getComplaints, updateComplaintStatus, deleteComplaint } from '../../services/InchargeService';
+import { getComplaints } from '../../services/InchargeService';
 import { formatDateWithTime } from '../interfaces/Date';
 
 const FacultyComplaintBox = () => {
@@ -50,34 +49,6 @@ const FacultyComplaintBox = () => {
         fetchComplaints();
     }, [filters]);
 
-    const handleStatusUpdate = async (id: string, newStatus: string) => {
-        const result = await updateComplaintStatus(id, newStatus, facultyName);
-        if (result && result.success) {
-            toast.current?.show({ severity: 'success', summary: 'Success', detail: `Complaint marked as ${newStatus}` });
-            fetchComplaints();
-        } else {
-            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to update status' });
-        }
-    };
-
-    const handleDelete = async (id: string) => {
-        confirmDialog({
-            message: 'Are you sure you want to delete this complaint?',
-            header: 'Delete Confirmation',
-            icon: 'pi pi-info-circle',
-            acceptClassName: 'p-button-danger',
-            accept: async () => {
-                const result = await deleteComplaint(id);
-                if (result && result.success) {
-                    toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Complaint deleted' });
-                    fetchComplaints();
-                } else {
-                    toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete complaint' });
-                }
-            }
-        });
-    };
-
     const statusBodyTemplate = (rowData: any) => {
         const severity = getSeverity(rowData.status);
         return <Tag value={rowData.status} severity={severity} />;
@@ -90,62 +61,6 @@ const FacultyComplaintBox = () => {
             case 'Issue Canceled': return 'danger';
             default: return 'info';
         }
-    };
-
-    const actionBodyTemplate = (rowData: any) => {
-        if (rowData.status === 'Issue Solved' || rowData.status === 'Issue Canceled') {
-            return (
-                <div className="flex align-items-center gap-2">
-                    <span className="mr-2">{rowData.status === 'Issue Canceled' ? 'Canceled by' : 'Resolved by'} {rowData.resolvedBy}</span>
-                    <Button
-                        severity="danger"
-                        tooltip="Delete"
-                        onClick={() => handleDelete(rowData._id)}
-                        rounded
-                        text
-                    >
-                        <i className="pi pi-trash" />
-                    </Button>
-                </div>
-            );
-        }
-
-        return (
-            <div className="flex gap-2">
-                <Button
-                    icon="pi pi-check"
-                    severity="success"
-                    tooltip="Issue Solved"
-                    onClick={() => handleStatusUpdate(rowData._id, 'Issue Solved')}
-                    rounded
-                    text
-                />
-                <Button
-                    icon="pi pi-exclamation-circle"
-                    severity="warning"
-                    tooltip="Issue Recognized"
-                    onClick={() => handleStatusUpdate(rowData._id, 'Issue Recognized')}
-                    rounded
-                    text
-                />
-                <Button
-                    icon="pi pi-times"
-                    severity="danger"
-                    tooltip="Issue Canceled"
-                    onClick={() => handleStatusUpdate(rowData._id, 'Issue Canceled')}
-                    rounded
-                    text
-                />
-                <Button
-                    icon="pi pi-trash"
-                    severity="danger"
-                    tooltip="Delete"
-                    onClick={() => handleDelete(rowData._id)}
-                    rounded
-                    text
-                />
-            </div>
-        );
     };
 
     const dateTemplate = (rowData: any) => {
@@ -189,7 +104,6 @@ const FacultyComplaintBox = () => {
                 <Column field="complaintText" header="Complaint" style={{ width: '30%' }}></Column>
                 <Column field="createdAt" header="Date" body={dateTemplate} sortable></Column>
                 <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
-                <Column header="Actions" body={actionBodyTemplate} style={{ minWidth: '150px' }}></Column>
             </DataTable>
         </div>
     );

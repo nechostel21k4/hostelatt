@@ -23,9 +23,10 @@ const hostels = [
 
 interface AttendanceDashboardProps {
     preSelectedHostel?: string;
+    readOnly?: boolean;
 }
 
-const AttendanceDashboard = ({ preSelectedHostel }: AttendanceDashboardProps) => {
+const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: AttendanceDashboardProps) => {
     // State
     const [attendanceData, setAttendanceData] = useState<any[]>([]);
     const [registrationData, setRegistrationData] = useState<any[]>([]);
@@ -80,6 +81,16 @@ const AttendanceDashboard = ({ preSelectedHostel }: AttendanceDashboardProps) =>
             let token = inchargeTokenString;
             try {
                 token = JSON.parse(inchargeTokenString);
+            } catch (e) { }
+            return { headers: { Authorization: `Bearer ${token}` } };
+        }
+
+        // Fallback to Faculty Token
+        const facultyTokenString = localStorage.getItem("facultyToken");
+        if (facultyTokenString) {
+            let token = facultyTokenString;
+            try {
+                token = JSON.parse(facultyTokenString);
             } catch (e) { }
             return { headers: { Authorization: `Bearer ${token}` } };
         }
@@ -346,7 +357,9 @@ const AttendanceDashboard = ({ preSelectedHostel }: AttendanceDashboardProps) =>
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800 m-0">Attendance & Bio-Metric Dashboard</h2>
                 <div className="flex gap-2">
-                    <Button icon="pi pi-cog" rounded outlined severity="secondary" aria-label="Settings" onClick={openSettings} tooltip="Configure Time" tooltipOptions={{ position: 'bottom' }} />
+                    {!readOnly && (
+                        <Button icon="pi pi-cog" rounded outlined severity="secondary" aria-label="Settings" onClick={openSettings} tooltip="Configure Time" tooltipOptions={{ position: 'bottom' }} />
+                    )}
                     <Button icon="pi pi-refresh" rounded outlined severity="secondary" aria-label="Refresh" onClick={refreshData} tooltip="Refresh Data" tooltipOptions={{ position: 'bottom' }} />
                 </div>
             </div>
@@ -365,7 +378,14 @@ const AttendanceDashboard = ({ preSelectedHostel }: AttendanceDashboardProps) =>
                         <Calendar value={selectedDate} onChange={(e) => e.value && setSelectedDate(e.value)} showIcon dateFormat="yy-mm-dd" />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
+                        <div
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all bg-white border-gray-200`}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Students</h3>
+                            <div className="text-3xl text-gray-800 font-bold">{registrationData.length}</div>
+                        </div>
+
                         <div
                             className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'present' ? 'bg-green-50 border-green-500' : 'bg-white border-gray-200'}`}
                             onClick={() => setViewMode('present')}
