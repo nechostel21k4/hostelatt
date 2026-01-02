@@ -32,6 +32,7 @@ import InchargeActiveRequest from "./components/incharge/InchargeActiveRequest";
 import InchargeArrivedRequest from "./components/incharge/InchargeArrivedRequest";
 import InchargeHistory from "./components/incharge/InchargeHistory";
 import InchargeList from "./components/incharge/InchargeList";
+import InchargeAttendance from "./components/incharge/InchargeAttendance";
 
 import InchargeAuthProvider from "./utils/InchargeAuth";
 import InchargeProtectedRoutes from "./utils/InchargeProtectedRoutes";
@@ -165,6 +166,10 @@ function App() {
                       <Route
                         path="complaint"
                         element={<InchargeComplaintBox />}
+                      />
+                      <Route
+                        path="attendance"
+                        element={<InchargeAttendance />}
                       />
                     </Route>
                   </Route>

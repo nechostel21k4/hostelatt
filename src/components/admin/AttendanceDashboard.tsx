@@ -21,13 +21,20 @@ const hostels = [
     { label: 'All Hostels', value: 'BOTH' }
 ];
 
-const AttendanceDashboard = () => {
+interface AttendanceDashboardProps {
+    preSelectedHostel?: string;
+}
+
+const AttendanceDashboard = ({ preSelectedHostel }: AttendanceDashboardProps) => {
     // State
     const [attendanceData, setAttendanceData] = useState<any[]>([]);
     const [registrationData, setRegistrationData] = useState<any[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-    const [selectedHostelType, setSelectedHostelType] = useState<string | null>(null);
-    const [viewMode, setViewMode] = useState('present'); // 'present' | 'absent'
+    // Initialize with preSelectedHostel if available
+    const [selectedHostelType, setSelectedHostelType] = useState<string | null>(preSelectedHostel || null);
+    const [leavesData, setLeavesData] = useState<any[]>([]);
+
+    const [viewMode, setViewMode] = useState('present'); // 'present' | 'absent' | 'outing' | 'not_registered'
     const [registrationView, setRegistrationView] = useState('registered'); // 'registered' | 'not_registered'
 
     // Settings State
@@ -42,13 +49,42 @@ const AttendanceDashboard = () => {
 
     const toast = React.useRef<Toast>(null);
 
-
+    // Update selectedHostelType if preSelectedHostel changes
+    useEffect(() => {
+        if (preSelectedHostel) {
+            setSelectedHostelType(preSelectedHostel);
+        }
+    }, [preSelectedHostel]);
 
     // Helper
     const formatDateHelper = (date: Date) => {
         const offset = date.getTimezoneOffset();
         const d = new Date(date.getTime() - (offset * 60 * 1000));
         return d.toISOString().split('T')[0];
+    };
+
+    // Settings Logic - Moved up to be accessible by fetchers
+    const getAuthHeaders = () => {
+        const adminTokenString = localStorage.getItem("adminToken");
+        if (adminTokenString) {
+            let token = adminTokenString;
+            try {
+                token = JSON.parse(adminTokenString);
+            } catch (e) { }
+            return { headers: { Authorization: `Bearer ${token}` } };
+        }
+
+        // Fallback to Incharge Token
+        const inchargeTokenString = localStorage.getItem("inchargeToken");
+        if (inchargeTokenString) {
+            let token = inchargeTokenString;
+            try {
+                token = JSON.parse(inchargeTokenString);
+            } catch (e) { }
+            return { headers: { Authorization: `Bearer ${token}` } };
+        }
+
+        return {};
     };
 
     const fetchAttendance = async () => {
@@ -74,6 +110,21 @@ const AttendanceDashboard = () => {
         }
     };
 
+    const fetchDailyLeaves = async () => {
+        try {
+            if (!selectedDate) return;
+            const dateStr = formatDateHelper(selectedDate);
+            const res = await axios.get(`${API_BASE_URL}/attendance/daily-leaves?date=${dateStr}`, getAuthHeaders());
+            let data = res.data || [];
+            if (selectedHostelType && selectedHostelType !== 'BOTH') {
+                data = data.filter((d: any) => d.hostelId === selectedHostelType);
+            }
+            setLeavesData(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const fetchRegistrationStatus = async () => {
         try {
             const res = await axios.get(`${API_BASE_URL}/attendance/registration-status`, getAuthHeaders());
@@ -96,38 +147,32 @@ const AttendanceDashboard = () => {
     // Derived State
     const allAttendanceIds = new Set(attendanceData.map((a: any) => a.studentId));
 
-    // 1. Present List: Status is Present, Late, or Permission
+    // 1. Present List: Status is Present, Late, or Permission (Checked in attendance)
+    // ADDED: 'ARRIVED' and 'arrived' to include them in present list so they don't show up in Absent/Outing
     const presentRecords = attendanceData.filter((a: any) =>
-        a.status === 'Present' || a.status === 'Late' || a.status === 'Permission'
+        a.status === 'Present' || a.status === 'Late' || a.status === 'Permission' || a.status === 'ARRIVED' || a.status === 'arrived'
     );
+    const presentIds = new Set(presentRecords.map((a: any) => a.studentId));
 
-    // 2. Marked Absent List: Status is Absent or Leave
-    const markedAbsentRecords = attendanceData.filter((a: any) =>
-        a.status === 'Absent' || a.status === 'Leave'
+    // 2. Outing / Leave List (From Requests)
+    // We only count them as "Outing/Leave" if they are NOT already marked present (e.g. came back)
+    const allRequests = leavesData.filter((l: any) => !presentIds.has(l.rollNo));
+
+    // Split into Outing (Permission) and Leave
+    const outingRecords = allRequests.filter((l: any) => l.type === 'PERMISSION');
+    const leaveRecords = allRequests.filter((l: any) => l.type === 'LEAVE');
+
+    const requestIds = new Set(allRequests.map((l: any) => l.rollNo));
+
+    // 3. Not Registered List
+    const notRegisteredRecords = registrationData.filter((s: any) => !s.isRegistered);
+    // const notRegisteredIds = new Set(notRegisteredRecords.map((s: any) => s.rollNo));
+
+    // 4. Actual Absent List (Registered AND Not Present AND Not On Leave/Outing)
+    const registeredStudents = registrationData.filter((s: any) => s.isRegistered);
+    const realAbsentRecords = registeredStudents.filter((s: any) =>
+        !presentIds.has(s.rollNo) && !requestIds.has(s.rollNo)
     );
-
-    // 3. No Show List: Students who haven't marked attendance at all
-    const noShowStudents = registrationData.filter((s: any) => !allAttendanceIds.has(s.rollNo));
-
-    // Combine for Absent View
-    const absentListCombined = [
-        ...markedAbsentRecords.map((r: any) => ({
-            rollNo: r.studentId,
-            name: r.name,
-            hostelId: r.hostelId,
-            status: r.status,
-            isRegistered: true,
-            remarks: r.remarks || 'Marked Absent'
-        })),
-        ...noShowStudents.map((s: any) => ({
-            rollNo: s.rollNo,
-            name: s.name,
-            hostelId: s.hostelId,
-            status: 'No Show',
-            isRegistered: s.isRegistered,
-            remarks: 'Did not mark attendance'
-        }))
-    ];
 
     // Templates
     const statusBodyTemplate = (rowData: any) => {
@@ -142,6 +187,9 @@ const AttendanceDashboard = () => {
             case 'Late': return 'warning';
             case 'Leave': return 'info';
             case 'Permission': return 'info';
+            case 'ACCEPTED': return 'info';
+            case 'ARRIVED': return 'success';
+            case 'arrived': return 'success';
             default: return 'info';
         }
     };
@@ -154,13 +202,23 @@ const AttendanceDashboard = () => {
         return <Tag value={rowData.isRegistered ? 'Registered' : 'Pending'} severity={rowData.isRegistered ? 'success' : 'warning'} />;
     };
 
+    const requestTypeTemplate = (rowData: any) => {
+        return <Tag value={rowData.type} severity={rowData.type === 'LEAVE' ? 'warning' : 'info'} />;
+    }
+
     const exportExcel = () => {
         import('xlsx').then((xlsx) => {
-            const dataToExport = viewMode === 'present' ? presentRecords : absentListCombined;
+            let dataToExport: any[] = [];
+            if (viewMode === 'present') dataToExport = presentRecords;
+            else if (viewMode === 'absent') dataToExport = realAbsentRecords;
+            else if (viewMode === 'outing') dataToExport = outingRecords;
+            else if (viewMode === 'leave') dataToExport = leaveRecords;
+            else if (viewMode === 'not_registered') dataToExport = notRegisteredRecords;
+
             const worksheet = xlsx.utils.json_to_sheet(dataToExport);
             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
             const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-            saveAsExcelFile(excelBuffer, `attendance_${formatDateHelper(selectedDate || new Date())}`);
+            saveAsExcelFile(excelBuffer, `attendance_${viewMode}_${formatDateHelper(selectedDate || new Date())}`);
         });
     };
 
@@ -169,21 +227,6 @@ const AttendanceDashboard = () => {
         let EXCEL_EXTENSION = '.xlsx';
         const data = new Blob([buffer], { type: EXCEL_TYPE });
         saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-    };
-
-    // Settings Logic
-    const getAuthHeaders = () => {
-        const tokenString = localStorage.getItem("adminToken");
-        if (!tokenString) return {};
-
-        let token = tokenString;
-        try {
-            // Attempt to parse if it's a JSON string
-            token = JSON.parse(tokenString);
-        } catch (e) {
-            // If parse fails, use the string as is
-        }
-        return { headers: { Authorization: `Bearer ${token}` } };
     };
 
     const fetchSettingsForHostel = async (hostelCode: string) => {
@@ -295,6 +338,7 @@ const AttendanceDashboard = () => {
     const refreshData = () => {
         fetchAttendance();
         fetchRegistrationStatus();
+        fetchDailyLeaves();
     };
 
     return (
@@ -307,9 +351,12 @@ const AttendanceDashboard = () => {
                 </div>
             </div>
 
-            <div className="flex gap-4 mb-4">
-                <Dropdown value={selectedHostelType} options={hostels} optionValue="value" onChange={(e) => setSelectedHostelType(e.value)} placeholder="Filter by Hostel" showClear />
-            </div>
+            {/* Hide dropdown if pre-selected */}
+            {!preSelectedHostel && (
+                <div className="flex gap-4 mb-4">
+                    <Dropdown value={selectedHostelType} options={hostels} optionValue="value" onChange={(e) => setSelectedHostelType(e.value)} placeholder="Filter by Hostel" showClear />
+                </div>
+            )}
 
             <TabView>
                 <TabPanel header="Daily Attendance">
@@ -318,9 +365,9 @@ const AttendanceDashboard = () => {
                         <Calendar value={selectedDate} onChange={(e) => e.value && setSelectedDate(e.value)} showIcon dateFormat="yy-mm-dd" />
                     </div>
 
-                    <div className="flex gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
                         <div
-                            className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'present' ? 'bg-green-50 border-green-500' : 'bg-white border-gray-200'}`}
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'present' ? 'bg-green-50 border-green-500' : 'bg-white border-gray-200'}`}
                             onClick={() => setViewMode('present')}
                         >
                             <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Present</h3>
@@ -328,25 +375,52 @@ const AttendanceDashboard = () => {
                         </div>
 
                         <div
-                            className={`flex-1 p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'absent' ? 'bg-red-50 border-red-500' : 'bg-white border-gray-200'}`}
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'absent' ? 'bg-red-50 border-red-500' : 'bg-white border-gray-200'}`}
                             onClick={() => setViewMode('absent')}
                         >
                             <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Total Absent</h3>
-                            <div className="text-3xl text-red-600 font-bold">{absentListCombined.length}</div>
+                            <div className="text-3xl text-red-600 font-bold">{realAbsentRecords.length}</div>
+                        </div>
+
+                        <div
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'outing' ? 'bg-blue-50 border-blue-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setViewMode('outing')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Outing (Perm)</h3>
+                            <div className="text-3xl text-blue-600 font-bold">{outingRecords.length}</div>
+                        </div>
+
+                        <div
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'leave' ? 'bg-teal-50 border-teal-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setViewMode('leave')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">On Leave</h3>
+                            <div className="text-3xl text-teal-600 font-bold">{leaveRecords.length}</div>
+                        </div>
+
+                        <div
+                            className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${viewMode === 'not_registered' ? 'bg-orange-50 border-orange-500' : 'bg-white border-gray-200'}`}
+                            onClick={() => setViewMode('not_registered')}
+                        >
+                            <h3 className="text-gray-600 text-sm font-medium m-0 mb-1">Not Registered</h3>
+                            <div className="text-3xl text-orange-600 font-bold">{notRegisteredRecords.length}</div>
                         </div>
                     </div>
 
                     <div className="mb-2 flex items-center gap-2">
-                        <Tag value={viewMode === 'present' ? "Present Students" : "Absent Students"} severity={viewMode === 'present' ? 'success' : 'danger'} />
+                        <Tag
+                            value={viewMode === 'present' ? "Present Students" : viewMode === 'absent' ? "Absent Students" : viewMode === 'outing' ? "Students on Outing" : viewMode === 'leave' ? "Students on Leave" : "Unregistered Students"}
+                            severity={viewMode === 'present' ? 'success' : viewMode === 'absent' ? 'danger' : viewMode === 'outing' ? 'info' : viewMode === 'leave' ? 'info' : 'warning'}
+                        />
                         <Button
                             label="Export Excel"
                             icon="pi pi-file-excel"
-                            className={`p-button-sm ${viewMode === 'present' ? 'p-button-success' : 'p-button-danger'}`}
+                            className={`p-button-sm p-button-secondary`}
                             onClick={exportExcel}
                         />
                     </div>
 
-                    {viewMode === 'present' ? (
+                    {viewMode === 'present' && (
                         <DataTable value={presentRecords} paginator rows={10} stripedRows emptyMessage="No present students found for this date.">
                             <Column field="studentId" header="Roll No" sortable filter></Column>
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
@@ -356,21 +430,52 @@ const AttendanceDashboard = () => {
                             <Column header="Location" body={(r) => r.location ? `${r.location.latitude?.toFixed(4)}, ${r.location.longitude?.toFixed(4)}` : '-'}></Column>
                             <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
                             <Column field="matchScore" header="Match Accuracy" body={matchScoreTemplate} sortable></Column>
-
                         </DataTable>
-                    ) : (
-                        <DataTable value={absentListCombined} paginator rows={10} stripedRows emptyMessage="No absent students found (Everyone is present!).">
+                    )}
+
+                    {viewMode === 'absent' && (
+                        <DataTable value={realAbsentRecords} paginator rows={10} stripedRows emptyMessage="No absent students found.">
                             <Column field="rollNo" header="Roll No" sortable filter></Column>
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
                             <Column field="hostelId" header="Hostel" sortable></Column>
-                            <Column field="distance" header="Dist (m)" sortable body={(r) => r.distance ? `${r.distance}m` : '-'}></Column>
-                            <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
-                            <Column field="remarks" header="Remarks" sortable></Column>
+                            {/* <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column> */}
+                            <Column header="Status" body={() => <Tag value="Absent" severity="danger" />}></Column>
                             <Column field="isRegistered" header="Face Registered?" body={registeredBodyTemplate} sortable></Column>
                         </DataTable>
                     )}
-                </TabPanel>
 
+                    {viewMode === 'outing' && (
+                        <DataTable value={outingRecords} paginator rows={10} stripedRows emptyMessage="No students on outing.">
+                            <Column field="rollNo" header="Roll No" sortable filter></Column>
+                            <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
+                            <Column field="hostelId" header="Hostel" sortable></Column>
+                            <Column field="type" header="Type" body={requestTypeTemplate} sortable></Column>
+                            <Column field="date" header="Date" body={(r) => formatDateHelper(new Date(r.date))} sortable></Column>
+                            <Column field="status" header="Request Status" body={statusBodyTemplate} sortable></Column>
+                        </DataTable>
+                    )}
+
+                    {viewMode === 'leave' && (
+                        <DataTable value={leaveRecords} paginator rows={10} stripedRows emptyMessage="No students on leave.">
+                            <Column field="rollNo" header="Roll No" sortable filter></Column>
+                            <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
+                            <Column field="hostelId" header="Hostel" sortable></Column>
+                            <Column field="type" header="Type" body={requestTypeTemplate} sortable></Column>
+                            <Column field="fromDate" header="From" body={(r) => formatDateHelper(new Date(r.fromDate))} sortable></Column>
+                            <Column field="toDate" header="To" body={(r) => formatDateHelper(new Date(r.toDate))} sortable></Column>
+                            <Column field="status" header="Request Status" body={statusBodyTemplate} sortable></Column>
+                        </DataTable>
+                    )}
+
+                    {viewMode === 'not_registered' && (
+                        <DataTable value={notRegisteredRecords} paginator rows={10} stripedRows emptyMessage="No unregistered students found.">
+                            <Column field="rollNo" header="Roll No" sortable filter></Column>
+                            <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
+                            <Column field="hostelId" header="Hostel" sortable></Column>
+                            <Column header="Status" body={() => <Tag value="Not Registered" severity="warning" />}></Column>
+                        </DataTable>
+                    )}
+                </TabPanel>
                 <TabPanel header="Face Registration Status">
                     {/* Summary Cards */}
                     <div className="flex gap-4 mb-4">

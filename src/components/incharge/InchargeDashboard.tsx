@@ -289,8 +289,8 @@ function InchargeDashboard() {
                 incharge?.hostelId === "BH1"
                   ? "Boys Hostel (BH1)"
                   : incharge?.hostelId === "GH1"
-                  ? "Girls Hostel (GH1)"
-                  : ""
+                    ? "Girls Hostel (GH1)"
+                    : ""
               }
               className="bg-primary mt-2"
               icon="pi pi-circle-fill"
@@ -355,6 +355,8 @@ function InchargeDashboard() {
               </div>
             </div>
           </Card>
+
+
 
           <Card header={collegeDataHeader} className=" col-12 lg:col-8 mt-2">
             <BarChartt
