@@ -382,16 +382,32 @@ function AdminStudentList() {
     );
   };
 
+  const phoneBodyTemplate = (student: any) => {
+    return (
+      <a href={`tel:${student.phoneNo}`} className="no-underline text-900 hover:underline">
+        {student.phoneNo}
+      </a>
+    );
+  };
+
+  const parentPhoneBodyTemplate = (student: any) => {
+    return (
+      <a href={`tel:${student.parentPhoneNo}`} className="no-underline text-900 hover:underline">
+        {student.parentPhoneNo}
+      </a>
+    );
+  };
+
   return (
     <>
       <Dialog
         header={`${college}-clg__${year}-yr__${branch}-dept__${hostelId.toUpperCase() === "ALL"
-            ? "Boys-Girls"
-            : hostelId.toUpperCase() === "BH1"
-              ? "Boys"
-              : hostelId.toUpperCase() === "GH1"
-                ? "Girls"
-                : ""
+          ? "Boys-Girls"
+          : hostelId.toUpperCase() === "BH1"
+            ? "Boys"
+            : hostelId.toUpperCase() === "GH1"
+              ? "Girls"
+              : ""
           }.xlsx`}
         visible={dwnldDialogVisible}
         onHide={() => {
@@ -403,12 +419,12 @@ function AdminStudentList() {
         <DownloadExcel
           selectedStudents={selectedStudents}
           filename={`${college}-clg__${year}-yr__${branch}-dept__${hostelId.toUpperCase() === "ALL"
-              ? "Boys-Girls"
-              : hostelId.toUpperCase() === "BH1"
-                ? "Boys"
-                : hostelId.toUpperCase() === "GH1"
-                  ? "Girls"
-                  : ""
+            ? "Boys-Girls"
+            : hostelId.toUpperCase() === "BH1"
+              ? "Boys"
+              : hostelId.toUpperCase() === "GH1"
+                ? "Girls"
+                : ""
             }`}
         />
       </Dialog>
@@ -580,10 +596,10 @@ function AdminStudentList() {
             <Column field="college" header="College"></Column>
             <Column field="year" header="Year"></Column>
             <Column field="branch" header="Branch"></Column>
-            <Column field="phoneNo" header="Phone No"></Column>
+            <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
             <Column field="email" header="Email"></Column>
             <Column field="parentName" header="Parent Name"></Column>
-            <Column field="parentPhoneNo" header="Parent PhoneNo"></Column>
+            <Column field="parentPhoneNo" header="Parent PhoneNo" body={parentPhoneBodyTemplate}></Column>
             <Column field="currentStatus" header="Status"></Column>
           </DataTable>
         </Card>

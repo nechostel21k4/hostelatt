@@ -459,6 +459,22 @@ function AdminPendingRequests() {
     );
   };
 
+  const phoneBodyTemplate = (request: any) => {
+    return (
+      <a href={`tel:${request.phoneNo}`} className="no-underline text-900 hover:underline">
+        {request.phoneNo}
+      </a>
+    );
+  };
+
+  const parentPhoneBodyTemplate = (request: any) => {
+    return (
+      <a href={`tel:${request.parentPhoneNo}`} className="no-underline text-900 hover:underline">
+        {request.parentPhoneNo}
+      </a>
+    );
+  };
+
   return (
     <>
       <Toast ref={pendingRequestToast} position="center" />
@@ -560,8 +576,8 @@ function AdminPendingRequests() {
                 body={toDateTemplate}
               ></Column>
               <Column field="reason" header="Reason"></Column>
-              <Column field="phoneNo" header="Phone No"></Column>
-              <Column field="parentPhoneNo" header="Parent PhoneNo"></Column>
+              <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
+              <Column field="parentPhoneNo" header="Parent PhoneNo" body={parentPhoneBodyTemplate}></Column>
               <Column body={AcceptRequestButton}></Column>
               <Column body={RejectRequestButton}></Column>
             </DataTable>
@@ -619,8 +635,8 @@ function AdminPendingRequests() {
                 body={toTimeTemplate}
               ></Column>
               <Column field="reason" header="Reason"></Column>
-              <Column field="phoneNo" header="Phone No"></Column>
-              <Column field="parentPhoneNo" header="Parent PhoneNo"></Column>
+              <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
+              <Column field="parentPhoneNo" header="Parent PhoneNo" body={parentPhoneBodyTemplate}></Column>
               <Column body={AcceptRequestButton}></Column>
               <Column body={RejectRequestButton}></Column>
             </DataTable>

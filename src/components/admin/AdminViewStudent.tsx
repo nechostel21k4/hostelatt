@@ -777,7 +777,9 @@ function AdminViewStudent() {
                             Phone No
                           </div>
                           <div className="text-900 w-6">
-                            {studentOldData?.phoneNo}
+                            <a href={`tel:${studentOldData?.phoneNo}`} className="no-underline text-900 hover:underline">
+                              {studentOldData?.phoneNo}
+                            </a>
                           </div>
                         </div>
                         <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
@@ -802,7 +804,9 @@ function AdminViewStudent() {
                             Parent PhoneNo
                           </div>
                           <div className="text-900 w-6">
-                            {studentOldData?.parentPhoneNo}
+                            <a href={`tel:${studentOldData?.parentPhoneNo}`} className="no-underline text-900 hover:underline">
+                              {studentOldData?.parentPhoneNo}
+                            </a>
                           </div>
                         </div>
                       </li>

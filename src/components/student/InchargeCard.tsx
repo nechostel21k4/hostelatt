@@ -153,7 +153,9 @@ function InchargeCard(props: any) {
                   <i className="pi pi-phone"></i>&nbsp;&nbsp; Contact
                 </div>
                 <div className="text-900 font-bold w-6">
-                  {incharge?.phoneNo || ""}
+                  <a href={`tel:${incharge?.phoneNo}`} className="no-underline text-900 hover:underline">
+                    {incharge?.phoneNo || ""}
+                  </a>
                 </div>
               </div>
               {incharge?.hostelId && (

@@ -459,6 +459,22 @@ function AdminActiveRequests() {
     );
   };
 
+  const phoneBodyTemplate = (request: any) => {
+    return (
+      <a href={`tel:${request.phoneNo}`} className="no-underline text-900 hover:underline">
+        {request.phoneNo}
+      </a>
+    );
+  };
+
+  const parentPhoneBodyTemplate = (request: any) => {
+    return (
+      <a href={`tel:${request.parentPhoneNo}`} className="no-underline text-900 hover:underline">
+        {request.parentPhoneNo}
+      </a>
+    );
+  };
+
   return (
     <>
       <Toast ref={activeRequestToast} position="center" />
@@ -556,8 +572,8 @@ function AdminActiveRequests() {
                 body={toDateTemplate}
               ></Column>
               <Column field="reason" header="Reason"></Column>
-              <Column field="phoneNo" header="Phone No"></Column>
-              <Column field="parentPhoneNo" header="Parent PhoneNo"></Column>
+              <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
+              <Column field="parentPhoneNo" header="Parent PhoneNo" body={parentPhoneBodyTemplate}></Column>
               <Column body={CancelButton}></Column>
               <Column body={ArrivedButton}></Column>
             </DataTable>
@@ -609,8 +625,8 @@ function AdminActiveRequests() {
                 body={toTimeTemplate}
               ></Column>
               <Column field="reason" header="Reason"></Column>
-              <Column field="phoneNo" header="Phone No"></Column>
-              <Column field="parentPhoneNo" header="Parent PhoneNo"></Column>
+              <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
+              <Column field="parentPhoneNo" header="Parent PhoneNo" body={parentPhoneBodyTemplate}></Column>
               <Column body={CancelButton}></Column>
               <Column body={ArrivedButton}></Column>
             </DataTable>

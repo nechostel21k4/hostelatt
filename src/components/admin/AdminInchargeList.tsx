@@ -75,6 +75,14 @@ function AdminInchargeList() {
     setIncharges(newInchargeList);
   };
 
+  const phoneBodyTemplate = (incharge: Incharge) => {
+    return (
+      <a href={`tel:${incharge.phoneNo}`} className="no-underline text-900 hover:underline">
+        {incharge.phoneNo}
+      </a>
+    );
+  };
+
   return (
     <>
       <Toast ref={mytoast} position="center"></Toast>
@@ -166,7 +174,7 @@ function AdminInchargeList() {
 
               <Column field="hostelId" header="Hostel ID" sortable></Column>
               <Column field="name" header="Name"></Column>
-              <Column field="phoneNo" header="Phone No"></Column>
+              <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
               <Column field="designation" header="Designation"></Column>
             </DataTable>
           </Card>
