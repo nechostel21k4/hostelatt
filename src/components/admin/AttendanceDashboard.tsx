@@ -205,10 +205,13 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
     const notRegisteredRecords = registrationData.filter((s: any) => !s.isRegistered);
     // const notRegisteredIds = new Set(notRegisteredRecords.map((s: any) => s.rollNo));
 
-    // 4. Actual Absent List (Registered AND Not Present AND Not On Leave/Outing)
+    // 4. Students with upcoming leaves (future dates)
+    const upcomingLeaveIds = new Set(upcomingLeaves.map((l: any) => l.rollNo));
+
+    // 5. Actual Absent List (Registered AND Not Present AND Not On Leave/Outing AND No Upcoming Leave)
     const registeredStudents = registrationData.filter((s: any) => s.isRegistered);
     const realAbsentRecords = registeredStudents.filter((s: any) =>
-        !presentIds.has(s.rollNo) && !requestIds.has(s.rollNo)
+        !presentIds.has(s.rollNo) && !requestIds.has(s.rollNo) && !upcomingLeaveIds.has(s.rollNo)
     );
 
     // Templates
