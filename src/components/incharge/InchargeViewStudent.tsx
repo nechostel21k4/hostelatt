@@ -24,9 +24,9 @@ function InchargeViewStudent() {
     getStudent(stuRollNumber)
       .then((data) => {
         setIsSearching(false);
-        if(data.isExist){
+        if (data.isExist) {
           setStudent(data.hosteler);
-        }else{
+        } else {
           setStudent(null)
         }
       })
@@ -45,7 +45,7 @@ function InchargeViewStudent() {
 
   useEffect(() => {
     validateSearchForm();
-  }, [stuRollNumber,validateSearchForm]);
+  }, [stuRollNumber, validateSearchForm]);
 
   return (
     <>
@@ -97,18 +97,17 @@ function InchargeViewStudent() {
                 </div>
                 <div className="status">
                   <Chip
-                    className={`${
-                      student?.currentStatus === "HOSTEL"
+                    className={`${student?.currentStatus === "HOSTEL"
                         ? "bg-green-500"
                         : "bg-orange-500"
-                    } text-white-alpha-90`}
+                      } text-white-alpha-90`}
                     icon={"pi pi-circle-fill"}
                     label={student?.currentStatus}
                   ></Chip>
                 </div>
               </div>
 
-              <ul className="list-none p-0 m-0" style={{wordWrap:"break-word"}}>
+              <ul className="list-none p-0 m-0" style={{ wordWrap: "break-word" }}>
                 <li className="grid py-3 px-2 border-top-1 border-300">
                   <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
                     <div className="text-500 font-medium w-6">Name</div>
@@ -133,11 +132,11 @@ function InchargeViewStudent() {
                       {student?.roomNo}
                     </div>
                   </div>
-                  
+
                 </li>
 
                 <li className="grid py-3 px-2 border-top-1 border-300">
-                <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
+                  <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
                     <div className="text-500 font-medium w-6">College</div>
                     <div className="text-900 w-6 ">{student?.college}</div>
                   </div>
@@ -145,11 +144,11 @@ function InchargeViewStudent() {
                     <div className="text-500 w-6 font-medium">Year</div>
                     <div className="text-900 w-6">{student?.year}</div>
                   </div>
-                  
+
                 </li>
 
                 <li className="grid py-3 px-2 border-top-1 border-300">
-                <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
+                  <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
                     <div className="text-500 font-medium w-6">Branch</div>
                     <div className="text-900 w-6">{student?.branch}</div>
                   </div>
@@ -157,13 +156,17 @@ function InchargeViewStudent() {
                     <div className="text-500 w-6 font-medium">Gender</div>
                     <div className="text-900 w-6">{student?.gender}</div>
                   </div>
-                  
+
                 </li>
 
                 <li className="grid py-3 px-2 border-top-1 border-300">
                   <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
                     <div className="text-500 w-6 font-medium">Phone No</div>
-                    <div className="text-900 w-6">{student?.phoneNo}</div>
+                    <div className="text-900 w-6">
+                      <a href={`tel:${student?.phoneNo}`} className="text-primary hover:underline">
+                        {student?.phoneNo}
+                      </a>
+                    </div>
                   </div>
                   <div className="flex mt-1 mb-1 w-12 md:w-6 align-items-center justify-content-start">
                     <div className="text-500 font-medium w-6">Email</div>
@@ -180,7 +183,11 @@ function InchargeViewStudent() {
                     <div className="text-500 font-medium w-6">
                       Parent PhoneNo
                     </div>
-                    <div className="text-900 w-6">{student?.parentPhoneNo}</div>
+                    <div className="text-900 w-6">
+                      <a href={`tel:${student?.parentPhoneNo}`} className="text-primary hover:underline">
+                        {student?.parentPhoneNo}
+                      </a>
+                    </div>
                   </div>
                 </li>
               </ul>
