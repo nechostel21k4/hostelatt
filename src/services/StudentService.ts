@@ -15,6 +15,24 @@ export const getStudent = async (rollNumber: string) => {
   }
 };
 
+export const searchStudent = async (key: string) => {
+  try {
+    const response = await api.get(`${server}/student/search/${key}`);
+    return response.data;
+  } catch (error) {
+    console.log("Error : while searching the Student data", error);
+  }
+};
+
+export const getStudentSuggestions = async (key: string) => {
+  try {
+    const response = await api.get(`${server}/student/suggestions/${key}`);
+    return response.data;
+  } catch (error) {
+    console.log("Error : while fetching suggestions", error);
+    return [];
+  }
+};
 
 export const createRequestandUpdateStudent = async (
   student: Student,

@@ -34,6 +34,7 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
     // Initialize with preSelectedHostel if available
     const [selectedHostelType, setSelectedHostelType] = useState<string | null>(preSelectedHostel || null);
     const [leavesData, setLeavesData] = useState<any[]>([]);
+    const [upcomingLeaves, setUpcomingLeaves] = useState<any[]>([]);
 
     const [viewMode, setViewMode] = useState('present'); // 'present' | 'absent' | 'outing' | 'not_registered'
     const [registrationView, setRegistrationView] = useState('registered'); // 'registered' | 'not_registered'
@@ -62,6 +63,16 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
         const offset = date.getTimezoneOffset();
         const d = new Date(date.getTime() - (offset * 60 * 1000));
         return d.toISOString().split('T')[0];
+    };
+
+    const formatTime12Hour = (timeStr: string) => {
+        if (!timeStr) return '-';
+        const [hours, minutes] = timeStr.split(':');
+        let h = parseInt(hours, 10);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12;
+        h = h ? h : 12; // the hour '0' should be '12'
+        return `${h}:${minutes} ${ampm}`;
     };
 
     // Settings Logic - Moved up to be accessible by fetchers
@@ -131,6 +142,21 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
                 data = data.filter((d: any) => d.hostelId === selectedHostelType);
             }
             setLeavesData(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const fetchUpcomingLeaves = async () => {
+        try {
+            if (!selectedDate) return;
+            const dateStr = formatDateHelper(selectedDate);
+            const res = await axios.get(`${API_BASE_URL}/attendance/upcoming-leaves?date=${dateStr}`, getAuthHeaders());
+            let data = res.data || [];
+            if (selectedHostelType && selectedHostelType !== 'BOTH') {
+                data = data.filter((d: any) => d.hostelId === selectedHostelType);
+            }
+            setUpcomingLeaves(data);
         } catch (error) {
             console.error(error);
         }
@@ -349,7 +375,9 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
     const refreshData = () => {
         fetchAttendance();
         fetchRegistrationStatus();
+        fetchRegistrationStatus();
         fetchDailyLeaves();
+        fetchUpcomingLeaves();
     };
 
     return (
@@ -445,7 +473,7 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
                             <Column field="studentId" header="Roll No" sortable filter></Column>
                             <Column field="name" header="Name" sortable filter filterPlaceholder="Search Name"></Column>
                             <Column field="date" header="Date"></Column>
-                            <Column field="time" header="Time" sortable></Column>
+                            <Column field="time" header="Time" body={(r) => formatTime12Hour(r.time)} sortable></Column>
                             <Column field="distance" header="Dist (m)" sortable body={(r) => `${r.distance || 0}m`}></Column>
                             <Column header="Location" body={(r) => r.location ? `${r.location.latitude?.toFixed(4)}, ${r.location.longitude?.toFixed(4)}` : '-'}></Column>
                             <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column>
@@ -460,6 +488,16 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
                             <Column field="hostelId" header="Hostel" sortable></Column>
                             {/* <Column field="status" header="Status" body={statusBodyTemplate} sortable></Column> */}
                             <Column header="Status" body={() => <Tag value="Absent" severity="danger" />}></Column>
+                            <Column header="Upcoming Leave" body={(r: any) => {
+                                const upcoming = upcomingLeaves.find((l: any) => l.rollNo === r.rollNo);
+                                if (upcoming) {
+                                    return <div className="text-sm">
+                                        <div className="font-bold text-blue-600">Starts: {formatDateHelper(new Date(upcoming.fromDate))}</div>
+                                        <div className="text-gray-500 text-xs">Approved</div>
+                                    </div>
+                                }
+                                return '-';
+                            }}></Column>
                             <Column field="isRegistered" header="Face Registered?" body={registeredBodyTemplate} sortable></Column>
                         </DataTable>
                     )}

@@ -1,3 +1,4 @@
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
@@ -15,7 +16,7 @@ import React, {
   useState,
 } from "react";
 import { Student } from "../interfaces/Student";
-import { getStudent } from "../../services/StudentService";
+import { getStudent, searchStudent, getStudentSuggestions } from "../../services/StudentService";
 import ReqCard from "../student/ReqCard";
 import { Chip } from "primereact/chip";
 import {
@@ -28,6 +29,8 @@ import { AdminContext } from "./AdminHome";
 import { getProfileImage } from "../../services/ImageService";
 
 function AdminViewStudent() {
+  const [searchKey, setSearchKey] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<any[]>([]); // Suggestions list
   const [rollNumber, setRollNumber] = useState<string>("");
   const [student, setStudent] = useState<Student | null>(null);
   const [studentOldData, setStudentOldData] = useState<Student | null>(null);
@@ -50,44 +53,62 @@ function AdminViewStudent() {
 
   const validateSearchForm = useCallback(() => {
     setIsSearchFormValid(false);
-    const isRollValid = /^[a-zA-Z0-9]{10}$/.test(rollNumber);
-    if (isRollValid) {
+    // Allow Roll Number (10 chars) OR Name (at least 3 chars)
+    const isValid = searchKey.length >= 3;
+    if (isValid) {
       setIsSearchFormValid(true);
     }
-  }, [rollNumber]);
+  }, [searchKey]);
 
   useEffect(() => {
     validateSearchForm();
-  }, [rollNumber, validateSearchForm]);
+  }, [searchKey, validateSearchForm]);
 
   const handleSearchFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSearching(true);
     setEnableEdit(false);
-    getStudent(rollNumber)
+
+    // Use the new search service
+    searchStudent(searchKey)
       .then((data) => {
         const { isExist, hosteler } = data;
         if (isExist) {
           setStudent(hosteler);
           setStudentOldData(hosteler);
+          setRollNumber(hosteler.rollNo); // Update rollNumber for other operations
+
+          // Fetch image using the actual roll number from result
+          getProfileImage(hosteler.rollNo)
+            .then((imgData) => {
+              if (imgData?.imageExist) {
+                setProfileImageUrl(imgData.imagePath);
+              } else {
+                setProfileImageUrl("/images/Avatar.jpg");
+              }
+            })
+            .catch((err) => {
+              console.log("Error : while getting profile image", err);
+              setProfileImageUrl("/images/Avatar.jpg");
+            });
+
         } else {
           setStudent(null);
+          setRollNumber("");
+
+          if (ViewStudentToast.current) {
+            ViewStudentToast.current.show({
+              severity: "warn",
+              summary: "Not Found",
+              detail: "Student not found",
+            });
+          }
         }
         setIsSearching(false);
       })
       .catch((err) => {
         console.log(err);
-      });
-    getProfileImage(rollNumber)
-      .then((data) => {
-        if (data?.imageExist) {
-          setProfileImageUrl(data.imagePath);
-        } else {
-          setProfileImageUrl("/images/Avatar.jpg");
-        }
-      })
-      .catch((err) => {
-        console.log("Error : while getting profile image", err);
+        setIsSearching(false);
       });
   };
 
@@ -247,17 +268,42 @@ function AdminViewStudent() {
           <form onSubmit={handleSearchFormSubmit} className="grid">
             <div className="col-12 sm:col-6 mt-3 ">
               <FloatLabel>
-                <InputText
+                <AutoComplete
                   id="ad-stu-view-rollno"
-                  type="text"
-                  className="w-full"
-                  value={rollNumber}
-                  onChange={(e) => {
-                    setRollNumber(e.target.value.toUpperCase());
+                  value={searchKey}
+                  suggestions={suggestions}
+                  completeMethod={(e: AutoCompleteCompleteEvent) => {
+                    if (e.query.trim().length > 1) { // Fetch only if length > 1
+                      getStudentSuggestions(e.query)
+                        .then((data) => {
+                          setSuggestions(data);
+                        })
+                        .catch(err => {
+                          console.log(err);
+                          setSuggestions([]);
+                        });
+                    } else {
+                      setSuggestions([]);
+                    }
                   }}
+                  field="rollNo"
+                  itemTemplate={(item) => (
+                    <div className="flex align-items-center">
+                      <span className="font-bold mr-2">{item.rollNo}</span>
+                      <span>- {item.name}</span>
+                    </div>
+                  )}
+                  onSelect={(e: AutoCompleteSelectEvent) => {
+                    setSearchKey(e.value.rollNo);
+                  }}
+                  onChange={(e) => {
+                    setSearchKey(e.value);
+                  }}
+                  className="w-full"
+                  inputClassName="w-full"
                   required
                 />
-                <label htmlFor="ad-stu-view-rollno">Roll Number</label>
+                <label htmlFor="ad-stu-view-rollno">Roll Number / Name</label>
               </FloatLabel>
             </div>
             <div className="col-12 sm:col-6 mt-3">
@@ -644,8 +690,8 @@ function AdminViewStudent() {
                       <div className="status">
                         <Chip
                           className={`${studentOldData?.currentStatus === "HOSTEL"
-                              ? "bg-green-500"
-                              : "bg-orange-500"
+                            ? "bg-green-500"
+                            : "bg-orange-500"
                             } text-white-alpha-90`}
                           icon={"pi pi-circle-fill"}
                           label={studentOldData?.currentStatus}

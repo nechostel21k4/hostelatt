@@ -154,7 +154,7 @@ const AnnouncementList: React.FC<AnnouncementListProps> = ({ refreshTrigger, hos
                                     <i className="pi pi-calendar" style={{ fontSize: '0.8rem' }}></i>
                                     <span>{new Date(item.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
                                     <span className="hidden md:inline">•</span>
-                                    <span className="block md:inline">{new Date(item.date).toLocaleTimeString(undefined, { timeStyle: 'short' })}</span>
+                                    <span className="block md:inline">{new Date(item.date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
                                 </div>
                             </div>
 

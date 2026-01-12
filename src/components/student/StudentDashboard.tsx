@@ -20,14 +20,14 @@ function StudentDashboard() {
         <Card title="Last Request" className="special-font">
           {student?.lastRequest ? (
             <ReqCard request={student?.lastRequest} showCancel={true} />
-            
+
           ) : (
             "No Data Found"
           )}
         </Card>
-        
+
       </div>
-     
+
     </>
   );
 }
