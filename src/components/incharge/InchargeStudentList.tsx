@@ -123,6 +123,22 @@ function InchargeStudentList() {
       />
     );
   };
+
+  const phoneBodyTemplate = (student: any) => {
+    return (
+      <a href={`tel:${student.phoneNo}`} className="text-primary hover:underline">
+        {student.phoneNo}
+      </a>
+    );
+  };
+
+  const parentPhoneBodyTemplate = (student: any) => {
+    return (
+      <a href={`tel:${student.parentPhoneNo}`} className="text-primary hover:underline">
+        {student.parentPhoneNo}
+      </a>
+    );
+  };
   return (
     <>
       <div
@@ -258,10 +274,10 @@ function InchargeStudentList() {
             <Column field="college" header="College"></Column>
             <Column field="year" header="Year"></Column>
             <Column field="branch" header="Branch"></Column>
-            <Column field="phoneNo" header="Phone No"></Column>
+            <Column field="phoneNo" header="Phone No" body={phoneBodyTemplate}></Column>
             <Column field="email" header="Email"></Column>
             <Column field="parentName" header="Parent Name"></Column>
-            <Column field="parentPhoneNo" header="Parent PhoneNo"></Column>
+            <Column field="parentPhoneNo" header="Parent PhoneNo" body={parentPhoneBodyTemplate}></Column>
             <Column field="currentStatus" header="Status"></Column>
           </DataTable>
         </Card>

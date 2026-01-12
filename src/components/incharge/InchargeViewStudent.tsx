@@ -4,15 +4,17 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
+import { AutoComplete, AutoCompleteCompleteEvent } from "primereact/autocomplete";
 import { Chip } from "primereact/chip";
 import ReqCard from "../student/ReqCard";
-import { getStudent } from "../../services/StudentService";
+import { getStudent, searchStudent, getStudentSuggestions } from "../../services/StudentService";
 import { formatDate } from "../interfaces/Date";
 
 function InchargeViewStudent() {
   const [student, setStudent] = useState<Student | null>(null);
 
-  const [stuRollNumber, setStuRollNumber] = useState<string>("");
+  const [searchKey, setSearchKey] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
 
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isSearchFormValid, setIsSearchFormValid] = useState<boolean>(false);
@@ -21,7 +23,7 @@ function InchargeViewStudent() {
     event.preventDefault();
     setIsSearching(true);
 
-    getStudent(stuRollNumber)
+    searchStudent(searchKey)
       .then((data) => {
         setIsSearching(false);
         if (data.isExist) {
@@ -32,20 +34,22 @@ function InchargeViewStudent() {
       })
       .catch((err) => {
         console.log(err);
+        setIsSearching(false);
       });
   };
 
   const validateSearchForm = useCallback(() => {
     setIsSearchFormValid(false);
-    const isRollValid = /^[a-zA-Z0-9]{10}$/.test(stuRollNumber);
-    if (isRollValid) {
+    // Allow search if at least 3 characters
+    const isValid = searchKey.length >= 3;
+    if (isValid) {
       setIsSearchFormValid(true);
     }
-  }, [stuRollNumber]);
+  }, [searchKey]);
 
   useEffect(() => {
     validateSearchForm();
-  }, [stuRollNumber, validateSearchForm]);
+  }, [searchKey, validateSearchForm]);
 
   return (
     <>
@@ -61,17 +65,42 @@ function InchargeViewStudent() {
           <form onSubmit={handleSearchFormSubmit} className="grid">
             <div className="col-12 sm:col-6 mt-3 ">
               <FloatLabel>
-                <InputText
+                <AutoComplete
                   id="inc-view-rollno"
-                  type="text"
-                  className="w-full"
-                  value={stuRollNumber}
-                  onChange={(e) => {
-                    setStuRollNumber(e.target.value.toUpperCase());
+                  value={searchKey}
+                  suggestions={suggestions}
+                  completeMethod={(e: AutoCompleteCompleteEvent) => {
+                    if (e.query.trim().length > 1) {
+                      getStudentSuggestions(e.query)
+                        .then((data) => {
+                          setSuggestions(data);
+                        })
+                        .catch((err) => {
+                          console.error("Error fetching suggestions", err);
+                          setSuggestions([]);
+                        });
+                    } else {
+                      setSuggestions([]);
+                    }
                   }}
+                  field="rollNo"
+                  itemTemplate={(item) => (
+                    <div className="flex align-items-center">
+                      <span className="font-bold mr-2">{item.rollNo}</span>
+                      <span>- {item.name}</span>
+                    </div>
+                  )}
+                  onSelect={(e: any) => {
+                    setSearchKey(e.value.rollNo);
+                  }}
+                  onChange={(e) => {
+                    setSearchKey(e.value);
+                  }}
+                  className="w-full"
+                  inputClassName="w-full"
                   required
                 />
-                <label htmlFor="inc-view-rollno">Roll Number</label>
+                <label htmlFor="inc-view-rollno">Roll Number / Name</label>
               </FloatLabel>
             </div>
             <div className="col-12 sm:col-6 mt-3">
@@ -98,8 +127,8 @@ function InchargeViewStudent() {
                 <div className="status">
                   <Chip
                     className={`${student?.currentStatus === "HOSTEL"
-                        ? "bg-green-500"
-                        : "bg-orange-500"
+                      ? "bg-green-500"
+                      : "bg-orange-500"
                       } text-white-alpha-90`}
                     icon={"pi pi-circle-fill"}
                     label={student?.currentStatus}
