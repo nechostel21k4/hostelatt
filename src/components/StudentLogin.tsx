@@ -53,16 +53,8 @@ function StudentLogin() {
         setShowStuLoading(false);
         const { success, token } = data;
         if (success) {
-          if (loginToast.current) {
-            loginToast.current.show({
-              severity: "success",
-              summary: "Login Successful !",
-              detail: "Welcome, User",
-            });
-          }
-
           studentLogin(token);
-          Navigate(`/student/${stuUsername}`, { replace: true });
+          Navigate(`/student/${stuUsername}`, { replace: true, state: { loginSuccess: true } });
         } else {
           if (loginToast.current) {
             loginToast.current.show({
