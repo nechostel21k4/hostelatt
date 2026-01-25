@@ -92,7 +92,7 @@ const FacultyAttendance = lazy(() => import("./components/faculty/FacultyAttenda
 
 // Other
 const StudentLogin = lazy(() => import("./components/StudentLogin"));
-const DeveloperCard = lazy(() => import("./components/DeveloperCard"));
+
 const PageNotFound = lazy(() => import("./components/PageNotFound"));
 
 function App() {
@@ -131,10 +131,7 @@ function App() {
                       element={<AdminForgotPassword />}
                     ></Route>
 
-                    <Route
-                      path="/developers"
-                      element={<DeveloperCard />}
-                    ></Route>
+
 
                     {/* student routes start */}
                     <Route element={<StudentProtectedRoutes />}>
@@ -357,21 +354,7 @@ function App() {
                   </Routes>
                 </Suspense>
 
-                <Link to="/developers">
-                  <Button
-                    raised
-                    style={{
-                      position: "absolute",
-                      bottom: "5px",
-                      right: "5px",
-                      backgroundColor: "dodgerblue",
-                      color: "white",
-                      borderRadius: "15px",
-                    }}
-                  >
-                    Developers ?
-                  </Button>
-                </Link>
+
               </BrowserRouter>
             </FacultyAuthProvider>
           </AdminAuthProvider>
