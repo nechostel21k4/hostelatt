@@ -3,7 +3,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Suspense, lazy } from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -17,7 +17,7 @@ import AdminProtectedRoutes from "./utils/AdminProtectedRoutes";
 import AdminAuthProvider from "./utils/AdminAuth";
 import FacultyProtectedRoutes from "./utils/FacultyProtectedRoutes";
 import { FacultyAuthProvider } from "./utils/FacultyAuth";
-import { Button } from "primereact/button";
+
 
 // Lazy Load Pages & Components
 const Login = lazy(() => import("./components/Login"));
@@ -91,7 +91,7 @@ const FacultyAnnouncements = lazy(() => import("./components/faculty/FacultyAnno
 const FacultyAttendance = lazy(() => import("./components/faculty/FacultyAttendance"));
 
 // Other
-const StudentLogin = lazy(() => import("./components/StudentLogin"));
+
 
 const PageNotFound = lazy(() => import("./components/PageNotFound"));
 
