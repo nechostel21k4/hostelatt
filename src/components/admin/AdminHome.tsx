@@ -345,7 +345,7 @@ function AdminHome() {
                     </li>
                     <li>
                       <div
-                        className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-white hover:bg-white-alpha-20 transition-duration-150 transition-colors w-full"
+                        className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-red-200 hover:text-white hover:bg-red-500 transition-duration-150 transition-colors w-full"
                         onClick={handleLogout}
                       >
                         <i className="pi pi-power-off mr-2"></i>
@@ -581,7 +581,7 @@ function AdminHome() {
                         </li>
                         <li>
                           <div
-                            className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-white hover:bg-white-alpha-20 transition-duration-150 transition-colors w-full"
+                            className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-red-200 hover:text-white hover:bg-red-500 transition-duration-150 transition-colors w-full"
                             onClick={handleLogout}
                           >
                             <i className="pi pi-power-off mr-2"></i>
