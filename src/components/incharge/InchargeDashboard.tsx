@@ -15,6 +15,7 @@ import { Leave, Permission } from "../interfaces/Request";
 import PieChartt from "../../charts/PieChartt";
 import BarChartt from "../../charts/BarChartt";
 
+
 interface TotalCount {
   hostel: number;
   permissions: number;
@@ -296,73 +297,123 @@ function InchargeDashboard() {
               icon="pi pi-circle-fill"
             />
           </div>
-          <Card header={studentCardHeader} className="col-12 lg:col-6">
-            <div style={{ justifySelf: "center" }}>
+          <div className="col-12 lg:col-6">
+            <Card header={studentCardHeader} className="h-full" style={{ minHeight: '460px' }}>
               <PieChartt data={pieChartData} total={totalHostelStats?.total} />
-            </div>
-          </Card>
+            </Card>
+          </div>
 
-          <Card header={collegeDataHeader} className="col-12 lg:col-6">
-            <BarChartt
-              nec={NECTotalData}
-              nit={NITTotalData}
-              nips={NIPSTotalData}
-            />
-          </Card>
+          <div className="col-12 lg:col-6">
+            <Card header={collegeDataHeader} className="h-full" style={{ minHeight: '460px' }}>
+              <BarChartt
+                data={[
+                  {
+                    name: '1st Year',
+                    NEC: NECTotalData?.Iyear || 0,
+                    NIT: NITTotalData?.Iyear || 0,
+                    NIPS: NIPSTotalData?.Iyear || 0
+                  },
+                  {
+                    name: '2nd Year',
+                    NEC: NECTotalData?.IIyear || 0,
+                    NIT: NITTotalData?.IIyear || 0,
+                    NIPS: NIPSTotalData?.IIyear || 0
+                  },
+                  {
+                    name: '3rd Year',
+                    NEC: NECTotalData?.IIIyear || 0,
+                    NIT: NITTotalData?.IIIyear || 0,
+                    NIPS: NIPSTotalData?.IIIyear || 0
+                  },
+                  {
+                    name: '4th Year',
+                    NEC: NECTotalData?.IVyear || 0,
+                    NIT: NITTotalData?.IVyear || 0,
+                    NIPS: NIPSTotalData?.IVyear || 0
+                  },
+                  {
+                    name: '5th Year',
+                    NEC: 0,
+                    NIT: 0,
+                    NIPS: NIPSTotalData?.Vyear || 0
+                  },
+                  {
+                    name: '6th Year',
+                    NEC: 0,
+                    NIT: 0,
+                    NIPS: NIPSTotalData?.VIyear || 0
+                  },
+                ]}
+                bars={[
+                  { dataKey: 'NEC', name: 'NEC', color: '#8884d8' },
+                  { dataKey: 'NIT', name: 'NIT', color: '#82ca9d' },
+                  { dataKey: 'NIPS', name: 'NIPS', color: '#ffc658' },
+                ]}
+              />
+            </Card>
+          </div>
 
-          <Card
-            header={todayAcceptedCardHeader}
-            footer={todayAcceptedCardFooter}
-            className="col-12 lg:col-6"
-          >
-            <div className="flex align-items-center  justify-content-between">
-              <div className="text-500 font-bold font-medium m-1">
-                Permissions
-              </div>
-              <div className="text-900 font-bold m-1">
-                {todayAcceptedHostelStats?.permissions}
-              </div>
-            </div>
-            <div className="flex align-items-center  justify-content-between">
-              <div className="text-500 font-bold font-medium m-1">Leaves</div>
-              <div className="text-900 font-bold m-1">
-                {todayAcceptedHostelStats?.leaves}
-              </div>
-            </div>
-            <div className="flex align-items-center  justify-content-between mt-1 border-top-1 border-bottom-1">
-              <div className="text-500 font-bold font-medium m-1">Total</div>
-              <div className="text-900 font-bold m-1">
-                {todayAcceptedHostelStats?.total}
-              </div>
-            </div>
-          </Card>
 
-          <Card
-            header={todayArrivedCardHeader}
-            footer={todayArrivedCardFooter}
-            className="col-12 lg:col-6"
-          >
-            <div className="flex align-items-center  justify-content-between">
-              <div className="text-500 font-bold font-medium m-1">
-                Permissions
+
+          <div className="col-12 lg:col-6">
+            <Card
+              header={todayAcceptedCardHeader}
+              footer={todayAcceptedCardFooter}
+              className="h-full shadow-4 border-round-xl"
+              style={{ minHeight: '460px' }}
+            >
+              <div className="flex flex-column gap-3 mt-2">
+                <div className="flex justify-content-between align-items-center p-3 surface-ground border-round-lg">
+                  <span className="text-lg font-medium text-700">Permissions</span>
+                  <span className="text-2xl font-bold text-primary">
+                    {todayAcceptedHostelStats?.permissions}
+                  </span>
+                </div>
+                <div className="flex justify-content-between align-items-center p-3 surface-ground border-round-lg">
+                  <span className="text-lg font-medium text-700">Leaves</span>
+                  <span className="text-2xl font-bold text-primary">
+                    {todayAcceptedHostelStats?.leaves}
+                  </span>
+                </div>
+                <div className="flex justify-content-between align-items-center p-3 surface-card border-1 surface-border border-round-lg">
+                  <span className="text-xl font-bold text-900">Total</span>
+                  <span className="text-3xl font-bold text-900">
+                    {todayAcceptedHostelStats?.total}
+                  </span>
+                </div>
               </div>
-              <div className="text-900 font-bold m-1">
-                {todayArrivedHostelStats?.permissions}
+            </Card>
+          </div>
+
+          <div className="col-12 lg:col-6">
+            <Card
+              header={todayArrivedCardHeader}
+              footer={todayArrivedCardFooter}
+              className="h-full shadow-4 border-round-xl"
+              style={{ minHeight: '460px' }}
+            >
+              <div className="flex flex-column gap-3 mt-2">
+                <div className="flex justify-content-between align-items-center p-3 surface-ground border-round-lg">
+                  <span className="text-lg font-medium text-700">Permissions</span>
+                  <span className="text-2xl font-bold text-green-500">
+                    {todayArrivedHostelStats?.permissions}
+                  </span>
+                </div>
+                <div className="flex justify-content-between align-items-center p-3 surface-ground border-round-lg">
+                  <span className="text-lg font-medium text-700">Leaves</span>
+                  <span className="text-2xl font-bold text-green-500">
+                    {todayArrivedHostelStats?.leaves}
+                  </span>
+                </div>
+                <div className="flex justify-content-between align-items-center p-3 surface-card border-1 surface-border border-round-lg">
+                  <span className="text-xl font-bold text-900">Total</span>
+                  <span className="text-3xl font-bold text-900">
+                    {todayArrivedHostelStats?.total}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="flex align-items-center  justify-content-between">
-              <div className="text-500 font-bold font-medium m-1">Leaves</div>
-              <div className="text-900 font-bold m-1">
-                {todayArrivedHostelStats?.leaves}
-              </div>
-            </div>
-            <div className="flex align-items-center  justify-content-between mt-1 border-top-1 border-bottom-1">
-              <div className="text-500 font-bold font-medium m-1">Total</div>
-              <div className="text-900 font-bold m-1">
-                {todayArrivedHostelStats?.total}
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     </>

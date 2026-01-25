@@ -36,8 +36,9 @@ function FacultyHome() {
       <div className={styles.container}>
         <div
           className={`${styles.header} p-card flex p-1 align-items-center justify-content-between `}
+          style={{ backgroundColor: '#1976D2' }}
         >
-          <h1 className="text-primary m-0 ml-3 font-bold text-2xl">NEC HOSTEL PORTAL</h1>
+          <h1 className="text-white m-0 ml-3 font-bold text-2xl">NEC HOSTEL PORTAL</h1>
 
           <Button
             icon="pi pi-bars"
@@ -56,20 +57,19 @@ function FacultyHome() {
             className={`${styles.content} flex flex-row align-items-start`}
           >
             <div
-              className={`${styles.sidenavbar} hidden lg:block bg-primary`}
+              className={`${styles.sidenavbar} hidden lg:block`}
+              style={{ backgroundColor: '#1976D2' }}
             >
               <div className="overflow-y-auto">
                 <ul className="list-none p-3 m-0">
                   <li>
                     <NavLink
                       to="viewstudent"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-user-edit mr-2"></i>
                       <span className="font-medium">View Student</span>
                     </NavLink>
@@ -77,13 +77,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="studentlist"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-list mr-2"></i>
                       <span className="font-medium">Student List</span>
                     </NavLink>
@@ -103,13 +101,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="arrivedrequests"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-list-check mr-2"></i>
                       <span className="font-medium">Arrived Students</span>
                     </NavLink>
@@ -117,13 +113,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="acceptedhistory"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-check mr-2"></i>
                       <span className="font-medium">Accepted History</span>
                     </NavLink>
@@ -132,13 +126,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="inchargelist"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-users mr-2"></i>
                       <span className="font-medium">Incharge List</span>
                     </NavLink>
@@ -146,13 +138,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="complaint"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-envelope mr-2"></i>
                       <span className="font-medium">Complaint Box</span>
                     </NavLink>
@@ -160,13 +150,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="announcement"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-megaphone mr-2"></i>
                       <span className="font-medium">Announcements</span>
                     </NavLink>
@@ -174,13 +162,11 @@ function FacultyHome() {
                   <li>
                     <NavLink
                       to="attendance"
-                      className={({ isActive }) => {
-                        let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                          ? "text-primary surface-100 text-primary"
-                          : "text-white"
-                          }`;
-                        return result;
-                      }}                    >
+                      className={({ isActive }) =>
+                        `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                        }`
+                      }
+                      style={({ isActive }) => isActive ? {} : {}}                    >
                       <i className="pi pi-calendar-plus mr-2"></i>
                       <span className="font-medium">Attendance</span>
                     </NavLink>
@@ -194,7 +180,8 @@ function FacultyHome() {
                   visible={sidenavVisible}
                   modal={false}
                   onHide={() => setSidenavVisible(false)}
-                  className="lg:hidden w-14rem bg-primary"
+                  className="lg:hidden w-14rem"
+                  style={{ backgroundColor: '#1976D2' }}
                 >
                   <div className="overflow-y-auto">
                     <ul className="list-none p-3 m-0">
@@ -202,13 +189,10 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="viewstudent"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }                    >
                           <i className="pi pi-user-edit mr-2"></i>
                           <span className="font-medium">View Student</span>
                         </NavLink>
@@ -216,13 +200,11 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="studentlist"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-list mr-2"></i>
                           <span className="font-medium">Student List</span>
                         </NavLink>
@@ -242,13 +224,11 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="arrivedrequests"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-list-check mr-2"></i>
                           <span className="font-medium">Arrived Students</span>
                         </NavLink>
@@ -256,13 +236,11 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="acceptedhistory"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-check mr-2"></i>
                           <span className="font-medium">Accepted History</span>
                         </NavLink>
@@ -270,13 +248,11 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="inchargelist"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-users mr-2"></i>
                           <span className="font-medium">Incharge List</span>
                         </NavLink>
@@ -284,13 +260,11 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="complaint"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-envelope mr-2"></i>
                           <span className="font-medium">Complaint Box</span>
                         </NavLink>
@@ -298,13 +272,11 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="announcement"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-megaphone mr-2"></i>
                           <span className="font-medium">Announcements</span>
                         </NavLink>
@@ -312,20 +284,18 @@ function FacultyHome() {
                       <li>
                         <NavLink
                           to="attendance"
-                          className={({ isActive }) => {
-                            let result = `p-ripple no-underline flex  align-items-center hover:text-primary  cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${isActive
-                              ? "text-primary surface-100 text-primary"
-                              : "text-white"
-                              }`;
-                            return result;
-                          }}                    >
+                          className={({ isActive }) =>
+                            `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                            }`
+                          }
+                          style={({ isActive }) => isActive ? {} : {}}                    >
                           <i className="pi pi-calendar-plus mr-2"></i>
                           <span className="font-medium">Attendance</span>
                         </NavLink>
                       </li>
                       <li>
                         <div
-                          className="p-ripple flex align-items-center hover:text-primary cursor-pointer p-3 border-round text-white hover:surface-100 transition-duration-150 transition-colors w-full"
+                          className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-white hover:bg-white-alpha-20 transition-duration-150 transition-colors w-full"
                           onClick={handleLogout}
                         >
                           <i className="pi pi-power-off mr-2"></i>

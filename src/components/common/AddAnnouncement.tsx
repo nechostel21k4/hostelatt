@@ -22,14 +22,14 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
     const [description, setDescription] = useState('');
     const [image, setImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [targetAudience, setTargetAudience] = useState<string | null>(initialHostelId || null);
+    const [targetAudience, setTargetAudience] = useState<string | null>(initialHostelId || 'ALL');
     const [loading, setLoading] = useState(false);
     const toast = useRef<Toast>(null);
     const fileUploadRef = useRef<FileUpload>(null);
 
     // Options for Admin Target Audience
     const targetOptions = [
-        { label: 'All Hostels', value: null },
+        { label: 'All Hostels', value: 'ALL' },
         { label: 'Boys Hostels', value: 'BH' },
         { label: 'Girls Hostels', value: 'GH' }
     ];
@@ -38,6 +38,8 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
         // If it's INCHARGE, force their hostelId
         if (type === 'INCHARGE' && initialHostelId) {
             setTargetAudience(initialHostelId);
+        } else if (type === 'ADMIN' && !initialHostelId) {
+            setTargetAudience('ALL');
         }
     }, [type, initialHostelId]);
 
@@ -56,7 +58,7 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
         formData.append('author', author);
 
         // Handle target audience
-        if (targetAudience) {
+        if (targetAudience && targetAudience !== 'ALL') {
             formData.append('hostelId', targetAudience);
         }
 
@@ -84,7 +86,7 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
                 fileUploadRef.current.clear();
             }
             // For Admin, reset to 'All', for Incharge keep their ID
-            if (type === 'ADMIN') setTargetAudience(null);
+            if (type === 'ADMIN') setTargetAudience('ALL');
 
             onSuccess();
         } catch (error) {
@@ -135,10 +137,14 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
     }
 
     return (
-        <div className="card">
+        <div className="card shadow-2 border-round-xl p-4">
             <Toast ref={toast} />
-            <h3>Create Announcement</h3>
-            <form onSubmit={handleSubmit} className="flex flex-column gap-3">
+            <div className="flex align-items-center mb-4">
+                <i className="pi pi-megaphone text-2xl mr-2" style={{ color: '#000080' }}></i>
+                <h3 className="m-0 text-900">Create Announcement</h3>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-column gap-4">
                 {type === 'ADMIN' && (
                     <span className="p-float-label mt-2">
                         <Dropdown
@@ -153,7 +159,7 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
                     </span>
                 )}
 
-                <span className="p-float-label mt-2">
+                <span className="p-float-label mt-1">
                     <InputText id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full" />
                     <label htmlFor="title">Title</label>
                 </span>
@@ -163,39 +169,51 @@ const AddAnnouncement: React.FC<AddAnnouncementProps> = ({ hostelId: initialHost
                     <label htmlFor="description">Description</label>
                 </span>
 
-                <div className="flex flex-column gap-2">
-                    <label className="font-bold">Image (Optional):</label>
-                    <div className="flex align-items-center gap-3">
-                        <FileUpload
-                            ref={fileUploadRef}
-                            mode="basic"
-                            name="image"
-                            accept="image/*"
-                            maxFileSize={5000000}
-                            onSelect={onFileSelect}
-                            auto={false}
-                            chooseLabel={image ? "Change Image" : "Select Image"}
-                        />
-                        {image && (
-                            <Button
-                                type="button"
-                                icon="pi pi-times"
-                                className="p-button-rounded p-button-danger p-button-text"
-                                onClick={onClearImage}
-                                tooltip="Remove Image"
+                <div className="surface-50 border-round p-3 border-1 surface-border border-dashed">
+                    <label className="block text-900 font-medium mb-2">Attachment (Optional)</label>
+                    <div className="flex flex-column gap-3">
+                        <div className="flex align-items-center gap-3">
+                            <FileUpload
+                                ref={fileUploadRef}
+                                mode="basic"
+                                name="image"
+                                accept="image/*"
+                                maxFileSize={5000000}
+                                onSelect={onFileSelect}
+                                auto={false}
+                                chooseLabel={image ? "Change Image" : "Select Image"}
+                                className="p-button-outlined p-button-secondary"
                             />
+                            {image && (
+                                <Button
+                                    type="button"
+                                    icon="pi pi-times"
+                                    className="p-button-rounded p-button-danger p-button-text"
+                                    onClick={onClearImage}
+                                    tooltip="Remove Image"
+                                />
+                            )}
+                        </div>
+
+                        {imagePreview && (
+                            <div className="border-round overflow-hidden surface-overlay border-1 surface-border shadow-1" style={{ maxWidth: '300px' }}>
+                                <Image src={imagePreview} alt="Preview" width="100%" preview />
+                                <div className="p-2 bg-white text-sm text-center text-700 font-medium white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                                    {image?.name}
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>
 
-                {imagePreview && (
-                    <div className="mt-2 border-round overflow-hidden surface-overlay border-1 surface-border p-2" style={{ maxWidth: '300px' }}>
-                        <Image src={imagePreview} alt="Preview" width="100%" preview />
-                        <div className="text-center text-sm text-gray-600 mt-1">{image?.name}</div>
-                    </div>
-                )}
-
-                <Button label="Post Announcement" icon="pi pi-send" loading={loading} type="submit" />
+                <Button
+                    label="Post Announcement"
+                    icon="pi pi-send"
+                    loading={loading}
+                    type="submit"
+                    className="w-full md:w-auto align-self-end mt-2"
+                    style={{ backgroundColor: '#000080', borderColor: '#000080' }}
+                />
             </form>
         </div>
     );
