@@ -93,12 +93,10 @@ function InchargeHome() {
 
             <Button
               icon="pi pi-bars"
-              label="Menu"
-              severity="info"
-              className="lg:hidden"
+              className="lg:hidden p-button-rounded p-button-text text-white"
               onClick={() => setVisible(true)}
-              raised
-              aria-label="User"
+              aria-label="Menu"
+              style={{ fontSize: '1.5rem' }}
             />
 
 

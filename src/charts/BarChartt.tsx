@@ -48,9 +48,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 const BarChartt: React.FC<BarChartProps> = ({ data, title, bars, xAxisKey = "name" }) => {
   return (
-    <div style={{ width: '100%', height: 350 }}>
+    <div style={{ width: '99%', height: 350, minHeight: '350px', minWidth: 0 }}>
       {title && <h5 className="text-center mb-2" style={{ color: '#555' }}>{title}</h5>}
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" debounce={200}>
         <BarChart
           data={data}
           margin={{

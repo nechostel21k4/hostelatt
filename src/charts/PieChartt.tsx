@@ -39,7 +39,7 @@ const PieChartt = (props: any) => {
   const isEmpty = pieData.length === 0 || pieData.every(item => item.value === 0);
 
   return (
-    <div style={{ width: '100%', height: 350, position: 'relative', minHeight: '350px' }}>
+    <div style={{ width: '99%', height: 350, position: 'relative', minHeight: '350px', minWidth: 0 }}>
       {isEmpty ? (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
@@ -57,7 +57,7 @@ const PieChartt = (props: any) => {
         </div>
       ) : (
         <>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" debounce={200}>
             <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
               <Pie
                 data={pieData}
