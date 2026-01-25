@@ -78,7 +78,7 @@ function StudentLogin() {
         className="w-full p-1 flex align-items-center justify-content-center"
         style={{ backgroundColor: "#3FA2F6" }}
       >
-        <h1 className="text-white m-0 font-bold text-3xl">GO SAFE PORTAL</h1>
+        <h1 className="text-white m-0 font-bold text-3xl">NEC HOSTEL PORTAL</h1>
       </div>
 
       <div className="flex align-items-center justify-content-center m-5">

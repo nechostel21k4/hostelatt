@@ -37,7 +37,7 @@ function FacultyHome() {
         <div
           className={`${styles.header} p-card flex p-1 align-items-center justify-content-between `}
         >
-          <h1 className="text-primary m-0 ml-3 font-bold text-2xl">GO SAFE PORTAL</h1>
+          <h1 className="text-primary m-0 ml-3 font-bold text-2xl">NEC HOSTEL PORTAL</h1>
 
           <Button
             icon="pi pi-bars"
