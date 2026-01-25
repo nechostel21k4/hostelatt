@@ -105,9 +105,8 @@ const AdminComplaintBox = () => {
                         onClick={() => handleDelete(rowData._id)}
                         rounded
                         text
-                    >
-                        <i className="pi pi-trash" />
-                    </Button>
+                        icon="pi pi-trash"
+                    />
                 </div>
             );
         }
@@ -120,36 +119,32 @@ const AdminComplaintBox = () => {
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Solved')}
                     rounded
                     text
-                >
-                    <i className="pi pi-check" />
-                </Button>
+                    icon="pi pi-check"
+                />
                 <Button
                     severity="warning"
                     tooltip="Issue Recognized"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Recognized')}
                     rounded
                     text
-                >
-                    <i className="pi pi-exclamation-circle" />
-                </Button>
+                    icon="pi pi-exclamation-circle"
+                />
                 <Button
                     severity="danger"
                     tooltip="Issue Canceled"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Canceled')}
                     rounded
                     text
-                >
-                    <i className="pi pi-times" />
-                </Button>
+                    icon="pi pi-times"
+                />
                 <Button
                     severity="danger"
                     tooltip="Delete"
                     onClick={() => handleDelete(rowData._id)}
                     rounded
                     text
-                >
-                    <i className="pi pi-trash" />
-                </Button>
+                    icon="pi pi-trash"
+                />
             </div>
         );
     };
@@ -180,9 +175,8 @@ const AdminComplaintBox = () => {
                         tooltip="Refresh"
                         rounded
                         outlined
-                    >
-                        <i className="pi pi-refresh" />
-                    </Button>
+                        icon="pi pi-refresh"
+                    />
                 </div>
             </Card>
 

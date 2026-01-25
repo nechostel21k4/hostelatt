@@ -422,15 +422,24 @@ function AdminDashboard() {
             />
           </div>
 
-          <Card header={studentCardHeader} className="col-12  lg:col-8">
+          <Card header={studentCardHeader} className="col-12 lg:col-6">
             <div style={{ justifySelf: "center" }}>
               <PieChartt data={BH1PieChartData} total={BH1TotalStats?.total} />
             </div>
           </Card>
+
+          <Card header={collegeDataHeader} className="col-12 lg:col-6">
+            <BarChartt
+              nec={BH1NECTotalData}
+              nit={BH1NITTotalData}
+              nips={BH1NIPSTotalData}
+            />
+          </Card>
+
           <Card
             header={todayAcceptedCardHeader}
             footer={todayAcceptedCardFooter("BH1")}
-            className=" col-12 sm:col-6 lg:col-4 align-self-start"
+            className="col-12 lg:col-6"
           >
             <div className="flex align-items-center  justify-content-between">
               <div className="text-500 font-bold font-medium m-1">
@@ -453,10 +462,11 @@ function AdminDashboard() {
               </div>
             </div>
           </Card>
+
           <Card
             header={todayArrivedCardHeader}
             footer={todayArrivedCardFooter("BH1")}
-            className=" col-12 sm:col-6 lg:col-4 mt-2 align-self-end"
+            className="col-12 lg:col-6"
           >
             <div className="flex align-items-center  justify-content-between">
               <div className="text-500 font-bold font-medium m-1">
@@ -479,17 +489,9 @@ function AdminDashboard() {
               </div>
             </div>
           </Card>
-
-          <Card header={collegeDataHeader} className=" col-12 lg:col-8 mt-2">
-            <BarChartt
-              nec={BH1NECTotalData}
-              nit={BH1NITTotalData}
-              nips={BH1NIPSTotalData}
-            />
-          </Card>
         </div>
 
-        <div className="p-card grid mt-2 p-0" style={{backgroundColor:"whitesmoke"}}>
+        <div className="p-card grid mt-2 p-0" style={{ backgroundColor: "whitesmoke" }}>
           <div className="col-12 flex align-items-center justify-content-center">
             <Chip
               label="Girls Hostel (GH1)"
@@ -498,15 +500,24 @@ function AdminDashboard() {
             />
           </div>
 
-          <Card header={studentCardHeader} className="col-12  lg:col-8">
+          <Card header={studentCardHeader} className="col-12 lg:col-6">
             <div style={{ justifySelf: "center" }}>
               <PieChartt data={GH1PieChartData} total={GH1TotalStats?.total} />
             </div>
           </Card>
+
+          <Card header={collegeDataHeader} className="col-12 lg:col-6">
+            <BarChartt
+              nec={GH1NECTotalData}
+              nit={GH1NITTotalData}
+              nips={GH1NIPSTotalData}
+            />
+          </Card>
+
           <Card
             header={todayAcceptedCardHeader}
             footer={todayAcceptedCardFooter("GH1")}
-            className=" col-12 sm:col-6 lg:col-4 align-self-start"
+            className="col-12 lg:col-6"
           >
             <div className="flex align-items-center  justify-content-between">
               <div className="text-500 font-bold font-medium m-1">
@@ -529,10 +540,11 @@ function AdminDashboard() {
               </div>
             </div>
           </Card>
+
           <Card
             header={todayArrivedCardHeader}
             footer={todayArrivedCardFooter("GH1")}
-            className=" col-12 sm:col-6 lg:col-4 mt-2 align-self-end"
+            className="col-12 lg:col-6"
           >
             <div className="flex align-items-center  justify-content-between">
               <div className="text-500 font-bold font-medium m-1">
@@ -554,14 +566,6 @@ function AdminDashboard() {
                 {GH1TodayArrivedStats?.total}
               </div>
             </div>
-          </Card>
-
-          <Card header={collegeDataHeader} className=" col-12 lg:col-8 mt-2">
-            <BarChartt
-              nec={GH1NECTotalData}
-              nit={GH1NITTotalData}
-              nips={GH1NIPSTotalData}
-            />
           </Card>
         </div>
       </div>

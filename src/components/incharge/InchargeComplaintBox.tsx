@@ -142,9 +142,8 @@ const InchargeComplaintBox = () => {
                         tooltip="Refresh"
                         rounded
                         outlined
-                    >
-                        <i className="pi pi-refresh" />
-                    </Button>
+                        icon="pi pi-refresh"
+                    />
                 </div>
             </Card>
 

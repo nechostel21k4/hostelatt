@@ -105,12 +105,12 @@ function AdminStudentBulkDataUpload() {
     const result = exactData?.map((student) => {
       let newStudent = {
         ...student,
-        rollNo: student?.rollNo.toString().trim().toUpperCase(),
-        branch: student?.branch.toString().trim().toUpperCase(),
-        gender: student?.gender.toString().trim().toUpperCase(),
-        college: student?.college.toString().trim().toUpperCase(),
+        rollNo: (student?.rollNo || "").toString().trim().toUpperCase(),
+        branch: (student?.branch || "").toString().trim().toUpperCase(),
+        gender: (student?.gender || "").toString().trim().toUpperCase(),
+        college: (student?.college || "").toString().trim().toUpperCase(),
         hostelId:
-          student?.gender.toString().toUpperCase() === "MALE" ? "BH1" : "GH1",
+          (student?.gender || "").toString().toUpperCase() === "MALE" ? "BH1" : "GH1",
         requestCount: 0,
         currentStatus: "HOSTEL",
         lastRequest: null,

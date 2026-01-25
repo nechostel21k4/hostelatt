@@ -75,20 +75,10 @@ function StudentLogin() {
     <>
       <Toast ref={loginToast} position="top-center" />
       <div
-        className="w-full p-1 flex align-items-center justify-content-between"
+        className="w-full p-1 flex align-items-center justify-content-center"
         style={{ backgroundColor: "#3FA2F6" }}
       >
-        <img
-          src="/images/logo-no-background1.png"
-          alt="Nec logo"
-          className="ml-4 h-3rem"
-        />
-        <img src="/images/Nec.png" alt="Nec logo" className="mr-4 h-4rem" />
-        <img
-          src="/images/logo nec 2.png"
-          alt="Nec logo"
-          className="mr-4 h-4rem hidden sm:block"
-        />
+        <h1 className="text-white m-0 font-bold text-3xl">GO SAFE PORTAL</h1>
       </div>
 
       <div className="flex align-items-center justify-content-center m-5">

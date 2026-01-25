@@ -296,16 +296,24 @@ function InchargeDashboard() {
               icon="pi pi-circle-fill"
             />
           </div>
-          <Card header={studentCardHeader} className="col-12  lg:col-8">
+          <Card header={studentCardHeader} className="col-12 lg:col-6">
             <div style={{ justifySelf: "center" }}>
               <PieChartt data={pieChartData} total={totalHostelStats?.total} />
             </div>
           </Card>
 
+          <Card header={collegeDataHeader} className="col-12 lg:col-6">
+            <BarChartt
+              nec={NECTotalData}
+              nit={NITTotalData}
+              nips={NIPSTotalData}
+            />
+          </Card>
+
           <Card
             header={todayAcceptedCardHeader}
             footer={todayAcceptedCardFooter}
-            className=" col-12 sm:col-6 lg:col-4 align-self-start"
+            className="col-12 lg:col-6"
           >
             <div className="flex align-items-center  justify-content-between">
               <div className="text-500 font-bold font-medium m-1">
@@ -332,7 +340,7 @@ function InchargeDashboard() {
           <Card
             header={todayArrivedCardHeader}
             footer={todayArrivedCardFooter}
-            className=" col-12 sm:col-6 lg:col-4 align-self-end"
+            className="col-12 lg:col-6"
           >
             <div className="flex align-items-center  justify-content-between">
               <div className="text-500 font-bold font-medium m-1">
@@ -354,16 +362,6 @@ function InchargeDashboard() {
                 {todayArrivedHostelStats?.total}
               </div>
             </div>
-          </Card>
-
-
-
-          <Card header={collegeDataHeader} className=" col-12 lg:col-8 mt-2">
-            <BarChartt
-              nec={NECTotalData}
-              nit={NITTotalData}
-              nips={NIPSTotalData}
-            />
           </Card>
         </div>
       </div>

@@ -109,16 +109,7 @@ function StudentHome() {
           <div
             className={`${styles.header} p-card flex p-1 align-items-center justify-content-between `}
           >
-            <img
-              src="/images/logo-no-background.png"
-              alt="Nec logo"
-              className="ml-3 mr-3 h-full hidden sm:block"
-            />
-            <img
-              src="/images/Nec.png"
-              alt="Nec logo"
-              className="ml-3 mr-3 h-full"
-            />
+            <h1 className="text-primary m-0 ml-3 font-bold text-2xl">GO SAFE PORTAL</h1>
 
             <Button
               icon="pi pi-bars"
@@ -130,13 +121,7 @@ function StudentHome() {
               aria-label="User"
             />
 
-            <Button
-              icon="pi pi-power-off"
-              rounded
-              raised
-              label="Logout"
-              onClick={handleLogout}
-            />
+
           </div>
           <div className={styles.body}>
             <div
@@ -274,6 +259,15 @@ function StudentHome() {
                         <span className="font-medium">Roomies</span>
                       </NavLink>
                     </li>
+                    <li>
+                      <div
+                        className="p-ripple flex align-items-center hover:text-primary cursor-pointer p-3 border-round text-white hover:surface-100 transition-duration-150 transition-colors w-full"
+                        onClick={handleLogout}
+                      >
+                        <i className="pi pi-power-off mr-2"></i>
+                        <span className="font-medium">Logout</span>
+                      </div>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -395,6 +389,15 @@ function StudentHome() {
                             <i className="pi pi-comments mr-2"></i>
                             <span className="font-medium">Complaint Box</span>
                           </NavLink>
+                        </li>
+                        <li>
+                          <div
+                            className="p-ripple flex align-items-center hover:text-primary cursor-pointer p-3 border-round text-white hover:surface-100 transition-duration-150 transition-colors w-full"
+                            onClick={handleLogout}
+                          >
+                            <i className="pi pi-power-off mr-2"></i>
+                            <span className="font-medium">Logout</span>
+                          </div>
                         </li>
                       </ul>
                     </div>
