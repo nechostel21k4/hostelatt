@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -19,7 +19,7 @@ const FacultyComplaintBox = () => {
     const toast = useRef<Toast>(null);
     // Since Faculty context wasn't readily available, I'll default the name. 
     // Ideally we'd decode the token or fetch the profile. 
-    const facultyName = "Faculty Member";
+    // const facultyName = "Faculty Member";
 
     const colleges = [
         { label: 'All Colleges', value: 'ALL' },
@@ -36,18 +36,18 @@ const FacultyComplaintBox = () => {
         { label: 'Issue Canceled', value: 'Issue Canceled' }
     ];
 
-    const fetchComplaints = async () => {
+    const fetchComplaints = useCallback(async () => {
         setLoading(true);
         const data = await getComplaints(filters.college, filters.status);
         if (data && data.success) {
             setComplaints(data.data);
         }
         setLoading(false);
-    };
+    }, [filters]);
 
     useEffect(() => {
         fetchComplaints();
-    }, [filters]);
+    }, [fetchComplaints]);
 
     const statusBodyTemplate = (rowData: any) => {
         const severity = getSeverity(rowData.status);

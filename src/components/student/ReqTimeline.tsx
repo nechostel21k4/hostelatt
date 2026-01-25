@@ -1,5 +1,5 @@
-import { Card } from "primereact/card";
-import React, { useEffect, useRef, useState } from "react";
+// import { Card } from "primereact/card";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { formatDateWithTime } from "../interfaces/Date";
 
 function ReqTimeline(props: any) {
@@ -9,66 +9,9 @@ function ReqTimeline(props: any) {
   const [accRejCancel, setAccRejCancel] = useState<any>(null);
   const [arriveCancel, setArriveCancel] = useState<any>(null);
 
-  useEffect(() => {
-    if (submitted) {
-      setSubmit({
-        status: "Submitted",
-        time: formatDateWithTime(new Date(submitted?.time)),
-        name:submitted?.name
-      });
-    } else {
-      setSubmit(null);
-    }
-
-    if (accORrejORcancel) {
-      if (accORrejORcancel?.acc !== null && accORrejORcancel?.rej === null && accORrejORcancel?.cancel === null ) {
-        setAccRejCancel({
-          status: "Accepted",
-          name: accORrejORcancel?.acc?.name,
-          time: formatDateWithTime(new Date(accORrejORcancel?.acc?.time)),
-        });
-      } else if (accORrejORcancel?.acc === null && accORrejORcancel?.rej !== null && accORrejORcancel?.cancel === null) {
-        setAccRejCancel({
-          status: "Rejected",
-          name: accORrejORcancel?.rej?.name,
-          time: formatDateWithTime(new Date(accORrejORcancel?.rej?.time)),
-        });
-      }else if(accORrejORcancel?.acc === null && accORrejORcancel?.rej === null && accORrejORcancel?.cancel !== null){
-        setAccRejCancel({
-          status: "Cancelled",
-          name: accORrejORcancel?.cancel?.name,
-          time: formatDateWithTime(new Date(accORrejORcancel?.cancel?.time)),
-        });
-      }
-    } else {
-      setAccRejCancel(null);
-    }
-
-    if (arrivedORcancel) {
-      if(arrivedORcancel?.arr !== null && arrivedORcancel?.cancel === null){
-        setArriveCancel({
-          status: "Arrived",
-          time: formatDateWithTime(new Date(arrivedORcancel?.arr?.time)),
-          name: arrivedORcancel?.arr?.name,
-        });
-      }else if(arrivedORcancel?.arr === null && arrivedORcancel?.cancel !== null){
-        setArriveCancel({
-          status: "Cancelled",
-          time: formatDateWithTime(new Date(arrivedORcancel?.cancel?.time)),
-          name: arrivedORcancel?.cancel?.name,
-        });
-      }
-      
-    } else {
-      setArriveCancel(null);
-    }
-
-    drawTimeline();
-  }, [submitted, accORrejORcancel, arrivedORcancel]);
-
   const mycanvas = useRef(null);
 
-  const drawTimeline = () => {
+  const drawTimeline = useCallback(() => {
     if (mycanvas.current) {
       const canvas = mycanvas.current as HTMLCanvasElement;
       canvas.height = 200;
@@ -96,7 +39,7 @@ function ReqTimeline(props: any) {
           } else if (accRejCancel?.status === "Rejected") {
             ctx.strokeStyle = "tomato";
             ctx.fillStyle = "red";
-          }else if(accRejCancel?.status === "Cancelled"){
+          } else if (accRejCancel?.status === "Cancelled") {
             ctx.strokeStyle = "orange";
             ctx.fillStyle = "orange";
           }
@@ -120,7 +63,7 @@ function ReqTimeline(props: any) {
           if (arriveCancel?.status === "Arrived") {
             ctx.strokeStyle = "green";
             ctx.fillStyle = "green";
-          }else if (arriveCancel?.status === "Cancelled") {
+          } else if (arriveCancel?.status === "Cancelled") {
             ctx.strokeStyle = "orange";
             ctx.fillStyle = "orange";
           }
@@ -187,7 +130,66 @@ function ReqTimeline(props: any) {
         }
       }
     }
-  };
+  }, [accRejCancel, arriveCancel, submit]);
+
+  useEffect(() => {
+    if (submitted) {
+      setSubmit({
+        status: "Submitted",
+        time: formatDateWithTime(new Date(submitted?.time)),
+        name: submitted?.name
+      });
+    } else {
+      setSubmit(null);
+    }
+
+    if (accORrejORcancel) {
+      if (accORrejORcancel?.acc !== null && accORrejORcancel?.rej === null && accORrejORcancel?.cancel === null) {
+        setAccRejCancel({
+          status: "Accepted",
+          name: accORrejORcancel?.acc?.name,
+          time: formatDateWithTime(new Date(accORrejORcancel?.acc?.time)),
+        });
+      } else if (accORrejORcancel?.acc === null && accORrejORcancel?.rej !== null && accORrejORcancel?.cancel === null) {
+        setAccRejCancel({
+          status: "Rejected",
+          name: accORrejORcancel?.rej?.name,
+          time: formatDateWithTime(new Date(accORrejORcancel?.rej?.time)),
+        });
+      } else if (accORrejORcancel?.acc === null && accORrejORcancel?.rej === null && accORrejORcancel?.cancel !== null) {
+        setAccRejCancel({
+          status: "Cancelled",
+          name: accORrejORcancel?.cancel?.name,
+          time: formatDateWithTime(new Date(accORrejORcancel?.cancel?.time)),
+        });
+      }
+    } else {
+      setAccRejCancel(null);
+    }
+
+    if (arrivedORcancel) {
+      if (arrivedORcancel?.arr !== null && arrivedORcancel?.cancel === null) {
+        setArriveCancel({
+          status: "Arrived",
+          time: formatDateWithTime(new Date(arrivedORcancel?.arr?.time)),
+          name: arrivedORcancel?.arr?.name,
+        });
+      } else if (arrivedORcancel?.arr === null && arrivedORcancel?.cancel !== null) {
+        setArriveCancel({
+          status: "Cancelled",
+          time: formatDateWithTime(new Date(arrivedORcancel?.cancel?.time)),
+          name: arrivedORcancel?.cancel?.name,
+        });
+      }
+
+    } else {
+      setArriveCancel(null);
+    }
+  }, [submitted, accORrejORcancel, arrivedORcancel]);
+
+  useEffect(() => {
+    drawTimeline();
+  }, [drawTimeline]);
 
   return <canvas id="mycanvas" ref={mycanvas} className=""></canvas>;
 }

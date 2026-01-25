@@ -86,7 +86,7 @@ function StudentRegister() {
         setIsRegistering(false);
         const { success } = data;
         if (success) {
-          let myLog:LOG = {date:new Date(),userId:rollno,username:studentData?.name as string,action:"Registered as student"}
+          let myLog: LOG = { date: new Date(), userId: rollno, username: studentData?.name as string, action: "Registered as student" }
           createLog(myLog)
           if (registerToast.current) {
             registerToast.current.show({
@@ -154,7 +154,7 @@ function StudentRegister() {
                 className="text-center font-bold text-lg"
                 disabled={isStudentExist ? true : false}
               />
-              {isStudentExist == null ? (
+              {isStudentExist === null ? (
                 <Button
                   className={`${isStudentExist}`}
                   disabled={!isRollnoValid || isValidating}
@@ -245,7 +245,7 @@ function StudentRegister() {
 
                 <div className="col-12 md:col-6 mt-3">
                   <FloatLabel>
-                  <InputText
+                    <InputText
                       id="stu-reg-roomNo"
                       type="number"
                       className="w-12"
@@ -380,21 +380,21 @@ function StudentRegister() {
                         Select Branch
                       </option>
                       <option value="AI&ML">AI & ML</option>
-                  <option value="BPHARMACY">B Pharmacy</option>
-                  <option value="CAI">CAI</option>
-                  <option value="CE">CIVIL</option>
-                  <option value="CS">CS (Cyber Security)</option>
-                  <option value="CSE">CSE</option>
-                  <option value="CSE-AI">CSE-AI</option>
-                  <option value="CSM(AI&ML)">CSM(AI&ML)</option>
-                  <option value="DS">DS (Data Science)</option>
-                  <option value="ECE">ECE</option>
-                  <option value="EEE">EEE</option>
-                  <option value="IT">IT</option>
-                  <option value="MBA">MBA</option>
-                  <option value="MCA">MCA</option>
-                  <option value="ME">MECH</option>
-                  <option value="PHARMD">Pharm D</option>
+                      <option value="BPHARMACY">B Pharmacy</option>
+                      <option value="CAI">CAI</option>
+                      <option value="CE">CIVIL</option>
+                      <option value="CS">CS (Cyber Security)</option>
+                      <option value="CSE">CSE</option>
+                      <option value="CSE-AI">CSE-AI</option>
+                      <option value="CSM(AI&ML)">CSM(AI&ML)</option>
+                      <option value="DS">DS (Data Science)</option>
+                      <option value="ECE">ECE</option>
+                      <option value="EEE">EEE</option>
+                      <option value="IT">IT</option>
+                      <option value="MBA">MBA</option>
+                      <option value="MCA">MCA</option>
+                      <option value="ME">MECH</option>
+                      <option value="PHARMD">Pharm D</option>
                     </select>
                   </div>
                 </div>
@@ -454,9 +454,9 @@ function StudentRegister() {
                           "stu-reg-password"
                         ) as HTMLInputElement | null;
                         if (ele) {
-                          if (ele.type == "text") {
+                          if (ele.type === "text") {
                             ele.type = "password";
-                          } else if (ele.type == "password") {
+                          } else if (ele.type === "password") {
                             ele.type = "text";
                           }
                         }
@@ -491,9 +491,9 @@ function StudentRegister() {
                           "stu-reg-cpassword"
                         ) as HTMLInputElement | null;
                         if (ele) {
-                          if (ele.type == "text") {
+                          if (ele.type === "text") {
                             ele.type = "password";
-                          } else if (ele.type == "password") {
+                          } else if (ele.type === "password") {
                             ele.type = "text";
                           }
                         }

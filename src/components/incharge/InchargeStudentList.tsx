@@ -120,6 +120,7 @@ function InchargeStudentList() {
             : "/images/Avatar.jpg"
         }
         className="w-6rem h-6rem shadow-2 border-round"
+        alt="Student Profile"
       />
     );
   };

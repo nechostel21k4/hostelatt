@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Card } from 'primereact/card';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+// import { Card } from 'primereact/card';
 import { Image } from 'primereact/image';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
@@ -51,11 +51,7 @@ const AnnouncementList: React.FC<AnnouncementListProps> = ({ refreshTrigger, hos
         { label: 'Girls Hostels', value: 'GH' }
     ];
 
-    useEffect(() => {
-        fetchAnnouncements();
-    }, [refreshTrigger, hostelId]);
-
-    const fetchAnnouncements = async () => {
+    const fetchAnnouncements = useCallback(async () => {
         try {
             setLoading(true);
             let url = `${server}/announcement/get`;
@@ -69,7 +65,11 @@ const AnnouncementList: React.FC<AnnouncementListProps> = ({ refreshTrigger, hos
         } finally {
             setLoading(false);
         }
-    };
+    }, [hostelId]);
+
+    useEffect(() => {
+        fetchAnnouncements();
+    }, [fetchAnnouncements]);
 
     const handleDelete = (id: string) => {
         confirmDialog({

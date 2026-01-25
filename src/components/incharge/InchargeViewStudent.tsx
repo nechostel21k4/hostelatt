@@ -3,12 +3,12 @@ import { Student } from "../interfaces/Student";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { FloatLabel } from "primereact/floatlabel";
-import { InputText } from "primereact/inputtext";
+// import { InputText } from "primereact/inputtext";
 import { AutoComplete, AutoCompleteCompleteEvent } from "primereact/autocomplete";
 import { Chip } from "primereact/chip";
 import ReqCard from "../student/ReqCard";
-import { getStudent, searchStudent, getStudentSuggestions } from "../../services/StudentService";
-import { formatDate } from "../interfaces/Date";
+import { searchStudent, getStudentSuggestions } from "../../services/StudentService";
+// import { formatDate } from "../interfaces/Date";
 
 function InchargeViewStudent() {
   const [student, setStudent] = useState<Student | null>(null);

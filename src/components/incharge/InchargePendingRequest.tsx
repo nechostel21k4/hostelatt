@@ -132,8 +132,8 @@ function InchargePendingRequest() {
   };
   const tableHeader = renderHeader();
 
-  const tableFooter = `Total : ${selectionOption === "Leaves" ? leaves.length : permissions.length
-    } ${selectionOption}`;
+  // const tableFooter = `Total : ${selectionOption === "Leaves" ? leaves.length : permissions.length
+  //   } ${selectionOption}`;
 
   const fromDateTemplate = (data: any) => {
     if (data.fromDate) {

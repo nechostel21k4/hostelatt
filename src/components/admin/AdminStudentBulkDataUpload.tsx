@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -24,6 +24,7 @@ function AdminStudentBulkDataUpload() {
 
   const admin = useContext(AdminContext);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [requiredKeys, setRequiredKeys] = useState<any>([
     "rollNo",
     "name",
@@ -97,7 +98,7 @@ function AdminStudentBulkDataUpload() {
       }
       setMissingKeys(missingKeys);
     }
-  }, [data]);
+  }, [data, requiredKeys]);
 
   const handleFileUpload = () => {
     const exactData = data?.filter((element) => element.rollNo !== "__");
@@ -117,81 +118,81 @@ function AdminStudentBulkDataUpload() {
       return newStudent;
     });
 
-    let previewTableData:any ;
+    let previewTableData: any;
 
-    if( result && result.length > 5){
-      previewTableData = result.slice(1,4)
-    }else if(result){
+    if (result && result.length > 5) {
+      previewTableData = result.slice(1, 4)
+    } else if (result) {
       previewTableData = result;
-    }else{
+    } else {
       previewTableData = []
     }
 
-    const accept = ()=>{
-    setIsUploading(true);
+    const accept = () => {
+      setIsUploading(true);
 
       UploadStudentBulkData(result)
-      .then((data) => {
-        setIsUploading(false);
-        const {added,message} = data;
+        .then((data) => {
+          setIsUploading(false);
+          const { added, message } = data;
 
-        if(added){
-          let myLog: LOG = {
-            date: new Date(),
-            userId: admin.eid,
-            username: admin.name as string,
-            action: `Added Multiple Students (${message})`,
-          };
-          createLog(myLog);
-          if(uploadDataToast.current){
-            uploadDataToast.current.show({
-              severity: "success",
-              summary: "Data Uploaded Successfully",
-              detail: message,
-            })
-          }
-        }else{
-          if(uploadDataToast.current){
-            uploadDataToast.current.show({
-              severity: "error",
-              summary: "Data Upload Failed",
-              detail: message,
-            })
-          }
+          if (added) {
+            let myLog: LOG = {
+              date: new Date(),
+              userId: admin.eid,
+              username: admin.name as string,
+              action: `Added Multiple Students (${message})`,
+            };
+            createLog(myLog);
+            if (uploadDataToast.current) {
+              uploadDataToast.current.show({
+                severity: "success",
+                summary: "Data Uploaded Successfully",
+                detail: message,
+              })
+            }
+          } else {
+            if (uploadDataToast.current) {
+              uploadDataToast.current.show({
+                severity: "error",
+                summary: "Data Upload Failed",
+                detail: message,
+              })
+            }
 
-        }
-      })
-      .catch((err) => console.log("something went wrong", err));
+          }
+        })
+        .catch((err) => console.log("something went wrong", err));
 
     }
-    const reject = ()=>{
+    const reject = () => {
 
     }
 
     confirmDialog({
-          message: <PreviewTable previewTableData={previewTableData}></PreviewTable>,
-          header: "Student Data Preview",
-          defaultFocus: "reject",
-          acceptClassName: "p-button-success",
-          accept,
-          reject,
-          id: "adminholidaymessagedialog",
-        });
+      message: <PreviewTable previewTableData={previewTableData}></PreviewTable>,
+      header: "Student Data Preview",
+      defaultFocus: "reject",
+      acceptClassName: "p-button-success",
+      accept,
+      reject,
+      id: "adminholidaymessagedialog",
+    });
 
-    
+
   };
 
   return (
     <>
-    <ConfirmDialog
-              id="studentbulkdataupload"
-              className="w-10 md:w-6 "
-            />
+      <ConfirmDialog
+        id="studentbulkdataupload"
+        className="w-10 md:w-6 "
+      />
       <div className="instructions">
         <strong style={{ color: "red" }}>Requirements : </strong>
         <ul>
           <li>
-            Download Template.&nbsp;<a  style={{fontSize:"large"}} target="_blank" href="https://docs.google.com/spreadsheets/d/1dR4f4iCOTI2sJrPDG_k8wex0hENgn67T/edit?usp=sharing&ouid=100065442155014362182&rtpof=true&sd=true">click here</a>
+            Download Template.&nbsp;<a style={{ fontSize: "large" }} target="_blank" rel="noreferrer" href="https://docs.google.com/spreadsheets/d/1dR4f4iCOTI2sJrPDG_k8wex0hENgn67T/edit?usp=sharing&ouid=100065442155014362182&rtpof=true&sd=true">click here</a>
           </li>
           <li>
             File should be in{" "}
@@ -202,8 +203,8 @@ function AdminStudentBulkDataUpload() {
             {isExcelFormat !== null &&
               (isExcelFormat ? (
                 <i
-                className="pi pi-check-circle"
-                style={{ color: "green" }}
+                  className="pi pi-check-circle"
+                  style={{ color: "green" }}
                 ></i>
               ) : (
                 <i className="pi pi-times-circle" style={{ color: "red" }}></i>
@@ -253,7 +254,7 @@ function AdminStudentBulkDataUpload() {
       </div>
 
       <div className="grid">
-      <Toast ref={uploadDataToast} position="bottom-center" />
+        <Toast ref={uploadDataToast} position="bottom-center" />
 
         <div className="col-12 md:col-6 lg:col-4 m-3">
           <input type="file" accept=".xls,.xlsx" onChange={handleFileChange} />

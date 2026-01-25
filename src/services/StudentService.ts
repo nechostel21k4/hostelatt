@@ -1,6 +1,5 @@
-import axios from "axios";
 import { Leave, Permission } from "../components/interfaces/Request";
-import api, { getExistingToken } from "../utils/Api";
+import api from "../utils/Api";
 import { Student } from "../components/interfaces/Student";
 
 const server = process.env.REACT_APP_SERVER;

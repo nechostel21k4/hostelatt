@@ -81,8 +81,8 @@ const AdminMarquee = () => {
                     {isEnabled ? (
                         <div className="w-full overflow-hidden bg-primary text-white p-2 border-round">
                             <div className="white-space-nowrap overflow-hidden text-overflow-clip">
-                                {/* @ts-ignore */}
-                                <marquee>{text}</marquee>
+                                {/* eslint-disable-next-line jsx-a11y/no-distracting-elements */}
+                                {React.createElement('marquee', {}, text)}
                             </div>
                         </div>
                     ) : (

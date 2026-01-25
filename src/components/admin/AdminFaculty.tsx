@@ -26,7 +26,7 @@ function AdminFaculty() {
     setIsUpdating(true);
     UpdateFacultyData(facUsername, facPassword).then((data) => {
       setIsUpdating(false);
-      const { success, message } = data;
+      const { success } = data;
       if (success) {
         let myLog: LOG = {
           date: new Date(),
@@ -131,9 +131,9 @@ function AdminFaculty() {
                     "faculty-password"
                   ) as HTMLInputElement | null;
                   if (ele) {
-                    if (ele.type == "text") {
+                    if (ele.type === "text") {
                       ele.type = "password";
-                    } else if (ele.type == "password") {
+                    } else if (ele.type === "password") {
                       ele.type = "text";
                     }
                   }

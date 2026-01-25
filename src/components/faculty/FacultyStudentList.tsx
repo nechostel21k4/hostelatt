@@ -7,14 +7,14 @@ import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import React, {
   useCallback,
-  useContext,
+  // useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import { getAllStudents } from "../../services/InchargeService";
 import { Student } from "../interfaces/Student";
-import {  ConfirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 
 
@@ -220,11 +220,11 @@ function FacultyStudentList() {
               </div>
             </div>
 
-             <div className="col-12 sm:col-6 mt-3">
+            <div className="col-12 sm:col-6 mt-3">
               <Button
                 type="submit"
                 label={isListSearching ? "Searching" : "Search"}
-                disabled={ isListSearching}
+                disabled={!isFormValid || isListSearching}
                 className="w-full sm:w-auto text-center"
               >
                 &nbsp;&nbsp;

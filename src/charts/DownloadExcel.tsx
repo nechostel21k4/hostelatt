@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import * as XLSX from "xlsx";
 
 interface Columns {
@@ -84,7 +84,7 @@ const DownloadExcel = (props: any) => {
     <>
       <h4 className="special-font">
         Selected Students :{" "}
-        <span className={selectedStudents.length?"text-primary":"text-red-500"} >{selectedStudents.length?selectedStudents.length: "Select atleast one student"}</span>
+        <span className={selectedStudents.length ? "text-primary" : "text-red-500"} >{selectedStudents.length ? selectedStudents.length : "Select atleast one student"}</span>
       </h4>
       <h4 className="special-font">Select Columns :</h4>
       <div className="grid">
@@ -108,7 +108,7 @@ const DownloadExcel = (props: any) => {
         })}
 
         <div className="flex align-items-center justify-content-end w-11 mt-2">
-          <Button label="Download" disabled={selectedStudents.length<1} text raised onClick={handleDownload} />
+          <Button label="Download" disabled={selectedStudents.length < 1} text raised onClick={handleDownload} />
         </div>
       </div>
     </>

@@ -9,7 +9,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Leave, Permission } from "../interfaces/Request";
 import { formatDate, formatDateWithTime, formatTime } from "../interfaces/Date";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import {
   ArriveRequest,
@@ -20,7 +20,7 @@ import { createLog } from "../../services/AdminService";
 import { LOG } from "../interfaces/Log";
 import { CancelRequest } from "../../services/StudentService";
 
-import { Nullable } from "primereact/ts-helpers";
+// import { Nullable } from "primereact/ts-helpers";
 
 function AdminActiveRequests() {
   const admin = useContext(AdminContext);
@@ -455,6 +455,7 @@ function AdminActiveRequests() {
             : "/images/Avatar.jpg"
         }
         className="w-6rem h-6rem shadow-2 border-round"
+        alt="Student Profile"
       />
     );
   };

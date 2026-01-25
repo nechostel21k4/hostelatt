@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import InchargeCard from "../student/InchargeCard";
-import { Card } from "primereact/card";
+// import { Card } from "primereact/card";
 import { InchargeContext } from "./InchargeHome";
 
 

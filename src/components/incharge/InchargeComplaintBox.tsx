@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -38,18 +38,18 @@ const InchargeComplaintBox = () => {
         { label: 'Issue Canceled', value: 'Issue Canceled' }
     ];
 
-    const fetchComplaints = async () => {
+    const fetchComplaints = useCallback(async () => {
         setLoading(true);
         const data = await getComplaints(filters.college, filters.status);
         if (data && data.success) {
             setComplaints(data.data);
         }
         setLoading(false);
-    };
+    }, [filters]);
 
     useEffect(() => {
         fetchComplaints();
-    }, [filters]);
+    }, [fetchComplaints]);
 
     const handleStatusUpdate = async (id: string, newStatus: string) => {
         const result = await updateComplaintStatus(id, newStatus, incharge?.name || 'Incharge');

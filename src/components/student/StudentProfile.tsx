@@ -10,7 +10,7 @@ import { createLog } from "../../services/AdminService";
 import { LOG } from "../interfaces/Log";
 
 function StudentProfile() {
-  const { student, setStudent } = useContext(StudentContext);
+  const { student } = useContext(StudentContext);
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -139,8 +139,8 @@ function StudentProfile() {
               <div className="status">
                 <Chip
                   className={`${student?.currentStatus === "HOSTEL"
-                      ? "bg-green-500"
-                      : "bg-orange-500"
+                    ? "bg-green-500"
+                    : "bg-orange-500"
                     } text-white-alpha-90`}
                   icon={"pi pi-circle-fill"}
                   label={student?.currentStatus}

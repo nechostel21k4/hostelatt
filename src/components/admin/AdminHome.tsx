@@ -1,14 +1,12 @@
 import styles from "../styles/home.module.css";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import {
-  Link,
   NavLink,
   Outlet,
   useLocation,
   useNavigate,
-  useParams,
 } from "react-router-dom";
 import { Dialog } from "primereact/dialog";
 import { useAdminAuth } from "../../utils/AdminAuth";
@@ -27,7 +25,6 @@ export const AdminConsumer = AdminContext.Consumer;
 function AdminHome() {
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const [cameraVisible, setCameraVisible] = useState<boolean>(false);
-  const params = useParams();
 
   const [admin, setAdmin] = useState<Admin>();
   const { adminLogout } = useAdminAuth();
@@ -72,7 +69,7 @@ function AdminHome() {
         adminLogout();
       }, 4000);
     }
-  }, [isSessionExpired]);
+  }, [isSessionExpired, adminLogout]);
 
   const handleLogout = () => {
     const reject = () => { };

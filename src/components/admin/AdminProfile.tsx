@@ -17,7 +17,7 @@ import {
   getAdmin,
   updateAdmin,
 } from "../../services/AdminService";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { LOG } from "../interfaces/Log";
 import { useAdminAuth } from "../../utils/AdminAuth";
@@ -117,7 +117,7 @@ function AdminProfile() {
           });
       }
     };
-    const reject = () => {};
+    const reject = () => { };
 
     confirmDialog({
       message: "Do you want to Update this record?",
@@ -165,7 +165,7 @@ function AdminProfile() {
         }
       });
     };
-    const reject = () => {};
+    const reject = () => { };
 
     confirmDialog({
       message: "Do you want to delete this record?",

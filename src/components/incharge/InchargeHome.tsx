@@ -8,7 +8,7 @@ import {
   Outlet,
   useLocation,
   useNavigate,
-  useParams,
+  // useParams,
 } from "react-router-dom";
 import { Incharge } from "../interfaces/Incharge";
 import { getIncharge } from "../../services/InchargeService";
@@ -25,7 +25,7 @@ export const InchargeConsumer = InchargeContext.Consumer;
 function InchargeHome() {
   const [visible, setVisible] = useState(false);
 
-  const params = useParams();
+  // const params = useParams();
 
   const [incharge, setIncharge] = useState<Incharge>();
 
@@ -71,7 +71,7 @@ function InchargeHome() {
         inchargeLogout();
       }, 4000);
     }
-  }, [isSessionExpired]);
+  }, [isSessionExpired, inchargeLogout]);
 
   const handleLogout = () => {
     let result = window.confirm("Are you sure you want to Logout?");

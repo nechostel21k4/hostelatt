@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Card } from "primereact/card";
 import { Chip } from "primereact/chip";
 import ReqTimeline from "./ReqTimeline";
 import { formatDate, formatDateWithTime, formatTime } from "../interfaces/Date";
 import { Button } from "primereact/button";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Image } from "primereact/image";
 import { getProfileImage } from "../../services/ImageService";
 import { Leave, Permission } from "../interfaces/Request";
@@ -39,7 +39,7 @@ function ReqCard(props: any) {
 
   const msgs = useRef<Messages>(null);
 
-  const GenerateQR = async () => {
+  const GenerateQR = useCallback(async () => {
     try {
       const result = await QRCode.toDataURL(
         request?.id ? request?.id : "Failed to Generate QR"
@@ -48,7 +48,7 @@ function ReqCard(props: any) {
     } catch (err) {
       console.log("Error while creating QR code", err);
     }
-  };
+  }, [request?.id]);
 
   useEffect(() => {
     getProfileImage(request?.rollNo)
@@ -109,7 +109,7 @@ function ReqCard(props: any) {
         closable: false,
       });
     }
-  }, [request]);
+  }, [request, GenerateQR]);
 
   useEffect(() => {
     if (request?.type === "LEAVE") {

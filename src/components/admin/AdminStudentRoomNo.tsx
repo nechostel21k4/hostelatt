@@ -52,6 +52,7 @@ function AdminStudentRoomNo() {
       <img
         src={image?.imagePath ? image?.imagePath : "/images/Avatar.jpg"}
         className="w-6rem h-6rem shadow-2 border-round"
+        alt="Student Profile"
       />
     );
   };

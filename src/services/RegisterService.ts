@@ -1,10 +1,9 @@
-import axios from "axios";
 import { Student } from "../components/interfaces/Student";
 import { Incharge } from "../components/interfaces/Incharge";
 import { Admin } from "../components/interfaces/Admin";
 import api from "../utils/Api";
 
-const server = process.env.REACT_APP_SERVER;
+// const server = process.env.REACT_APP_SERVER;
 
 export { };
 

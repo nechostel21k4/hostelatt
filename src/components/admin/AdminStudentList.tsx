@@ -6,7 +6,7 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import React, {
-  SetStateAction,
+  //   SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -15,7 +15,7 @@ import React, {
 } from "react";
 import { getAllStudents } from "../../services/InchargeService";
 import { Student } from "../interfaces/Student";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import {
   createLog,
@@ -378,6 +378,7 @@ function AdminStudentList() {
       <img
         src={image?.imagePath ? image?.imagePath : "/images/Avatar.jpg"}
         className="w-6rem h-6rem shadow-2 border-round"
+        alt="Student Profile"
       />
     );
   };

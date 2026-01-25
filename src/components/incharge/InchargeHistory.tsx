@@ -1,5 +1,5 @@
 import { Card } from "primereact/card";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
@@ -30,9 +30,8 @@ function History() {
     Permission | Leave | null
   >(null);
 
-  const tableFooter = `Total : ${
-    selectionOption === "Leaves" ? leaves.length : permissions.length
-  } ${selectionOption}`;
+  const tableFooter = `Total : ${selectionOption === "Leaves" ? leaves.length : permissions.length
+    } ${selectionOption}`;
 
 
   const renderHeader = () => {
@@ -193,17 +192,17 @@ function History() {
       });
   };
 
-  const validateSearchForm = () => {
+  const validateSearchForm = useCallback(() => {
     setIsSearchFormValid(false);
     const isRollValid = /^[a-zA-Z0-9]{10}$/.test(stuRollNumber);
     if (isRollValid) {
       setIsSearchFormValid(true);
     }
-  };
+  }, [stuRollNumber]);
 
   useEffect(() => {
     validateSearchForm();
-  }, [stuRollNumber]);
+  }, [stuRollNumber, validateSearchForm]);
 
   const requestIDTemplate = (request: Permission | Leave) => {
     return (
@@ -232,7 +231,7 @@ function History() {
           header="Request Details"
           visible={showRequestCard}
           position="top"
-          style={{ overflow:"scroll",height:"100%" }}
+          style={{ overflow: "scroll", height: "100%" }}
 
           onHide={() => {
             setShowRequestCard(false);
@@ -261,14 +260,14 @@ function History() {
             </div>
             <div className="col-12 sm:col-6  mt-3">
               <Button
-              label={isSearching?"Searching":"Search"}
-              className="text-center w-full sm:w-auto"
+                label={isSearching ? "Searching" : "Search"}
+                className="text-center w-full sm:w-auto"
                 type="submit"
                 disabled={!isSearchFormValid || isSearching}
               >
                 &nbsp;&nbsp;
                 {isSearching && <i className="pi pi-spin pi-spinner"></i>}
-                
+
               </Button>
             </div>
           </form>

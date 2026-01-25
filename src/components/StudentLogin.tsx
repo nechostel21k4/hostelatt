@@ -42,7 +42,7 @@ function StudentLogin() {
     } else {
       studentLogout()
     }
-  }, [Navigate]);
+  }, [Navigate, studentLogout]);
 
   const handleStudentSigninForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -158,9 +158,9 @@ function StudentLogin() {
                       "stu-password"
                     ) as HTMLInputElement | null;
                     if (ele) {
-                      if (ele.type == "text") {
+                      if (ele.type === "text") {
                         ele.type = "password";
-                      } else if (ele.type == "password") {
+                      } else if (ele.type === "password") {
                         ele.type = "text";
                       }
                     }

@@ -121,8 +121,8 @@ function InchargeActiveRequest() {
   };
   const tableHeader = renderHeader();
 
-  const tableFooter = `Total : ${selectionOption === "Leaves" ? leaves.length : permissions.length
-    } ${selectionOption}`;
+  // const tableFooter = `Total : ${selectionOption === "Leaves" ? leaves.length : permissions.length
+  //   } ${selectionOption}`;
 
   const fromDateTemplate = (data: any) => {
     if (data.fromDate) {
@@ -453,6 +453,7 @@ function InchargeActiveRequest() {
             : "/images/Avatar.jpg"
         }
         className="w-6rem h-6rem shadow-2 border-round"
+        alt="Student Profile"
       />
     );
   };

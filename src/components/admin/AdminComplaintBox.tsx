@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { confirmDialog } from 'primereact/confirmdialog';
 import { getComplaints, updateComplaintStatus, deleteComplaint } from '../../services/AdminService';
 import { AdminContext } from './AdminHome';
 import { formatDateWithTime } from '../interfaces/Date';
@@ -39,18 +39,18 @@ const AdminComplaintBox = () => {
         { label: 'Issue Canceled', value: 'Issue Canceled' }
     ];
 
-    const fetchComplaints = async () => {
+    const fetchComplaints = useCallback(async () => {
         setLoading(true);
         const data = await getComplaints(filters.college, filters.status);
         if (data && data.success) {
             setComplaints(data.data);
         }
         setLoading(false);
-    };
+    }, [filters]);
 
     useEffect(() => {
         fetchComplaints();
-    }, [filters]);
+    }, [fetchComplaints]);
 
     const handleStatusUpdate = async (id: string, newStatus: string) => {
         const result = await updateComplaintStatus(id, newStatus, admin?.name || 'Admin');

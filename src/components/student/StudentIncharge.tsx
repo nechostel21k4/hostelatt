@@ -2,12 +2,12 @@ import { Card } from "primereact/card";
 import React, { useContext, useEffect, useState } from "react";
 import InchargeCard from "./InchargeCard";
 import { Incharge } from "../interfaces/Incharge";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { getAllIncharges } from "../../services/StudentService";
 import { StudentContext } from "./StudentHome";
 
 function StudentIncharge() {
-  const { student, setStudent } = useContext(StudentContext);
+  const { student } = useContext(StudentContext);
 
   const [incharges, setIncharges] = useState<Incharge[]>([]);
 

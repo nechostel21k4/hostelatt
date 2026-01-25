@@ -1,16 +1,10 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import React from "react";
-import { formatDate } from "../components/interfaces/Date";
+// import { formatDate } from "../components/interfaces/Date";
 
 const PreviewTable = ({ previewTableData }: { previewTableData: any[] }) => {
-  const fromDateTemplate = (data: any) => {
-    if (data.dob) {
-      const fromDate = formatDate(new Date(data?.dob));
-      return fromDate;
-    }
-    return "";
-  };
+
   return (
     <DataTable
       value={previewTableData}

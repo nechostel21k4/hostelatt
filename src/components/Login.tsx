@@ -84,7 +84,7 @@ function Login() {
         adminLogout();
       }
     }
-  }, [Navigate]);
+  }, [Navigate, adminLogout, facultyLogout, inchargeLogout]);
 
   const handleFacultySigninForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -275,9 +275,9 @@ function Login() {
                           "fac-password"
                         ) as HTMLInputElement | null;
                         if (ele) {
-                          if (ele.type == "text") {
+                          if (ele.type === "text") {
                             ele.type = "password";
-                          } else if (ele.type == "password") {
+                          } else if (ele.type === "password") {
                             ele.type = "text";
                           }
                         }
@@ -356,9 +356,9 @@ function Login() {
                           "inc-password"
                         ) as HTMLInputElement | null;
                         if (ele) {
-                          if (ele.type == "text") {
+                          if (ele.type === "text") {
                             ele.type = "password";
-                          } else if (ele.type == "password") {
+                          } else if (ele.type === "password") {
                             ele.type = "text";
                           }
                         }
@@ -445,9 +445,9 @@ function Login() {
                           "admin-password"
                         ) as HTMLInputElement | null;
                         if (ele) {
-                          if (ele.type == "text") {
+                          if (ele.type === "text") {
                             ele.type = "password";
-                          } else if (ele.type == "password") {
+                          } else if (ele.type === "password") {
                             ele.type = "text";
                           }
                         }

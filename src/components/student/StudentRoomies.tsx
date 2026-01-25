@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import RoomieCard from "./RoomieCard";
 import { StudentContext } from "./StudentHome";
-import { getAllIncharges, getMyRoomies } from "../../services/StudentService";
+import { getMyRoomies } from "../../services/StudentService";
 import { Card } from "primereact/card";
 
 interface Roomie {

@@ -8,7 +8,7 @@ import { Messages } from "primereact/messages";
 import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 import { Toast } from "primereact/toast";
 import { Nullable } from "primereact/ts-helpers";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState, useCallback } from "react";
 import { Student } from "../interfaces/Student";
 import { StudentContext } from "./StudentHome";
 import { Permission, Leave } from "../interfaces/Request";
@@ -40,7 +40,7 @@ function StudentLeave() {
 
   const { student, updateStudent } = useContext(StudentContext);
 
-  const ValidateForm = () => {
+  const ValidateForm = useCallback(() => {
     setIsFormValid(false);
 
     const isDateValid = date !== null && date && date.toString() !== "";
@@ -72,11 +72,11 @@ function StudentLeave() {
         setIsFormValid(true);
       }
     }
-  };
+  }, [date, fromDate, toDate, fromTime, toTime, reason, selectionOption]);
 
   useEffect(() => {
     ValidateForm();
-  }, [date, fromDate, fromTime, toDate, toTime, reason]);
+  }, [ValidateForm]);
 
   useEffect(() => {
     if (date && fromTime) {
@@ -85,6 +85,7 @@ function StudentLeave() {
     if (date && toTime) {
       setToTime(mergeDateTime(date as Date, toTime as Date));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
   useEffect(() => {

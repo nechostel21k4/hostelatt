@@ -4,11 +4,7 @@ import { useDrawingArea } from "@mui/x-charts/hooks";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 
-const data = [
-  { value: 150, label: "Hostel" },
-  { value: 30, label: "Leave" },
-  { value: 40, label: "Permission" },
-];
+
 
 const StyledText = styled("text")(({ theme }) => ({
   fill: theme.palette.text.primary,
@@ -28,7 +24,7 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 
 export default function PieChartt(props: any) {
   const { data, total } = props;
-  let pieData = data?data:[]
+  let pieData = data ? data : []
 
   return (
     <Box sx={{ height: 250, width: 400 }}>
@@ -43,7 +39,7 @@ export default function PieChartt(props: any) {
         }}
         series={[
           {
-            data:pieData,
+            data: pieData,
             innerRadius: 50,
             arcLabel: "value",
             paddingAngle: 5,

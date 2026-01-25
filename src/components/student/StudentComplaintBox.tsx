@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useCallback } from 'react';
 import { Card } from 'primereact/card';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
@@ -19,7 +19,7 @@ const StudentComplaintBox = () => {
     const context = useContext(StudentContext);
     const student = context ? context.student : null;
 
-    const fetchRoomComplaints = async () => {
+    const fetchRoomComplaints = useCallback(async () => {
         if (student?._id) {
             setLoading(true);
             const data = await getRoomComplaints(student._id);
@@ -28,11 +28,11 @@ const StudentComplaintBox = () => {
             }
             setLoading(false);
         }
-    };
+    }, [student?._id]);
 
     React.useEffect(() => {
         fetchRoomComplaints();
-    }, [student]);
+    }, [fetchRoomComplaints, student]);
 
     const handleSubmit = async () => {
         if (!student) {

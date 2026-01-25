@@ -25,7 +25,7 @@ import {
   SendHolidayMessage,
 } from "../../services/AdminService";
 import { AdminContext } from "./AdminHome";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { formatDate, formatDateWithTime } from "../interfaces/Date";
 import axios from "axios";
 import { LOG } from "../interfaces/Log";
@@ -103,8 +103,8 @@ function AdminHolidayMessage() {
       setIsSendingMessage(true);
 
       const messageToadd = `ప్రియమైన తల్లిదండ్రులకు, మీ పిల్లలు చదువుకుంటున్న ${JSON.parse(JSON.stringify(holidayMessage.college)).code === "ALL"
-          ? "NEC/NIT/NIPS"
-          : JSON.parse(JSON.stringify(holidayMessage.college)).code
+        ? "NEC/NIT/NIPS"
+        : JSON.parse(JSON.stringify(holidayMessage.college)).code
         } కళాశాలలో ${teluguOccasionName} సందర్భంగా ${formatDate(
           holidayMessage.fromDate as Date
         )} నుండి ${formatDate(
@@ -168,8 +168,8 @@ function AdminHolidayMessage() {
     const reject = () => { };
 
     const messageFORlog = `ప్రియమైన తల్లిదండ్రులకు, మీ పిల్లలు చదువుకుంటున్న ${holidayMessage.college === "ALL"
-        ? "NEC/NIT/NIPS"
-        : JSON.parse(JSON.stringify(holidayMessage.college)).code
+      ? "NEC/NIT/NIPS"
+      : JSON.parse(JSON.stringify(holidayMessage.college)).code
       } కళాశాలలో ${teluguOccasionName} సందర్భంగా ${formatDate(
         holidayMessage.fromDate as Date
       )} నుండి ${formatDate(

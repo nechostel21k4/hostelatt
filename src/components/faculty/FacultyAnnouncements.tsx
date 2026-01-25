@@ -4,6 +4,7 @@ import AnnouncementList from '../common/AnnouncementList';
 const FacultyAnnouncements = () => {
     // Refresh trigger isn't strictly necessary if we don't have add/edit, 
     // but useful if we wanted to add a manual refresh button later.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     return (

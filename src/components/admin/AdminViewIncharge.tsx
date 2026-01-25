@@ -1,5 +1,5 @@
 import { Button } from "primereact/button";
-import { Card } from "primereact/card";
+// import { Card } from "primereact/card";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import React, {
@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { Incharge } from "../interfaces/Incharge";
 import { Toast } from "primereact/toast";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import InchargeCard from "../student/InchargeCard";
 import {
   createLog,
@@ -101,7 +101,7 @@ function AdminViewIncharge(props: any) {
           });
       }
     };
-    const reject = () => {};
+    const reject = () => { };
 
     confirmDialog({
       message: "Do you want to Update this record?",
@@ -140,7 +140,7 @@ function AdminViewIncharge(props: any) {
         }
       });
     };
-    const reject = () => {};
+    const reject = () => { };
 
     confirmDialog({
       message: "Do you want to delete this record?",

@@ -2,9 +2,9 @@ import { Incharge } from "../components/interfaces/Incharge";
 import { Student } from "../components/interfaces/Student";
 import { LOG } from "../components/interfaces/Log";
 import { Admin } from "../components/interfaces/Admin";
-import api, { getExistingToken } from "../utils/Api";
+import api from "../utils/Api";
 
-const server = process.env.REACT_APP_SERVER;
+// const server = process.env.REACT_APP_SERVER;
 
 export const getAdmin = async (eid: string) => {
   try {

@@ -1,4 +1,3 @@
-import { updateStudentProfile } from "./StudentService";
 import api from "../utils/Api";
 
 

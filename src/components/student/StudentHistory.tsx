@@ -17,7 +17,7 @@ import { Dialog } from "primereact/dialog";
 import ReqCard from "./ReqCard";
 
 function History() {
-  const { student, updateStudent } = useContext(StudentContext);
+  const { student } = useContext(StudentContext);
 
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [leaves, setLeaves] = useState<Leave[]>([]);
@@ -26,9 +26,10 @@ function History() {
 
   const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
 
-  const tableFooter = `Total : ${
-    selectionOption === "Leaves" ? leaves.length : permissions.length
-  } ${selectionOption}`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const tableFooter = `Total : ${selectionOption === "Leaves" ? leaves.length : permissions.length
+    } ${selectionOption}`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   const [showRequestCard, setShowRequestCard] = useState<boolean>(false);
 
@@ -94,6 +95,7 @@ function History() {
     return "";
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const acceptedTime = (data: any) => {
     if (data.accepted) {
       const date = data?.accepted?.time;
@@ -103,6 +105,7 @@ function History() {
     return "";
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const rejectedTime = (data: any) => {
     if (data.rejected) {
       const date = data?.rejected?.time;
@@ -112,6 +115,7 @@ function History() {
     return "";
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const arrivedTime = (data: any) => {
     if (data.arrived) {
       const date = data?.arrived?.time;
@@ -121,6 +125,7 @@ function History() {
     return "";
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const acceptedName = (data: any) => {
     if (data.accepted) {
       const name = data?.accepted?.name;
@@ -129,6 +134,7 @@ function History() {
     return "";
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const rejectedName = (data: any) => {
     if (data.rejected) {
       const name = data?.rejected?.name;
@@ -137,6 +143,7 @@ function History() {
     return "";
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const arrivedName = (data: any) => {
     if (data.arrived) {
       const name = data?.arrived?.name;
@@ -257,9 +264,8 @@ function History() {
         </Card>
 
         <Card
-          title={`${selectionOption} : ${
-            selectionOption === "Leaves" ? leaves.length : permissions.length
-          }`}
+          title={`${selectionOption} : ${selectionOption === "Leaves" ? leaves.length : permissions.length
+            }`}
           className="mt-2 special-font"
         >
           {selectionOption === "Leaves" ? (
@@ -299,7 +305,7 @@ function History() {
                 body={toDateTemplate}
               ></Column>
               <Column field="reason" header="Reason"></Column>
-              
+
             </DataTable>
           ) : (
             <DataTable
@@ -312,7 +318,7 @@ function History() {
               tableStyle={{ minWidth: "50rem" }}
               selectionMode="single"
             >
-              
+
               <Column
                 field="id"
                 className="font-bold"
@@ -345,7 +351,7 @@ function History() {
                 body={toTimeTemplate}
               ></Column>
               <Column field="reason" header="Reason"></Column>
-              
+
             </DataTable>
           )}
         </Card>

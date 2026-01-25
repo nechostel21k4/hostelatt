@@ -14,7 +14,7 @@ import { InputText } from "primereact/inputtext";
 import { LOG } from "../interfaces/Log";
 import { createLog, deleteLogs, getLogs } from "../../services/AdminService";
 import { Divider } from "primereact/divider";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { AdminContext } from "./AdminHome";
 import * as XLSX from "xlsx";
@@ -40,7 +40,7 @@ function AdminLogs() {
     getLogs(date as Date)
       .then((data) => {
         setIsSearching(false);
-        data.sort((a: any,b:any)=>new Date(b.date).getTime()-new Date(a.date).getTime())
+        data.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
         setLogs(data);
       })
       .catch((err) => {
@@ -58,7 +58,7 @@ function AdminLogs() {
           onClick={() => {
             exportExcel()
           }}
-          disabled={logs?(logs.length>0?false:true):true}
+          disabled={logs ? (logs.length > 0 ? false : true) : true}
         />
         <IconField iconPosition="left">
           <InputIcon className="pi pi-search" />
@@ -146,7 +146,7 @@ function AdminLogs() {
                 detail: `${message} before ${displayPastDate()}`,
               });
             }
-          }else{
+          } else {
             if (logToast.current) {
               logToast?.current.show({
                 severity: "error",
@@ -166,7 +166,7 @@ function AdminLogs() {
       }, 2000);
     };
 
-    const reject = () => {};
+    const reject = () => { };
 
     confirmDialog({
       message: `Do you want to Delete logs before ${displayPastDate()} ?`,
@@ -181,13 +181,13 @@ function AdminLogs() {
   };
 
   const exportExcel = () => {
-   const worksheet = XLSX.utils.json_to_sheet(logs as LOG[]);
-   
-         const workbook = XLSX.utils.book_new();
-         XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-   
-         XLSX.writeFile(workbook, `NEC_HOSTEL_LOGS_(${formatDate(date as Date)}).xlsx`);
-};
+    const worksheet = XLSX.utils.json_to_sheet(logs as LOG[]);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    XLSX.writeFile(workbook, `NEC_HOSTEL_LOGS_(${formatDate(date as Date)}).xlsx`);
+  };
 
 
 

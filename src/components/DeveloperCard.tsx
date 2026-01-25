@@ -1,4 +1,4 @@
-import { Card } from "primereact/card";
+// import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -100,13 +100,16 @@ function DeveloperCard() {
               >
                 <i className="pi pi-linkedin"></i>
               </a>
-              <a target="_blank" href="" rel="noopener noreferrer">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a target="_blank" href="#" rel="noopener noreferrer">
                 <i className="pi pi-github"></i>
               </a>
-              <a target="_blank" href="" rel="noopener noreferrer">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a target="_blank" href="#" rel="noopener noreferrer">
                 <i className="pi pi-facebook"></i>
               </a>
-              <a target="_blank" href="" rel="noopener noreferrer">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a target="_blank" href="#" rel="noopener noreferrer">
                 <i className="pi pi-instagram"></i>
               </a>
             </div>
@@ -131,12 +134,15 @@ function DeveloperCard() {
               >
                 <i className="pi pi-linkedin"></i>
               </a>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a target="_blank" rel="noopener noreferrer">
                 <i className="pi pi-github"></i>
               </a>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a target="_blank" rel="noopener noreferrer">
                 <i className="pi pi-facebook"></i>
               </a>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a target="_blank" rel="noopener noreferrer">
                 <i className="pi pi-instagram"></i>
               </a>
@@ -145,7 +151,7 @@ function DeveloperCard() {
 
           <div className="p-card mt-5">
             <Galleria value={images} responsiveOptions={responsiveOptions} numVisible={5} style={{ maxWidth: '640px' }}
-              item={itemTemplate} showItemNavigators showItemNavigatorsOnHover showIndicators showThumbnails={false} circular autoPlay transitionInterval={2000} />
+              item={itemTemplate} thumbnail={thumbnailTemplate} showItemNavigators showItemNavigatorsOnHover showIndicators showThumbnails={false} circular autoPlay transitionInterval={2000} />
           </div>
         </div>
 

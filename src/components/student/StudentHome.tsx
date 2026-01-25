@@ -6,14 +6,15 @@ import {
   NavLink,
   Outlet,
   useLocation,
+
   useNavigate,
-  useParams,
+  // useParams,
 } from "react-router-dom";
 import { Student } from "../interfaces/Student";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import {
   getStudent,
-  updateStudentProfile,
+
 } from "../../services/StudentService";
 import { useStudentAuth } from "../../utils/StudentAuth";
 import { jwtDecode } from "jwt-decode";
@@ -26,9 +27,9 @@ export const StudentProvider = StudentContext.Provider;
 export const StudentConsumer = StudentContext.Consumer;
 
 function StudentHome() {
-  const { studentLogin, studentLogout } = useStudentAuth();
+  const { studentLogout } = useStudentAuth();
 
-  const params = useParams();
+  // const params = useParams();
 
   const [sidenavVisible, setSidenavVisible] = useState(false);
 
@@ -76,7 +77,7 @@ function StudentHome() {
         studentLogout();
       }, 4000);
     }
-  }, [isSessionExpired]);
+  }, [isSessionExpired, studentLogout]);
 
   const updateStudent = (student: Student) => {
     setStudent(student)

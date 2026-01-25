@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -7,10 +7,10 @@ import { Calendar } from 'primereact/calendar';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
 import { API_BASE_URL } from '../../config';
 
-import { Dialog } from 'primereact/dialog';
+// import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { saveAs } from 'file-saver';
 import AttendanceSettingsModal from './AttendanceSettingsModal';
@@ -177,12 +177,22 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
         }
     };
 
-    useEffect(() => {
-        refreshData();
+    // Refresh Logic
+    const refreshData = useCallback(() => {
+        fetchAttendance();
+        fetchRegistrationStatus();
+        fetchRegistrationStatus();
+        fetchDailyLeaves();
+        fetchUpcomingLeaves();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDate, selectedHostelType]);
 
+    useEffect(() => {
+        refreshData();
+    }, [refreshData]);
+
     // Derived State
-    const allAttendanceIds = new Set(attendanceData.map((a: any) => a.studentId));
+    // const allAttendanceIds = new Set(attendanceData.map((a: any) => a.studentId));
 
     // 1. Present List: Status is Present, Late, or Permission (Checked in attendance)
     // ADDED: 'ARRIVED' and 'arrived' to include them in present list so they don't show up in Absent/Outing
@@ -372,15 +382,6 @@ const AttendanceDashboard = ({ preSelectedHostel, readOnly = false }: Attendance
             console.error("Error Response:", error.response);
             toast.current?.show({ severity: 'error', summary: 'Error', detail: `Failed to save: ${error.response?.data?.message || error.message}` });
         }
-    };
-
-    // Refresh Logic
-    const refreshData = () => {
-        fetchAttendance();
-        fetchRegistrationStatus();
-        fetchRegistrationStatus();
-        fetchDailyLeaves();
-        fetchUpcomingLeaves();
     };
 
     return (

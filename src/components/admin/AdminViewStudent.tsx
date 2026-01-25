@@ -1,7 +1,7 @@
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
@@ -16,7 +16,7 @@ import React, {
   useState,
 } from "react";
 import { Student } from "../interfaces/Student";
-import { getStudent, searchStudent, getStudentSuggestions } from "../../services/StudentService";
+import { searchStudent, getStudentSuggestions } from "../../services/StudentService";
 import ReqCard from "../student/ReqCard";
 import { Chip } from "primereact/chip";
 import {
@@ -247,7 +247,7 @@ function AdminViewStudent() {
     } else {
       setIsUpdateFormValid(false);
     }
-  }, [student]);
+  }, [student, rollNumber]);
 
   useEffect(() => {
     validateUpdateForm();
