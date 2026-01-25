@@ -92,24 +92,21 @@ const InchargeComplaintBox = () => {
                     severity="success"
                     tooltip="Issue Solved"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Solved')}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                 />
                 <Button
                     icon="pi pi-exclamation-circle"
                     severity="warning"
                     tooltip="Issue Recognized"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Recognized')}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                 />
                 <Button
                     icon="pi pi-times"
                     severity="danger"
                     tooltip="Issue Canceled"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Canceled')}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                 />
             </div>
         );
@@ -140,8 +137,7 @@ const InchargeComplaintBox = () => {
                     <Button
                         onClick={fetchComplaints}
                         tooltip="Refresh"
-                        rounded
-                        outlined
+                        className="p-button-rounded p-button-outlined"
                         icon="pi pi-refresh"
                     />
                 </div>

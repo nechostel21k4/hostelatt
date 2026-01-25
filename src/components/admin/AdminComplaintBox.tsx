@@ -103,8 +103,7 @@ const AdminComplaintBox = () => {
                         severity="danger"
                         tooltip="Delete"
                         onClick={() => handleDelete(rowData._id)}
-                        rounded
-                        text
+                        className="p-button-rounded p-button-text"
                         icon="pi pi-trash"
                     />
                 </div>
@@ -117,32 +116,28 @@ const AdminComplaintBox = () => {
                     severity="success"
                     tooltip="Issue Solved"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Solved')}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                     icon="pi pi-check"
                 />
                 <Button
                     severity="warning"
                     tooltip="Issue Recognized"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Recognized')}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                     icon="pi pi-exclamation-circle"
                 />
                 <Button
                     severity="danger"
                     tooltip="Issue Canceled"
                     onClick={() => handleStatusUpdate(rowData._id, 'Issue Canceled')}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                     icon="pi pi-times"
                 />
                 <Button
                     severity="danger"
                     tooltip="Delete"
                     onClick={() => handleDelete(rowData._id)}
-                    rounded
-                    text
+                    className="p-button-rounded p-button-text"
                     icon="pi pi-trash"
                 />
             </div>
@@ -173,8 +168,7 @@ const AdminComplaintBox = () => {
                     <Button
                         onClick={fetchComplaints}
                         tooltip="Refresh"
-                        rounded
-                        outlined
+                        className="p-button-rounded p-button-outlined"
                         icon="pi pi-refresh"
                     />
                 </div>

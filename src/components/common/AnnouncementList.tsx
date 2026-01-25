@@ -224,7 +224,7 @@ const AnnouncementList: React.FC<AnnouncementListProps> = ({ refreshTrigger, hos
                     <div className="flex flex-column gap-2">
                         <label>Change Image (Optional)</label>
                         <FileUpload mode="basic" name="image" accept="image/*" maxFileSize={5000000} onSelect={(e) => {
-                            let file = e.files && e.files.length > 0 ? e.files[0] : null;
+                            let file: File | null = e.files && e.files.length > 0 ? e.files[0] : null;
                             const target = e.originalEvent?.target as HTMLInputElement;
                             if (!file && target && target.files && target.files.length > 0) {
                                 file = target.files[0];
