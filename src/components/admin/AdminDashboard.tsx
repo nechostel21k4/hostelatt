@@ -6,7 +6,7 @@ import {
   getTodayArrivedHostelStats,
   getCollegeYearWiseData,
 } from "../../services/InchargeService";
-import { Chip } from "primereact/chip";
+import { Chip } from "primereact/chip"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "primereact/button";
 import { Leave, Permission } from "../interfaces/Request";
 import { Dialog } from "primereact/dialog";

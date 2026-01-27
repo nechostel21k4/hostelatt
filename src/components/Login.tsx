@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Toast } from "primereact/toast";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 

@@ -3,7 +3,7 @@ import { InputOtp } from "primereact/inputotp";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   UpdateADMINNewPassword,
   VerifyADMINFPassMail,
@@ -17,22 +17,16 @@ function AdminForgotPassword() {
   const Navigate = useNavigate();
 
   const [EID, setEID] = useState<string>("");
-  const [isEIDValid, setIsEIDValid] = useState<boolean>(false);
-
   const [isAdminExist, setIsAdminExist] = useState<boolean | null>(null);
   const [isValidating, setisValidating] = useState<boolean>(false);
 
   const [otpToken, setOtpTokens] = useState<any>();
 
-  const [disableResendOTP, setDisableResendOTP] = useState<boolean>(false);
-
-  const [isOTPvalid, setIsOTPvalid] = useState<boolean>(false);
   const [isOTPcorrect, setIsOTPcorrect] = useState<boolean>(false);
   const [isOTPsubmitting, setIsOTPsubmitting] = useState<boolean>(false);
 
   const [incNewPassword, setIncNewPassword] = useState<string>("");
   const [incNewCPassword, setIncNewCPassword] = useState<string>("");
-  const [isPasswordsSame, setIsPasswordsSame] = useState<boolean>(true);
   const [isUpdatingNewPass, setIsUpdatingNewPass] = useState<boolean>(false);
 
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -44,32 +38,12 @@ function AdminForgotPassword() {
 
   useEffect(() => {
     if (resendOTPTime > 0) {
-      setDisableResendOTP(true);
       const interval = setInterval(() => {
         setResendOTPTime((prevValue) => prevValue - 1);
       }, 1000);
       return () => clearInterval(interval);
-    } else {
-      setDisableResendOTP(false);
     }
   }, [resendOTPTime]);
-
-  useEffect(() => {
-    if (otpToken) {
-      if (otpToken.toString().length === 4) {
-        setIsOTPvalid(true);
-      } else {
-        setIsOTPvalid(false);
-      }
-    }
-  }, [otpToken]);
-
-  useEffect(() => {
-    setIsPasswordsSame(false);
-    if (incNewPassword === incNewCPassword) {
-      setIsPasswordsSame(true);
-    }
-  }, [incNewPassword, incNewCPassword]);
 
   const handleAdminForgotPassFormSubmit = (
     event: React.FormEvent<HTMLFormElement>
@@ -145,8 +119,6 @@ function AdminForgotPassword() {
   };
 
   const handleResendOTP = () => {
-    setDisableResendOTP(true);
-
     VerifyADMINFPassMail(EID)
       .then((data) => {
         if (FPassToast.current) {

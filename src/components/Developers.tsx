@@ -21,66 +21,66 @@ interface DeveloperCardProps {
     isHorizontal?: boolean;
 }
 
+const developersV1: Developer[] = [
+    {
+        name: "Gangadhar Rongala",
+        role: "Full Stack Web Developer",
+        id: "21471A0521",
+        batch: "2021-2025",
+        dept: "Computer Science Engineering",
+        college: "Narasaraopeta Engineering College",
+        image: "/images/developers/21471A0521.png",
+        linkedin: "https://www.linkedin.com/in/gangadhar-rongala-b65bb122a/",
+        github: "#",
+        facebook: "#",
+        instagram: "#",
+    },
+    {
+        name: "Bhuvanesh Thotakura",
+        role: "Full Stack Web Developer",
+        id: "21471A05K4",
+        batch: "2021-2025",
+        dept: "Computer Science Engineering",
+        college: "Narasaraopeta Engineering College",
+        image: "/images/developers/21471A05K4.png",
+        linkedin: "https://www.linkedin.com/in/bhuvanesh-thotakura-079b37283/",
+        github: "#",
+        facebook: "#",
+        instagram: "#",
+    },
+];
+
+const developersV2: Developer[] = [
+    {
+        name: "JADAM SURYA TEJA",
+        role: "Full Stack Web Developer",
+        id: "22471A05M6",
+        batch: "2022-2026",
+        dept: "Computer Science Engineering",
+        college: "Narasaraopeta Engineering College",
+        image: "/images/developers/SuryaTeja.jpeg",
+        linkedin: "https://www.linkedin.com/in/jadamsurya",
+        github: "https://github.com/jadamsuryateja",
+        facebook: "",
+        instagram: "https://www.instagram.com/_s_u_r_y_a_.j_/",
+    },
+];
+
+const galleryImages = [
+    "/images/developers/hostel-2.jpg",
+    "/images/developers/hostel-1.jpg",
+    "/images/developers/hostel-4.jpg",
+    "/images/developers/hostel-3.jpg",
+];
+
 const Developers = () => {
     const navigate = useNavigate();
     const [selectedDev, setSelectedDev] = useState<Developer | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-    const developersV1: Developer[] = [
-        {
-            name: "Gangadhar Rongala",
-            role: "Full Stack Web Developer",
-            id: "21471A0521",
-            batch: "2021-2025",
-            dept: "Computer Science Engineering",
-            college: "Narasaraopeta Engineering College",
-            image: "/images/developers/21471A0521.png",
-            linkedin: "https://www.linkedin.com/in/gangadhar-rongala-b65bb122a/",
-            github: "#",
-            facebook: "#",
-            instagram: "#",
-        },
-        {
-            name: "Bhuvanesh Thotakura",
-            role: "Full Stack Web Developer",
-            id: "21471A05K4",
-            batch: "2021-2025",
-            dept: "Computer Science Engineering",
-            college: "Narasaraopeta Engineering College",
-            image: "/images/developers/21471A05K4.png",
-            linkedin: "https://www.linkedin.com/in/bhuvanesh-thotakura-079b37283/",
-            github: "#",
-            facebook: "#",
-            instagram: "#",
-        },
-    ];
-
-    const developersV2: Developer[] = [
-        {
-            name: "JADAM SURYA TEJA",
-            role: "Full Stack Web Developer",
-            id: "22471A05M6",
-            batch: "2022-2026",
-            dept: "Computer Science Engineering",
-            college: "Narasaraopeta Engineering College",
-            image: "/images/developers/SuryaTeja.jpeg",
-            linkedin: "https://www.linkedin.com/in/jadamsurya",
-            github: "https://github.com/jadamsuryateja",
-            facebook: "",
-            instagram: "https://www.instagram.com/_s_u_r_y_a_.j_/",
-        },
-    ];
-
-    const galleryImages = [
-        "/images/developers/hostel-2.jpg",
-        "/images/developers/hostel-1.jpg",
-        "/images/developers/hostel-4.jpg",
-        "/images/developers/hostel-3.jpg",
-    ];
-
-    const nextImage = () => {
+    const nextImage = React.useCallback(() => {
         setCurrentIndex((prev) => (prev + 1) % galleryImages.length);
-    };
+    }, []);
 
     const prevImage = () => {
         setCurrentIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
@@ -91,7 +91,7 @@ const Developers = () => {
             nextImage();
         }, 3000);
         return () => clearInterval(timer);
-    }, []);
+    }, [nextImage]);
 
     const DeveloperCard: React.FC<DeveloperCardProps> = ({ dev, isHorizontal = false }) => (
         <div
