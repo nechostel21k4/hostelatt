@@ -1,0 +1,164 @@
+.login-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.login-header {
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    /* Changed from blue to transparent/consistent with page */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.login-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(to right, #2c3e50, #3498db);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.login-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 60px;
+    /* Space for header */
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 450px;
+    /* Adjusted width */
+    position: relative;
+    z-index: 1;
+}
+
+.login-card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-sub-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.login-description {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+/* Custom Tabs Styling override */
+.custom-tabs .p-tabview-nav {
+    background: transparent !important;
+    border-bottom: 2px solid #e9ecef !important;
+}
+
+.custom-tabs .p-tabview-nav li .p-tabview-nav-link {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    color: #6c757d !important;
+    font-weight: 600 !important;
+    transition: all 0.3s !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    /* Reset margin */
+}
+
+.custom-tabs .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    color: #3498db !important;
+    border-color: #3498db !important;
+}
+
+.custom-tabs .p-tabview-panels {
+    background: transparent !important;
+    padding: 1.5rem 0 0 0 !important;
+}
+
+/* Input Styles */
+.p-inputgroup-addon {
+    background: #f8f9fa !important;
+    border-color: #ced4da !important;
+    color: #6c757d !important;
+}
+
+.p-inputtext {
+    border-color: #ced4da !important;
+}
+
+.p-inputtext:focus {
+    border-color: #3498db !important;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2) !important;
+}
+
+/* Button Styles */
+.p-button {
+    background: #3498db !important;
+    border-color: #3498db !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s !important;
+}
+
+.p-button:hover {
+    background: #2980b9 !important;
+    border-color: #2980b9 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.developers-btn {
+    /* Ensure this matches Developers.css or keep it here if Login only */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: #495057;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.developers-btn:hover {
+    background: white;
+    border-color: #3498db;
+    color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.2);
+}

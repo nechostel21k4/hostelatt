@@ -24,6 +24,7 @@ const Login = lazy(() => import("./components/Login"));
 const StudentRegister = lazy(() => import("./components/StudentRegister"));
 const StudentForgotPassword = lazy(() => import("./components/StudentForgotPassword"));
 const InchargeForgotPassword = lazy(() => import("./components/InchargeForgotPassword"));
+const Developers = lazy(() => import("./components/Developers"));
 
 // student components
 const StudentHome = lazy(() => import("./components/student/StudentHome"));
@@ -95,6 +96,24 @@ const FacultyAttendance = lazy(() => import("./components/faculty/FacultyAttenda
 
 const PageNotFound = lazy(() => import("./components/PageNotFound"));
 
+// Suppress specific Recharts warnings
+const originalError = console.error;
+const originalWarn = console.warn;
+
+console.error = (...args) => {
+  if (/width\(-1\) and height\(-1\) of chart should be greater than 0/.test(args[0])) {
+    return;
+  }
+  originalError(...args);
+};
+
+console.warn = (...args) => {
+  if (/width\(-1\) and height\(-1\) of chart should be greater than 0/.test(args[0])) {
+    return;
+  }
+  originalWarn(...args);
+};
+
 function App() {
   return (
     <>
@@ -113,6 +132,7 @@ function App() {
                   <Routes>
                     <Route path="/" element={<Navigate to="/admins" replace />} />
                     <Route path="/admins" element={<Login />} />
+                    <Route path="/developers" element={<Developers />} />
                     <Route
                       path="/studentregister"
                       element={<StudentRegister />}
