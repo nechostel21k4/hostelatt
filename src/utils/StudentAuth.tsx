@@ -18,18 +18,6 @@ export const StudentAuthProvider = ({ children }: any) => {
     setStudentExist(false);
     localStorage.removeItem("studentExist");
     localStorage.removeItem("studentToken");
-
-    // OneSignal Logout
-    if ((window as any).OneSignalDeferred) {
-      (window as any).OneSignalDeferred.push(async function (OneSignal: any) {
-        try {
-          await OneSignal.Logout();
-          console.log("OneSignal Logout Successful");
-        } catch (e) {
-          console.error("OneSignal Logout Failed", e);
-        }
-      });
-    }
   };
 
   return (
