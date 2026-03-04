@@ -171,6 +171,15 @@ function FacultyHome() {
                       <span className="font-medium">Attendance</span>
                     </NavLink>
                   </li>
+                  <li>
+                    <div
+                      className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-white hover:bg-white-alpha-20 transition-duration-150 transition-colors w-full"
+                      onClick={handleLogout}
+                    >
+                      <i className="pi pi-power-off mr-2"></i>
+                      <span className="font-medium">Logout</span>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
