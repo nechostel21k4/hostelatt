@@ -1,8 +1,4 @@
-import { Leave, Permission } from "../components/interfaces/Request";
 import api from "../utils/Api";
-import { Student } from "../components/interfaces/Student";
-
-
 
 // get current
 export const getStudent = async (rollNumber: string) => {
