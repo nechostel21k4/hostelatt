@@ -31,6 +31,7 @@ import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 
 interface FeesReminderMessage {
+  college: any;
   year: any;
   feeAmountNonAC: string;
   feeAmountAC: string;
@@ -38,6 +39,7 @@ interface FeesReminderMessage {
 
 function AdminFeesReminder() {
   const [feesMessage, setFeesMessage] = useState<FeesReminderMessage>({
+    college: "",
     year: "",
     feeAmountNonAC: "",
     feeAmountAC: "",
@@ -55,8 +57,19 @@ function AdminFeesReminder() {
     if (adminToken) {
       const decoded = jwtDecode<CustomAdminJwtPayload>(adminToken);
       getAdmin(decoded?.eid as string)
-        .then((data) => setAdmin(data))
-        .catch((err) => console.log(err));
+        .then((data) => {
+          if (data && data.name) {
+            setAdmin(data);
+          } else {
+            // Fallback: use eid from JWT as name if admin record not found
+            setAdmin((prev) => ({ ...prev, name: decoded?.eid as string, eid: decoded?.eid as string }));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          const decoded2 = jwtDecode<CustomAdminJwtPayload>(adminToken);
+          setAdmin((prev) => ({ ...prev, name: decoded2?.eid as string, eid: decoded2?.eid as string }));
+        });
     }
 
     GetAllFeesReminders()
@@ -68,7 +81,12 @@ function AdminFeesReminder() {
       });
   }, []);
 
-  // Removed colleges array
+  const colleges = [
+    { name: "ALL", code: "ALL" },
+    { name: "NEC", code: "NEC" },
+    { name: "NIT", code: "NIT" },
+    { name: "NIPS", code: "NIPS" },
+  ];
 
   const years = [
     { name: "ALL", code: "ALL" },
@@ -84,7 +102,10 @@ function AdminFeesReminder() {
 
   const validateForm = useCallback(() => {
     setIsFormValid(
-      feesMessage.year !== "" &&
+      feesMessage.college?.code !== undefined &&
+      feesMessage.college?.code !== "" &&
+      feesMessage.year?.code !== undefined &&
+      feesMessage.year?.code !== "" &&
       feesMessage.feeAmountNonAC.trim() !== "" &&
       feesMessage.feeAmountAC.trim() !== ""
     );
@@ -98,12 +119,13 @@ function AdminFeesReminder() {
     event.preventDefault();
 
     const accept = () => {
+      if (!feesMessage.year?.code) return;
       setIsSendingMessage(true);
       const messageToLog = `ప్రియమైన తల్లిదండ్రులకు, మీ అబ్బాయి/అమ్మాయి చదువుకుంటున్న హాస్టల్ యొక్క ${feesMessage.year.name} సంవత్సరానికి సంబంధించిన ఫీజు NON-AC: ${feesMessage.feeAmountNonAC}, AC: ${feesMessage.feeAmountAC} గా నిర్ణయించబడినది. NEC హాస్టల్స్ - GEDNEC`;
   
       SendFeesReminder({
         sendBy: admin.name,
-        college: "ALL",
+        college: feesMessage.college.code,
         year: feesMessage.year.code,
         feeAmountNonAC: feesMessage.feeAmountNonAC,
         feeAmountAC: feesMessage.feeAmountAC,
@@ -118,20 +140,20 @@ function AdminFeesReminder() {
               date: new Date(),
               userId: admin.eid,
               username: admin.name as string,
-              action: `Fees Reminder Sent: ${feesMessage.year.name} - NonAC:${feesMessage.feeAmountNonAC}, AC:${feesMessage.feeAmountAC}`,
+              action: `Fees Reminder Sent: ${feesMessage.college.name} - ${feesMessage.year.name} - NonAC:${feesMessage.feeAmountNonAC}, AC:${feesMessage.feeAmountAC}`,
             };
             createLog(myLog);
 
             feesToast.current?.show({
               severity: "success",
               summary: "Success",
-              detail: `Total ${data.totalMessagesSent} messages sent`,
+              detail: data.message || `Total ${data.totalMessagesSent} messages sent`,
             });
           } else {
             feesToast.current?.show({
               severity: "error",
               summary: "Failure",
-              detail: "Failed to send messages",
+              detail: data.message || "Failed to send messages",
             });
           }
         })
@@ -146,6 +168,10 @@ function AdminFeesReminder() {
         <p className="mb-2"><b>Example (Male Student):</b></p>
         <p className="p-2 bg-gray-100 border-round">
           ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అబ్బాయి</span> చదువుకుంటున్న హాస్టల్ యొక్క{" "}
+          <span style={{ color: "blue", fontWeight: "bold" }}>
+             {feesMessage.college.code === "ALL" ? "NEC/NIT/NIPS" : feesMessage.college.code}
+          </span>{" "}
+          కళాశాలలో{" "}
           <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.year.name}</span>{" "}
           సంవత్సరానికి సంబంధించిన ఫీజు NON-AC:{" "}
           <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountNonAC}</span>, AC:{" "}
@@ -156,6 +182,10 @@ function AdminFeesReminder() {
         <p className="mb-2"><b>Example (Female Student):</b></p>
         <p className="p-2 bg-gray-100 border-round">
           ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అమ్మాయి</span> చదువుకుంటున్న హాస్టల్ యొక్క{" "}
+          <span style={{ color: "blue", fontWeight: "bold" }}>
+             {feesMessage.college.code === "ALL" ? "NEC/NIT/NIPS" : feesMessage.college.code}
+          </span>{" "}
+          కళాశాలలో{" "}
           <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.year.name}</span>{" "}
           సంవత్సరానికి సంబంధించిన ఫీజు NON-AC:{" "}
           <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountNonAC}</span>, AC:{" "}
@@ -176,6 +206,7 @@ function AdminFeesReminder() {
 
   const sendToTemplate = (data: any) => (
     <>
+      <p><b>College:</b> {data?.college || "ALL"}</p>
       <p><b>Year:</b> {data?.year}</p>
     </>
   );
@@ -186,9 +217,21 @@ function AdminFeesReminder() {
 
       <Card title="Hostel Fees Reminder (Cost Notice)" className="special-font">
         <form className="grid" onSubmit={handleFeesReminderForm}>
-          {/* Removed College Dropdown as per 'dont mention collage' request */}
+          <div className="col-12 md:col-6 lg:col-3 mt-3">
+            <FloatLabel>
+              <Dropdown
+                inputId="fees-college"
+                value={feesMessage.college}
+                onChange={(e) => setFeesMessage({ ...feesMessage, college: e.value })}
+                options={colleges}
+                optionLabel="name"
+                className="w-full"
+              />
+              <label htmlFor="fees-college">College</label>
+            </FloatLabel>
+          </div>
 
-          <div className="col-12 md:col-4 mt-3">
+          <div className="col-12 md:col-6 lg:col-3 mt-3">
             <FloatLabel>
               <Dropdown
                 inputId="fees-year"
@@ -202,7 +245,7 @@ function AdminFeesReminder() {
             </FloatLabel>
           </div>
 
-          <div className="col-12 md:col-4 mt-3">
+          <div className="col-12 md:col-6 lg:col-3 mt-3">
             <FloatLabel>
               <InputText
                 id="fees-amount-nonac"
@@ -215,7 +258,7 @@ function AdminFeesReminder() {
             </FloatLabel>
           </div>
 
-          <div className="col-12 md:col-4 mt-3">
+          <div className="col-12 md:col-6 lg:col-3 mt-3">
             <FloatLabel>
               <InputText
                 id="fees-amount-ac"

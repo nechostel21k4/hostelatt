@@ -140,16 +140,16 @@ function AdminHolidayMessage() {
             if (holidayToast?.current) {
               holidayToast?.current.show({
                 severity: "success",
-                summary: `Success !`,
-                detail: `Total ${data.totalMessagesSent} messages sended`,
+                summary: `Success!`,
+                detail: data.message || `Total ${data.totalMessagesSent} messages sent`,
               });
             }
           } else {
             if (holidayToast?.current) {
               holidayToast?.current.show({
                 severity: "error",
-                summary: `Failure !`,
-                detail: `Failed to send messages`,
+                summary: `Failure!`,
+                detail: data.message || `Failed to send messages`,
               });
             }
           }
