@@ -1,6 +1,6 @@
 import { Card } from "primereact/card";
 import  { useEffect, useState } from "react";
-import InchargeCard from "../student/InchargeCard";
+import InchargeCard from "../common/InchargeCard";
 import { Admin } from "../interfaces/Admin";
 import { getAllAdmins } from "../../services/AdminService";
 

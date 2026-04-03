@@ -12,7 +12,7 @@ import React, {
 import { Incharge } from "../interfaces/Incharge";
 import { Toast } from "primereact/toast";
 import { confirmDialog } from "primereact/confirmdialog";
-import InchargeCard from "../student/InchargeCard";
+import InchargeCard from "../common/InchargeCard";
 import {
   createLog,
   deleteIncharge,

@@ -14,7 +14,7 @@ import { formatDate, formatDateWithTime, formatTime } from "../interfaces/Date";
 import { getStudentAllRequests } from "../../services/StudentService";
 import { FloatLabel } from "primereact/floatlabel";
 import { Dialog } from "primereact/dialog";
-import ReqCard from "../student/ReqCard";
+import ReqCard from "../common/ReqCard";
 
 function History() {
   const [permissions, setPermissions] = useState<Permission[]>([]);

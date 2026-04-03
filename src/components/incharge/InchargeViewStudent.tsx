@@ -6,7 +6,7 @@ import { FloatLabel } from "primereact/floatlabel";
 // import { InputText } from "primereact/inputtext";
 import { AutoComplete, AutoCompleteCompleteEvent } from "primereact/autocomplete";
 import { Chip } from "primereact/chip";
-import ReqCard from "../student/ReqCard";
+import ReqCard from "../common/ReqCard";
 import { searchStudent, getStudentSuggestions } from "../../services/StudentService";
 // import { formatDate } from "../interfaces/Date";
 

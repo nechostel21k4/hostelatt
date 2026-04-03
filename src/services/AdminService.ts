@@ -11,7 +11,7 @@ export const getAdmin = async (eid: string) => {
     const response = await api.get(`/admin/getadmin/${eid}`);
     return response.data;
   } catch (error) {
-    console.log("Error : while getting Admin details", error);
+    throw error;
   }
 };
 
@@ -29,7 +29,7 @@ export const updateIncharge = async (incharge: Incharge) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while Updating Incharge details", error);
+    throw error;
   }
 };
 
@@ -38,7 +38,7 @@ export const deleteIncharge = async (eid: string) => {
     const response = await api.delete(`/incharge/delete/${eid}`);
     return response.data;
   } catch (error) {
-    console.log("Error : while Deleting Incharge details", error);
+    throw error;
   }
 };
 
@@ -50,7 +50,7 @@ export const UploadStudentBulkData = async (students: any) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while Uploading student bulk data", error);
+    throw error;
   }
 };
 
@@ -62,7 +62,7 @@ export const adminUpdateStudentProfile = async (student: Student) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while updating student", error);
+    throw error;
   }
 };
 
@@ -71,7 +71,7 @@ export const deleteStudent = async (rollNo: string) => {
     const response = await api.delete(`/student/delete/${rollNo}`);
     return response.data;
   } catch (error) {
-    console.log("Error : while Deleting Student details", error);
+    throw error;
   }
 };
 
@@ -80,7 +80,7 @@ export const createLog = async (newLog: LOG) => {
     const response = await api.post(`/logs/add-log`, newLog);
     return response.data;
   } catch (error) {
-    console.log("Error : while creating a log", error);
+    throw error;
   }
 };
 
@@ -92,7 +92,7 @@ export const getLogs = async (date: Date) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while getting Log data", error);
+    throw error;
   }
 };
 
@@ -101,7 +101,7 @@ export const getAllAdmins = async () => {
     const response = await api.get(`/admin/getAdmins`);
     return response.data;
   } catch (error) {
-    console.log("Error : While getting all admins data", error);
+    throw error;
   }
 };
 
@@ -113,7 +113,7 @@ export const updateAdmin = async (admin: Admin) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while Updating Admin details", error);
+    throw error;
   }
 };
 
@@ -122,7 +122,7 @@ export const deleteAdmin = async (eid: string) => {
     const response = await api.delete(`/admin/delete/${eid}`);
     return response.data;
   } catch (error) {
-    console.log("Error : while Deleting Admin details", error);
+    throw error;
   }
 };
 
@@ -137,7 +137,7 @@ export const UpdateMultipleStudents = async (
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while Updating  Multiple students", error);
+    throw error;
   }
 };
 
@@ -148,7 +148,7 @@ export const DeleteMultipleStudents = async (rollNumbers: string[]) => {
     });
     return response.data;
   } catch (error) {
-    console.log("Error : while Deleting Multiple students", error);
+    throw error;
   }
 };
 
@@ -157,7 +157,7 @@ export const FetchFacultyData = async () => {
     const response = await api.get(`/faculty/get`);
     return response.data;
   } catch (error) {
-    console.log("Error : While fetching faculty credentials", error);
+    throw error;
   }
 };
 
@@ -169,7 +169,7 @@ export const UpdateFacultyData = async (username: string, password: string) => {
     );
     return response.data;
   } catch (error) {
-    console.log("Error : while Updating  Faculty data", error);
+    throw error;
   }
 };
 
@@ -178,7 +178,7 @@ export const deleteLogs = async () => {
     const response = await api.delete(`/logs/delete-logs`);
     return response.data;
   } catch (error) {
-    console.log("Error : while Deleting Logs", error);
+    throw error;
   }
 };
 
@@ -187,7 +187,7 @@ export const SendHolidayMessage = async (data: any) => {
     const response = await api.post(`/holiday/send`, data);
     return response.data;
   } catch (error) {
-    console.log("Error : while Sending Holiday Messages", error);
+    throw error;
   }
 };
 
@@ -197,7 +197,7 @@ export const GetAllHolidayMsgs = async () => {
     const response = await api.get(`/holiday/all`);
     return response.data;
   } catch (err) {
-    console.log("Error : while fetching all holiday messages", err);
+    throw err;
   }
 
 }
@@ -207,7 +207,7 @@ export const GetStudentsByRoomNo = async (hostelId: string, roomNo: string) => {
     const response = await api.post(`/student/roomno`, { hostelId: hostelId, roomNo: roomNo })
     return response.data
   } catch (err) {
-    console.log("Error : while getting students data by room No", err);
+    throw err;
   }
 }
 
@@ -216,7 +216,7 @@ export const getComplaints = async (college?: string, status?: string) => {
     const response = await api.get(`/complaint/all?college=${college || 'ALL'}&status=${status || 'ALL'}`);
     return response.data;
   } catch (err) {
-    console.log("Error : while fetching complaints", err);
+    throw err;
   }
 };
 
@@ -225,7 +225,7 @@ export const updateComplaintStatus = async (id: string, status: string, resolved
     const response = await api.put(`/complaint/update/${id}`, { status, resolvedBy });
     return response.data;
   } catch (err) {
-    console.log("Error : while updating complaint status", err);
+    throw err;
   }
 };
 
@@ -235,7 +235,7 @@ export const deleteComplaint = async (id: string) => {
     const response = await api.delete(`/complaint/delete/${id}`);
     return response.data;
   } catch (err) {
-    console.log("Error : while deleting complaint", err);
+    throw err;
   }
 };
 
@@ -244,7 +244,7 @@ export const getMarqueeSettings = async () => {
     const response = await api.get('/marquee');
     return response.data;
   } catch (err) {
-    console.log("Error : while getting marquee settings", err);
+    throw err;
   }
 };
 
@@ -253,7 +253,25 @@ export const updateMarqueeSettings = async (text: string, isEnabled: boolean) =>
     const response = await api.post('/marquee/update', { text, isEnabled });
     return response.data;
   } catch (err) {
-    console.log("Error : while updating marquee settings", err);
+    throw err;
+  }
+};
+
+export const SendFeesReminder = async (data: any) => {
+  try {
+    const response = await api.post(`/fees/send`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const GetAllFeesReminders = async () => {
+  try {
+    const response = await api.get(`/fees/all`);
+    return response.data;
+  } catch (err) {
+    throw err;
   }
 };
 

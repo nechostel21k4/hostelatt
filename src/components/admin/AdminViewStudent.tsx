@@ -17,7 +17,7 @@ import React, {
 } from "react";
 import { Student } from "../interfaces/Student";
 import { searchStudent, getStudentSuggestions } from "../../services/StudentService";
-import ReqCard from "../student/ReqCard";
+import ReqCard from "../common/ReqCard";
 import { Chip } from "primereact/chip";
 import {
   adminUpdateStudentProfile,

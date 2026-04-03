@@ -328,6 +328,18 @@ function AdminHome() {
                         <span className="font-medium">Holiday Message</span>
                       </NavLink>
                     </li>
+                    <li>
+                      <NavLink
+                        to="feesreminder"
+                        className={({ isActive }) =>
+                          `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                          }`
+                        }
+                      >
+                        <i className="pi pi-money-bill mr-2"></i>
+                        <span className="font-medium">Hostel Fees Reminder</span>
+                      </NavLink>
+                    </li>
 
 
                     <li>
@@ -562,6 +574,18 @@ function AdminHome() {
                           >
                             <i className="pi pi-send mr-2"></i>
                             <span className="font-medium">Holiday Message</span>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to="feesreminder"
+                            className={({ isActive }) =>
+                              `p-ripple no-underline flex align-items-center cursor-pointer p-3 border-round transition-duration-150 transition-colors w-full ${isActive ? "bg-white-alpha-30 font-bold text-white" : "text-white hover:bg-white-alpha-20"
+                              }`
+                            }
+                          >
+                            <i className="pi pi-money-bill mr-2"></i>
+                            <span className="font-medium">Hostel Fees Reminder</span>
                           </NavLink>
                         </li>
 

@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { CustomStudentJwtPayload } from "../StudentLogin";
+import { CustomStudentJwtPayload } from "./Auth";
 
 export  const isTokenExpired = (token: string): boolean => {
     try {

@@ -1,6 +1,6 @@
 import { Card } from "primereact/card";
 import React, { useEffect, useState } from "react";
-import InchargeCard from "../student/InchargeCard";
+import InchargeCard from "../common/InchargeCard";
 import { Incharge } from "../interfaces/Incharge";
 import { getAllIncharges } from "../../services/StudentService";
 

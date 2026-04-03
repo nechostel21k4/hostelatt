@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { AdminContext } from "./AdminHome";
-import InchargeCard from "../student/InchargeCard";
+import InchargeCard from "../common/InchargeCard";
 import { Button } from "primereact/button";
 import { Admin } from "../interfaces/Admin";
 import { FloatLabel } from "primereact/floatlabel";

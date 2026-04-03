@@ -1,33 +1,31 @@
 import api from "../utils/Api";
 
 
-const server = process.env.REACT_APP_SERVER;
-
 export const getIncharge = async (eid: string) => {
     try {
-        const response = await api.get(`${server}/incharge/${eid}`);
+        const response = await api.get(`/incharge/${eid}`);
         return response.data
     } catch (error) {
-        console.log("Error : while getting Incharge details", error)
+        throw error;
     }
 }
 
 export const getAllStudents = async (data: any) => {
     try {
-        const response = await api.post(`${server}/student/getAll`, data);
+        const response = await api.post(`/student/getAll`, data);
         return response.data
     } catch (error) {
-        console.log("Error : while getting All students details", error)
+        throw error;
     }
 }
 
 
 export const getPendingRequests = async (hostelId: string) => {
     try {
-        const response = await api.get(`${server}/requests/pending/${hostelId}`);
+        const response = await api.get(`/requests/pending/${hostelId}`);
         return response.data
     } catch (error) {
-        console.log("Error : while getting Pending Requests", error)
+        throw error;
     }
 }
 
@@ -35,86 +33,84 @@ export const getPendingRequests = async (hostelId: string) => {
 
 export const AcceptORRejectRequest = async (id: string, request: any) => {
     try {
-        const response = await api.post(`${server}/requests/approve/${id}`, request);
+        const response = await api.post(`/requests/approve/${id}`, request);
         return response.data
     } catch (error) {
-        console.log("Error : while updating Pending Requests", error)
+        throw error;
     }
 }
 
 
 export const getActiveRequests = async (hostelId: string) => {
     try {
-        const response = await api.get(`${server}/requests/activeRequest/${hostelId}`);
+        const response = await api.get(`/requests/activeRequest/${hostelId}`);
         return response.data
     } catch (error) {
-        console.log("Error : while getting Active Requests", error)
+        throw error;
     }
 }
 
 export const ArriveRequest = async (id: string, data: any) => {
-
     try {
-        const response = await api.post(`${server}/requests/arrive/${id}`, data);
+        const response = await api.post(`/requests/arrive/${id}`, data);
         return response.data
     } catch (error) {
-        console.log("Error : while updating Arrive Requests", error)
+        throw error;
     }
 }
 
 export const getArrivedRequests = async (hostelId: string, startDate: Date, endDate: Date) => {
     try {
-        const response = await api.post(`${server}/requests/getArrivedRequests/${hostelId}`, { startDate: startDate, endDate: endDate });
+        const response = await api.post(`/requests/getArrivedRequests/${hostelId}`, { startDate: startDate, endDate: endDate });
         return response.data
     } catch (error) {
-        console.log("Error : while getting Arrive Requests", error)
+        throw error;
     }
-
 }
 
 export const getTotalHostelStats = async (hostelId: string) => {
     try {
-        const response = await api.get(`${server}/student/get/counts/${hostelId}`);
+        const response = await api.get(`/student/get/counts/${hostelId}`);
         return response.data;
     } catch (error) {
-        console.log("Error : while getting hostel statistics", error)
+        throw error;
     }
 }
 
 export const getTodayAcceptedHostelStats = async (hostelId: string) => {
     try {
-        const response = await api.get(`${server}/requests/getTodayAcceptedRequests/${hostelId}`);
+        const response = await api.get(`/requests/getTodayAcceptedRequests/${hostelId}`);
         return response.data;
     } catch (error) {
-        console.log("Error : while getting Today Accepted hostel statistics", error)
+        throw error;
     }
 }
 
 export const getTodayArrivedHostelStats = async (hostelId: string) => {
     try {
-        const response = await api.get(`${server}/requests/getTodayArrivedRequests/${hostelId}`);
+        const response = await api.get(`/requests/getTodayArrivedRequests/${hostelId}`);
         return response.data;
     } catch (error) {
-        console.log("Error : while getting Today Arrived hostel statistics", error)
+        throw error;
     }
 }
 
 export const AcceptedHistory = async (hostelId: string, startDate: Date, endDate: Date) => {
     try {
-        const response = await api.post(`${server}/requests/getAcceptedRequests/${hostelId}`, { startDate: startDate, endDate: endDate });
+        const response = await api.post(`/requests/getAcceptedRequests/${hostelId}`, { startDate: startDate, endDate: endDate });
         return response.data
     } catch (error) {
-        console.log("Error : while getting Accepted History", error)
+        throw error;
     }
 }
 
 
 export const getCollegeYearWiseData = async (hostelId: string) => {
     try {
-        const response = await api.get(`${server}/student/get/countsByClg/${hostelId}`);
+        const response = await api.get(`/student/get/countsByClg/${hostelId}`);
         return response.data;
     } catch (error) {
-        console.log("Error : while getting Colleges  year wise data", error)
+        throw error;
     }
 }
 
@@ -125,7 +121,7 @@ export const getComplaints = async (college?: string, status?: string) => {
         const response = await api.get(`/complaint/all?college=${college || 'ALL'}&status=${status || 'ALL'}`);
         return response.data;
     } catch (err) {
-        console.log("Error : while fetching complaints", err);
+        throw err;
     }
 };
 
@@ -134,7 +130,7 @@ export const updateComplaintStatus = async (id: string, status: string, resolved
         const response = await api.put(`/complaint/update/${id}`, { status, resolvedBy });
         return response.data;
     } catch (err) {
-        console.log("Error : while updating complaint status", err);
+        throw err;
     }
 };
 
@@ -143,7 +139,7 @@ export const deleteComplaint = async (id: string) => {
         const response = await api.delete(`/complaint/delete/${id}`);
         return response.data;
     } catch (err) {
-        console.log("Error : while deleting complaint", err);
+        throw err;
     }
 };
 
