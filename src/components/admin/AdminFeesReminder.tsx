@@ -53,30 +53,9 @@ function AdminFeesReminder() {
   const [allFeeReminders, setAllFeeReminders] = useState<[]>([]);
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [admin, setAdmin] = useState<Admin>(useContext(AdminContext));
-
-  const feesToast = useRef<Toast>(null);
+  const { admin, showToast } = useContext(AdminContext);
 
   useEffect(() => {
-    const adminToken = localStorage.getItem("adminToken");
-    if (adminToken) {
-      const decoded = jwtDecode<CustomAdminJwtPayload>(adminToken);
-      getAdmin(decoded?.eid as string)
-        .then((data) => {
-          if (data && data.name) {
-            setAdmin(data);
-          } else {
-            // Fallback: use eid from JWT as name if admin record not found
-            setAdmin((prev) => ({ ...prev, name: decoded?.eid as string, eid: decoded?.eid as string }));
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          const decoded2 = jwtDecode<CustomAdminJwtPayload>(adminToken);
-          setAdmin((prev) => ({ ...prev, name: decoded2?.eid as string, eid: decoded2?.eid as string }));
-        });
-    }
-
     GetAllFeesReminders()
       .then((data) => {
         setAllFeeReminders(data.messages ? data.messages : []);
@@ -142,7 +121,7 @@ function AdminFeesReminder() {
       if (feesMessage.templateType === "SAME_AS_LAST_YEAR") {
         messageToLog = `ప్రియమైన తల్లిదండ్రులకు, మీ అబ్బాయి/అమ్మాయి చదువుకుంటున్న హాస్టల్ ఫీజు వచ్చే విద్యాసంవత్సరానికి ${feesMessage.customYearText}కి కూడా గత సంవత్సరం నిర్ణయించిన విధంగానే కొనసాగించబడుతాయని తెలియజేస్తున్నాము. NEC హాస్టల్స్ - GEDNEC`;
       } else {
-        messageToLog = `ప్రియమైన తల్లిదండ్రులకు, మీ అబ్బాయి/అమ్మాయి చదువుకుంటున్న హాస్టల్ యొక్క ${feesMessage.customYearText} సంవత్సరం ఫీజు NON-AC: ${feesMessage.feeAmountNonAC}, AC: ${feesMessage.feeAmountAC} గా నిర్ణయించబడినది. NEC హాస్టల్స్ - GEDNEC`;
+        messageToLog = `ప్రియమైన తల్లిదండ్రులకు, మీ అబ్బాయి/అమ్మాయి చదువుకుంటున్న హాస్టల్ యొక్క ${feesMessage.customYearText} సంవత్సరానికి సంబంధించిన ఫీజు NON-AC: ${feesMessage.feeAmountNonAC}, AC: ${feesMessage.feeAmountAC} గా నిర్ణయించబడినది. NEC హాస్టల్స్ - GEDNEC`;
       }
   
       SendFeesReminder({
@@ -168,17 +147,9 @@ function AdminFeesReminder() {
             };
             createLog(myLog);
 
-            feesToast.current?.show({
-              severity: "success",
-              summary: "Success",
-              detail: data.message || `Total ${data.totalMessagesSent} messages sent`,
-            });
+            showToast("success", "Success", data.message || `Total ${data.totalMessagesSent} messages sent`);
           } else {
-            feesToast.current?.show({
-              severity: "error",
-              summary: "Failure",
-              detail: data.message || "Failed to send messages",
-            });
+            showToast("error", "Failure", data.message || "Failed to send messages");
           }
         })
         .catch((err) => {
@@ -191,13 +162,17 @@ function AdminFeesReminder() {
       <div className="text-sm">
         <p className="mb-2"><b>Example (Male Student):</b></p>
         <p className="p-2 bg-gray-100 border-round">
-          ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అబ్బాయి</span> చదువుకుంటున్న హాస్టల్ ఫీజు వచ్చే విద్యాసంవత్సరానికి{" "}
-          <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.customYearText}</span>{" "}
           {feesMessage.templateType === "SAME_AS_LAST_YEAR" ? (
-            <span style={{ color: "red", fontWeight: "bold" }}>కూడా గత సంవత్సరం నిర్ణయించిన విధంగానే కొనసాగించబడుతాయని తెలియజేస్తున్నాము</span>
+            <>
+              ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అబ్బాయి</span> చదువుకుంటున్న హాస్టల్ ఫీజు వచ్చే విద్యాసంవత్సరానికి{" "}
+              <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.customYearText}</span> కి కూడా{" "}
+              <span style={{ color: "red", fontWeight: "bold" }}>గత సంవత్సరం నిర్ణయించిన విధంగానే కొనసాగించబడుతాయని తెలియజేస్తున్నాము</span>
+            </>
           ) : (
             <>
-              సంవత్సరానికి సంబంధించిన ఫీజు NON-AC: <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountNonAC}</span>, AC:{" "}
+              ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అబ్బాయి</span> చదువుకుంటున్న హాస్టల్ యొక్క{" "}
+              <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.customYearText}</span> సంవత్సరానికి సంబంధించిన ఫీజు NON-AC:{" "}
+              <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountNonAC}</span>, AC:{" "}
               <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountAC}</span> గా నిర్ణయించబడినది
             </>
           )}
@@ -206,13 +181,17 @@ function AdminFeesReminder() {
         <Divider />
         <p className="mb-2"><b>Example (Female Student):</b></p>
         <p className="p-2 bg-gray-100 border-round">
-          ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అమ్మాయి</span> చదువుకుంటున్న హాస్టల్ ఫీజు వచ్చే విద్యాసంవత్సరానికి{" "}
-          <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.customYearText}</span>{" "}
           {feesMessage.templateType === "SAME_AS_LAST_YEAR" ? (
-            <span style={{ color: "red", fontWeight: "bold" }}>కూడా గత సంవత్సరం నిర్ణయించిన విధంగానే కొనసాగించబడుతాయని తెలియజేస్తున్నాము</span>
+            <>
+              ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అమ్మాయి</span> చదువుకుంటున్న హాస్టల్ ఫీజు వచ్చే విద్యాసంవత్సరానికి{" "}
+              <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.customYearText}</span> కి కూడా{" "}
+              <span style={{ color: "red", fontWeight: "bold" }}>గత సంవత్సరం నిర్ణయించిన విధంగానే కొనసాగించబడుతాయని తెలియజేస్తున్నాము</span>
+            </>
           ) : (
             <>
-              సంవత్సరానికి సంబంధించిన ఫీజు NON-AC: <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountNonAC}</span>, AC:{" "}
+              ప్రియమైన తల్లిదండ్రులకు, <span style={{ color: "green", fontWeight: "bold" }}>మీ అమ్మాయి</span> చదువుకుంటున్న హాస్టల్ యొక్క{" "}
+              <span style={{ color: "blue", fontWeight: "bold" }}>{feesMessage.customYearText}</span> సంవత్సరానికి సంబంధించిన ఫీజు NON-AC:{" "}
+              <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountNonAC}</span>, AC:{" "}
               <span style={{ color: "red", fontWeight: "bold" }}>{feesMessage.feeAmountAC}</span> గా నిర్ణయించబడినది
             </>
           )}
@@ -233,7 +212,7 @@ function AdminFeesReminder() {
   const sendToTemplate = (data: any) => (
     <>
       <p><b>College:</b> {data?.college || "ALL"}</p>
-      <p><b>Year:</b> {data?.year}</p>
+      <p><b>Batch/Year:</b> {data?.customYearText || data?.year}</p>
       <p><b>Type:</b> {data?.templateType === "SAME_AS_LAST_YEAR" ? "Same as Last Year" : "Default"}</p>
     </>
   );
@@ -245,8 +224,6 @@ function AdminFeesReminder() {
 
   return (
     <div className="p-2 md:p-4" style={{ maxWidth: "1200px", margin: "auto" }}>
-      <Toast ref={feesToast} position="top-center" />
-
       <Card title="Hostel Fees Reminder (Cost Notice)" className="special-font shadow-2 border-round">
         <form className="grid row-gap-2 mt-2" onSubmit={handleFeesReminderForm}>
           {/* Message Template First */}
@@ -264,6 +241,25 @@ function AdminFeesReminder() {
 
           <div className="col-12 md:col-6 lg:col-3">
             <FloatLabel>
+              <InputText
+                id="fees-custom-year"
+                value={feesMessage.customYearText}
+                onChange={(e) => setFeesMessage({ ...feesMessage, customYearText: e.target.value })}
+                className="w-full"
+                placeholder="e.g. 2022-26"
+              />
+              <label htmlFor="fees-custom-year">Batch / Year Text (for SMS)</label>
+            </FloatLabel>
+          </div>
+
+          <div className="col-12 mt-2">
+            <Divider align="left">
+              <span className="p-tag p-tag-info" style={{ fontSize: '0.7rem', opacity: 0.8 }}>TARGET STUDENTS</span>
+            </Divider>
+          </div>
+
+          <div className="col-12 md:col-6">
+            <FloatLabel>
               <Dropdown
                 inputId="fees-college"
                 value={feesMessage.college}
@@ -272,16 +268,28 @@ function AdminFeesReminder() {
                 optionLabel="name"
                 className="w-full"
               />
-              <label htmlFor="fees-college">College</label>
+              <label htmlFor="fees-college">College Filter</label>
             </FloatLabel>
           </div>
 
-          <div className="col-12 md:col-6 lg:col-3">
+          <div className="col-12 md:col-6">
             <FloatLabel>
               <Dropdown
                 inputId="fees-year"
                 value={feesMessage.year}
-                onChange={(e) => setFeesMessage({ ...feesMessage, year: e.value, customYearText: e.value.name })}
+                onChange={(e) => {
+                  const selectedYear = e.value;
+                  setFeesMessage(prev => ({
+                    ...prev,
+                    year: selectedYear,
+                    // Auto-fill SMS text only if selecting a specific year AND the text box is empty or was 'ALL'
+                    customYearText: (selectedYear.code !== "ALL" && (prev.customYearText === "" || prev.customYearText === "ALL"))
+                      ? selectedYear.name
+                      : (selectedYear.code === "ALL" && prev.customYearText === "ALL") 
+                        ? "" 
+                        : prev.customYearText
+                  }));
+                }}
                 options={years}
                 optionLabel="name"
                 className="w-full"
@@ -290,20 +298,6 @@ function AdminFeesReminder() {
             </FloatLabel>
           </div>
 
-          {feesMessage.templateType === "SAME_AS_LAST_YEAR" && (
-            <div className="col-12 md:col-6 lg:col-3">
-              <FloatLabel>
-                <InputText
-                  id="fees-custom-year"
-                  value={feesMessage.customYearText}
-                  onChange={(e) => setFeesMessage({ ...feesMessage, customYearText: e.target.value })}
-                  className="w-full"
-                  placeholder="e.g. 2022-26"
-                />
-                <label htmlFor="fees-custom-year">Batch / Year Text (for SMS)</label>
-              </FloatLabel>
-            </div>
-          )}
 
           {feesMessage.templateType === "DEFAULT" && (
             <>

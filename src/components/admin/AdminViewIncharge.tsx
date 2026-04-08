@@ -36,9 +36,8 @@ function AdminViewIncharge(props: any) {
 
   const [enableEdit, setEnableEdit] = useState<boolean>(false);
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
-  const mytoast = useRef<Toast>(null);
 
   const { closeDialog, updateIncharges } = props;
 
@@ -79,21 +78,9 @@ function AdminViewIncharge(props: any) {
               setInchargeOldData(incharge);
               updateIncharges(incharge);
               setEnableEdit(false);
-              if (mytoast.current) {
-                mytoast.current.show({
-                  severity: "success",
-                  summary: "Updated Successfully !",
-                  detail: "Incharge data has been updated",
-                });
-              }
+              showToast("success", "Updated Successfully !", "Incharge data has been updated");
             } else {
-              if (mytoast.current) {
-                mytoast.current.show({
-                  severity: "error",
-                  summary: "Update Failed !",
-                  detail: "Failed to update incharge data.Try Again",
-                });
-              }
+              showToast("error", "Update Failed !", "Failed to update incharge data.Try Again");
             }
           })
           .catch((err) => {
@@ -130,13 +117,7 @@ function AdminViewIncharge(props: any) {
           createLog(myLog);
           closeDialog(deleteEID);
         } else {
-          if (mytoast.current) {
-            mytoast.current.show({
-              severity: "warn",
-              summary: "Delete Failed !",
-              detail: "Failed to delete Incharge.Try Again",
-            });
-          }
+          showToast("warn", "Delete Failed !", "Failed to delete Incharge.Try Again");
         }
       });
     };
@@ -155,7 +136,6 @@ function AdminViewIncharge(props: any) {
 
   return (
     <>
-      <Toast ref={mytoast} position="center"></Toast>
       <div>
         <div className="flex align-items-center justify-content-end">
           <Button

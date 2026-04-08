@@ -17,12 +17,11 @@ function AdminStudentBulkDataUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [data, setData] = useState<ExcelData[] | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const uploadDataToast = useRef<Toast>(null);
 
   const [isExcelFormat, setIsExcelForamt] = useState<boolean | null>(null);
   const [noOfColumnsPresent, setNoOfColumnsPresent] = useState<number>(0);
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [requiredKeys, setRequiredKeys] = useState<any>([
@@ -150,21 +149,9 @@ function AdminStudentBulkDataUpload() {
               action: `Added Multiple Students (${message})`,
             };
             createLog(myLog);
-            if (uploadDataToast.current) {
-              uploadDataToast.current.show({
-                severity: "success",
-                summary: "Data Uploaded Successfully",
-                detail: message,
-              })
-            }
+            showToast("success", "Data Uploaded Successfully", message);
           } else {
-            if (uploadDataToast.current) {
-              uploadDataToast.current.show({
-                severity: "error",
-                summary: "Data Upload Failed",
-                detail: message,
-              })
-            }
+            showToast("error", "Data Upload Failed", message);
 
           }
         })
@@ -260,7 +247,6 @@ function AdminStudentBulkDataUpload() {
       </div>
 
       <div className="grid">
-        <Toast ref={uploadDataToast} position="bottom-center" />
 
         <div className="col-12 md:col-6 lg:col-4 m-3">
           <input type="file" accept=".xls,.xlsx" onChange={handleFileChange} />

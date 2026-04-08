@@ -18,9 +18,7 @@ const AdminComplaintBox = () => {
         college: 'ALL',
         status: 'ALL'
     });
-    const context = useContext(AdminContext);
-    const { admin } = context || {};
-    const toast = useRef<Toast>(null);
+    const { admin, showToast } = useContext(AdminContext);
 
     const colleges = [
         { label: 'All Colleges', value: 'ALL' },
@@ -55,10 +53,10 @@ const AdminComplaintBox = () => {
     const handleStatusUpdate = async (id: string, newStatus: string) => {
         const result = await updateComplaintStatus(id, newStatus, admin?.name || 'Admin');
         if (result && result.success) {
-            toast.current?.show({ severity: 'success', summary: 'Success', detail: `Complaint marked as ${newStatus}` });
+            showToast('success', 'Success', `Complaint marked as ${newStatus}`);
             fetchComplaints();
         } else {
-            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to update status' });
+            showToast('error', 'Error', 'Failed to update status');
         }
     };
 
@@ -71,10 +69,10 @@ const AdminComplaintBox = () => {
             accept: async () => {
                 const result = await deleteComplaint(id);
                 if (result && result.success) {
-                    toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Complaint deleted' });
+                    showToast('success', 'Success', 'Complaint deleted');
                     fetchComplaints();
                 } else {
-                    toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to delete complaint' });
+                    showToast('error', 'Error', 'Failed to delete complaint');
                 }
             }
         });
@@ -150,7 +148,6 @@ const AdminComplaintBox = () => {
 
     return (
         <div className="card">
-            <Toast ref={toast} />
             <Card title="Complaint Box" className="mb-3">
                 <div className="flex gap-3 mb-3">
                     <Dropdown

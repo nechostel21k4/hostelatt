@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputSwitch } from 'primereact/inputswitch';
-import { Toast } from 'primereact/toast';
 import { getMarqueeSettings, updateMarqueeSettings } from '../../services/AdminService';
+import { AdminContext } from './AdminHome';
 
 const AdminMarquee = () => {
     const [text, setText] = useState('');
     const [isEnabled, setIsEnabled] = useState(true);
     const [loading, setLoading] = useState(false);
-    const toast = useRef<Toast>(null);
+    const { showToast } = useContext(AdminContext);
 
     useEffect(() => {
         loadSettings();
@@ -34,12 +34,12 @@ const AdminMarquee = () => {
         try {
             const res = await updateMarqueeSettings(text, isEnabled);
             if (res) {
-                toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Marquee settings updated!' });
+                showToast('success', 'Success', 'Marquee settings updated!');
             } else {
-                toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to update.' });
+                showToast('error', 'Error', 'Failed to update.');
             }
         } catch (error) {
-            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'An error occurred.' });
+            showToast('error', 'Error', 'An error occurred.');
         } finally {
             setLoading(false);
         }
@@ -47,7 +47,6 @@ const AdminMarquee = () => {
 
     return (
         <div className="flex justify-content-center p-4">
-            <Toast ref={toast} />
             <Card title="Marquee Strip Configuration" className="w-full md:w-8 lg:w-6 shadow-4">
                 <form onSubmit={handleSave} className="flex flex-column gap-3">
                     <div className="flex flex-column gap-2">

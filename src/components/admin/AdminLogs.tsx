@@ -30,9 +30,8 @@ function AdminLogs() {
 
   const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
 
-  const logToast = useRef<Toast>(null);
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const handleLogsFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -139,21 +138,9 @@ function AdminLogs() {
             };
             createLog(myLog);
 
-            if (logToast.current) {
-              logToast?.current.show({
-                severity: "success",
-                summary: `Deleted Successfully`,
-                detail: `${message} before ${displayPastDate()}`,
-              });
-            }
+            showToast("success", "Deleted Successfully", `${message} before ${displayPastDate()}`);
           } else {
-            if (logToast.current) {
-              logToast?.current.show({
-                severity: "error",
-                summary: `Delete Failed !`,
-                detail: `Failed to delete logs`,
-              });
-            }
+            showToast("error", "Delete Failed !", "Failed to delete logs");
 
           }
         })
@@ -193,7 +180,6 @@ function AdminLogs() {
 
   return (
     <>
-      <Toast ref={logToast} position="center" />
       <div
         className="w-full"
         style={{

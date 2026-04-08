@@ -4,7 +4,7 @@ import AnnouncementList from '../common/AnnouncementList';
 import { AdminContext } from './AdminHome';
 
 const AdminAnnouncements = () => {
-    const admin = useContext(AdminContext);
+    const { admin } = useContext(AdminContext);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     const handleSuccess = () => {

@@ -43,11 +43,10 @@ function AdminViewStudent() {
 
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-  const ViewStudentToast = useRef<Toast>(null);
 
   const [enableEdit, setEnableEdit] = useState<boolean>(false);
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
@@ -96,13 +95,7 @@ function AdminViewStudent() {
           setStudent(null);
           setRollNumber("");
 
-          if (ViewStudentToast.current) {
-            ViewStudentToast.current.show({
-              severity: "warn",
-              summary: "Not Found",
-              detail: "Student not found",
-            });
-          }
+            showToast("warn", "Not Found", "Student not found");
         }
         setIsSearching(false);
       })
@@ -131,21 +124,9 @@ function AdminViewStudent() {
 
               setStudentOldData(student);
               setEnableEdit(false);
-              if (ViewStudentToast.current) {
-                ViewStudentToast.current.show({
-                  severity: "success",
-                  summary: "Updated Successfully !",
-                  detail: "Student data has been updated",
-                });
-              }
+              showToast("success", "Updated Successfully !", "Student data has been updated");
             } else {
-              if (ViewStudentToast.current) {
-                ViewStudentToast.current.show({
-                  severity: "error",
-                  summary: "Update Failed !",
-                  detail: "Failed to update student profile.Try again",
-                });
-              }
+              showToast("error", "Update Failed !", "Failed to update student profile.Try again");
             }
           })
           .catch((err) => {
@@ -181,21 +162,9 @@ function AdminViewStudent() {
 
           setRollNumber("");
           setStudent(null);
-          if (ViewStudentToast.current) {
-            ViewStudentToast.current.show({
-              severity: "error",
-              summary: "Deleted Successfully !",
-              detail: "Student has been removed",
-            });
-          }
+            showToast("error", "Deleted Successfully !", "Student has been removed");
         } else {
-          if (ViewStudentToast.current) {
-            ViewStudentToast.current.show({
-              severity: "warn",
-              summary: "Deleted Failed !",
-              detail: "Failed to delete student.Try again",
-            });
-          }
+            showToast("warn", "Deleted Failed !", "Failed to delete student.Try again");
         }
       });
     };
@@ -263,7 +232,6 @@ function AdminViewStudent() {
           transform: "translatex(-50%)",
         }}
       >
-        <Toast ref={ViewStudentToast} position="center" />
         <Card title="Search Student" className="special-font">
           <form onSubmit={handleSearchFormSubmit} className="grid">
             <div className="col-12 sm:col-6 mt-3 ">

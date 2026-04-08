@@ -32,7 +32,7 @@ function AdminAddStudent() {
     lastRequest: null,
   });
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -77,7 +77,6 @@ function AdminAddStudent() {
     ValidateForm();
   }, [newStudent, ValidateForm]);
 
-  const adminStudentToast = useRef<Toast>(null);
 
   const handleAdminStudentRegister = (
     event: React.FormEvent<HTMLFormElement>
@@ -99,13 +98,7 @@ function AdminAddStudent() {
             createLog(myLog);
           }
 
-          if (adminStudentToast.current) {
-            adminStudentToast.current.show({
-              severity: "success",
-              summary: "Registered Successfully !",
-              detail: "New Student has been added",
-            });
-          }
+          showToast("success", "Registered Successfully !", "New Student has been added");
           setNewStudent({
             hostelId: "label",
             rollNo: "",
@@ -125,26 +118,14 @@ function AdminAddStudent() {
           });
         } else {
           const msg = data?.message || "Student registeration failed";
-          if (adminStudentToast.current) {
-            adminStudentToast.current.show({
-              severity: "error",
-              summary: "Register Failed",
-              detail: msg,
-            });
-          }
+          showToast("error", "Register Failed", msg);
         }
       })
       .catch((err: any) => {
         setIsRegistering(false);
         console.log("Registration error:", err);
         const errorMsg = err.response?.data?.message || err.message || "An error occurred during registration. Please check inputs or try again.";
-        if (adminStudentToast.current) {
-          adminStudentToast.current.show({
-            severity: "error",
-            summary: "Error",
-            detail: errorMsg
-          });
-        }
+        showToast("error", "Error", errorMsg);
       });
   };
 
@@ -163,7 +144,6 @@ function AdminAddStudent() {
       >
 
         <Card title="Add Student" className="special-font">
-          <Toast ref={adminStudentToast} position="center"></Toast>
 
           <form
             action=""

@@ -1,5 +1,6 @@
 import styles from "../styles/home.module.css";
-import React, { createContext, useEffect, useState } from "react";
+import { Toast } from "primereact/toast";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import {
@@ -88,10 +89,17 @@ function AdminHome() {
     });
   };
 
+  const toast = useRef<Toast>(null);
+
+  const showToast = (severity: 'success' | 'info' | 'warn' | 'error', summary: string, detail: string, life = 3000) => {
+    toast.current?.show({ severity, summary, detail, life });
+  };
+
   return (
     <>
+      <Toast ref={toast} position="center" baseZIndex={10000} appendTo={document.body} />
       {isSessionExpired && <SessionExpCard />}
-      <AdminProvider value={admin}>
+      <AdminProvider value={{ admin, showToast }}>
         <div className={styles.container}>
           <div
             className={`${styles.header} p-card flex p-1 align-items-center justify-content-between`}

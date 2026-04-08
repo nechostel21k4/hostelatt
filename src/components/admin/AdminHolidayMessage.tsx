@@ -57,19 +57,9 @@ function AdminHolidayMessage() {
 
   const [isSendingMessage, setIsSendingMessage] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [admin, setAdmin] = useState<Admin>(useContext(AdminContext));
+  const { admin, showToast } = useContext(AdminContext);
 
   useEffect(() => {
-    const adminToken = localStorage.getItem("adminToken");
-    const decoded = jwtDecode<CustomAdminJwtPayload>(adminToken as string);
-
-    getAdmin(decoded?.eid as string)
-      .then((data) => {
-        setAdmin(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     GetAllHolidayMsgs()
       .then((data) => {
         setAllHolidayMsgs(data.messages ? data.messages : []);
@@ -137,21 +127,9 @@ function AdminHolidayMessage() {
             };
             createLog(myLog);
 
-            if (holidayToast?.current) {
-              holidayToast?.current.show({
-                severity: "success",
-                summary: `Success!`,
-                detail: data.message || `Total ${data.totalMessagesSent} messages sent`,
-              });
-            }
+            showToast("success", "Success!", data.message || `Total ${data.totalMessagesSent} messages sent`);
           } else {
-            if (holidayToast?.current) {
-              holidayToast?.current.show({
-                severity: "error",
-                summary: `Failure!`,
-                detail: data.message || `Failed to send messages`,
-              });
-            }
+            showToast("error", "Failure!", data.message || `Failed to send messages`);
           }
           // setHolidayMessage({
           //   year: "",
@@ -273,7 +251,6 @@ function AdminHolidayMessage() {
     validateForm();
   }, [validateForm]);
 
-  const holidayToast = useRef<Toast>(null);
 
   const sendToTemplate = (data: any) => {
     return (
@@ -308,7 +285,6 @@ function AdminHolidayMessage() {
           transform: "translatex(-50%)",
         }}
       >
-        <Toast ref={holidayToast} position="top-center"></Toast>
 
         <Card title="Send Holiday Message" className="special-font">
           <form action="" className="grid" onSubmit={handleHolidayMessageForm}>

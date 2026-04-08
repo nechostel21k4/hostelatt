@@ -25,10 +25,9 @@ import { jwtDecode } from "jwt-decode";
 import { CustomAdminJwtPayload } from "../Login";
 
 function AdminProfile() {
-  const [adminOldData, setAdminOldData] = useState<Admin | null>(
-    useContext(AdminContext)
-  );
-  const [admin, setAdmin] = useState<Admin | null>(useContext(AdminContext));
+  const { admin: initialAdmin, showToast } = useContext(AdminContext);
+  const [adminOldData, setAdminOldData] = useState<Admin | null>(initialAdmin);
+  const [admin, setAdmin] = useState<Admin | null>(initialAdmin);
 
   const { adminLogout } = useAdminAuth();
 
@@ -38,8 +37,6 @@ function AdminProfile() {
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   const [enableEdit, setEnableEdit] = useState<boolean>(false);
-
-  const mytoast = useRef<Toast>(null);
 
   useEffect(() => {
     const adminToken = localStorage.getItem("adminToken");
@@ -95,21 +92,9 @@ function AdminProfile() {
               createLog(myLog);
               setAdminOldData(admin);
               setEnableEdit(false);
-              if (mytoast.current) {
-                mytoast.current.show({
-                  severity: "success",
-                  summary: "Updated Successfully !",
-                  detail: "Admin data has been updated",
-                });
-              }
+              showToast("success", "Updated Successfully !", "Admin data has been updated");
             } else {
-              if (mytoast.current) {
-                mytoast.current.show({
-                  severity: "warn",
-                  summary: "Update Failed !",
-                  detail: "Failed to update Admin data.Try Again",
-                });
-              }
+              showToast("warn", "Update Failed !", "Failed to update Admin data.Try Again");
             }
           })
           .catch((err) => {
@@ -143,25 +128,13 @@ function AdminProfile() {
             action: `Deleted Admin ${admin?.eid}`,
           };
           createLog(myLog).then(() => {
-            if (mytoast.current) {
-              mytoast.current.show({
-                severity: "warn",
-                summary: "Deleted Successfully !",
-                detail: `${admin?.eid} has been deleted successfully`,
-              });
-            }
+            showToast("warn", "Deleted Successfully !", `${admin?.eid} has been deleted successfully`);
             setTimeout(() => {
               adminLogout();
             }, 2000);
           });
         } else {
-          if (mytoast.current) {
-            mytoast.current.show({
-              severity: "warn",
-              summary: "Delete Failed !",
-              detail: "Failed to delete Admin.Try Again",
-            });
-          }
+          showToast("warn", "Delete Failed !", "Failed to delete Admin.Try Again");
         }
       });
     };
@@ -180,7 +153,6 @@ function AdminProfile() {
 
   return (
     <>
-      <Toast ref={mytoast} position="center"></Toast>
       <div className="surface-0">
         <div className="flex align-items-start justify-content-between">
           <div className="font-medium text-3xl text-900 m-3">

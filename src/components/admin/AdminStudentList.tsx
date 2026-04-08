@@ -47,12 +47,11 @@ function AdminStudentList() {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-  const mytoast = useRef<Toast>(null);
 
   const [currentYear, setCurrentYear] = useState<string>("ALL");
   const [newYear, setNewYear] = useState<string>("");
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [imageURLS, setImageURLS] = useState<
     { username: string; imagePath: string }[]
@@ -115,21 +114,9 @@ function AdminStudentList() {
               };
               createLog(myLog);
 
-              if (mytoast.current) {
-                mytoast.current.show({
-                  severity: "success",
-                  summary: "Updated Successfully !",
-                  detail: message,
-                });
-              }
+              showToast("success", "Updated Successfully !", message);
             } else {
-              if (mytoast.current) {
-                mytoast.current.show({
-                  severity: "error",
-                  summary: "Update Failed !",
-                  detail: "Failed to update.Try Again",
-                });
-              }
+              showToast("error", "Update Failed !", "Failed to update.Try Again");
             }
           }
         );
@@ -171,21 +158,9 @@ function AdminStudentList() {
             action: `${selectStudentRollNo.size} Students are deleted from ${currentYear} year ${branch} branch in ${college} college (${message})`,
           };
           createLog(myLog);
-          if (mytoast.current) {
-            mytoast.current.show({
-              severity: "success",
-              summary: "Deleted Successfully !",
-              detail: `${selectStudentRollNo.size} Students are deleted from ${currentYear} year ${branch} branch in ${college} college`,
-            });
-          }
+          showToast("success", "Deleted Successfully !", `${selectStudentRollNo.size} Students are deleted from ${currentYear} year ${branch} branch in ${college} college`);
         } else {
-          if (mytoast.current) {
-            mytoast.current.show({
-              severity: "error",
-              summary: "Delete Failed !",
-              detail: `Failed to delete.Try again`,
-            });
-          }
+          showToast("error", "Delete Failed !", `Failed to delete.Try again`);
         }
       });
     };
@@ -550,7 +525,6 @@ function AdminStudentList() {
         </Card>
 
         <Card className="mt-2">
-          <Toast ref={mytoast} position="bottom-center"></Toast>
 
           <DataTable
             value={studentsList}

@@ -24,14 +24,13 @@ function AdminAddIncharge() {
     name: "",
     phoneNo: "",
   });
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [password, setPassword] = useState<string>("");
   const [CPassword, setCPassword] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
 
-  const adminInchargeToast = useRef<Toast>(null);
 
   const ValidateForm = useCallback(() => {
     setIsFormValid(false);
@@ -72,13 +71,7 @@ function AdminAddIncharge() {
           };
           createLog(myLog);
 
-          if (adminInchargeToast.current) {
-            adminInchargeToast.current.show({
-              severity: "success",
-              summary: "Registered Successfully !",
-              detail: "New Incharge has been added",
-            });
-          }
+          showToast("success", "Registered Successfully !", "New Incharge has been added");
           setNewIncharge({
             eid: "",
             hostelId: "label",
@@ -89,13 +82,7 @@ function AdminAddIncharge() {
           setPassword("");
           setCPassword("");
         } else {
-          if (adminInchargeToast.current) {
-            adminInchargeToast.current.show({
-              severity: "error",
-              summary: "Register Failed",
-              detail: "Incharge already exist",
-            });
-          }
+          showToast("error", "Register Failed", "Incharge already exist");
         }
       })
       .catch((err) => {
@@ -113,7 +100,6 @@ function AdminAddIncharge() {
           transform: "translatex(-50%)",
         }}
       >
-      <Toast ref={adminInchargeToast} position="center"></Toast>
 
         <Card title="Incharge Registration" className="special-font">
           <form

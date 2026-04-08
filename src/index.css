@@ -16,4 +16,9 @@ code {
   font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* Fix for Toast appearing behind fixed header */
+.p-toast {
+  z-index: 9999 !important;
+}
+
 

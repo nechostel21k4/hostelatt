@@ -23,7 +23,7 @@ import { CancelRequest } from "../../services/StudentService";
 // import { Nullable } from "primereact/ts-helpers";
 
 function AdminActiveRequests() {
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [selectionOption, setSelectionOption] = useState<
     "Permissions" | "Leaves"
@@ -33,8 +33,6 @@ function AdminActiveRequests() {
   const [leaves, setLeaves] = useState<Leave[]>([]);
 
   const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
-
-  const activeRequestToast = useRef<Toast>(null);
 
   const [isArriving, setIsArriving] = useState<boolean>(false);
 
@@ -236,23 +234,9 @@ function AdminActiveRequests() {
               };
               createLog(myLog);
 
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-                  summary: `Cancelled ${cancelRequest.rollNo} Accepted Leave`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `Cancelled ${cancelRequest.rollNo} Accepted Leave`, data?.message);
             } else {
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-                  summary: `Failed to Cancel ${rollNo} Accepted ${type}`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `Failed to Cancel ${rollNo} Accepted ${type}`, data?.message);
             }
           })
           .catch((err) => {
@@ -287,23 +271,9 @@ function AdminActiveRequests() {
               };
               createLog(myLog);
 
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-                  summary: `Cancelled ${cancelRequest.rollNo} Accepted Permission`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `Cancelled ${cancelRequest.rollNo} Accepted Permission`, data?.message);
             } else {
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-                  summary: `Failed to Cancel ${rollNo} Accepted ${type}`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `Failed to Cancel ${rollNo} Accepted ${type}`, data?.message);
             }
           })
           .catch((err) => {
@@ -356,25 +326,9 @@ function AdminActiveRequests() {
               };
               createLog(myLog);
 
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-
-                  summary: `${rollNo} is Arrived from ${type}`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `${rollNo} is Arrived from ${type}`, data?.message);
             } else {
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-
-                  summary: `Failed to update Arrival of ${rollNo} ${type}`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `Failed to update Arrival of ${rollNo} ${type}`, data?.message);
             }
           })
           .catch((err) => {
@@ -408,23 +362,9 @@ function AdminActiveRequests() {
               };
               createLog(myLog);
 
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-                  summary: `${rollNo} is Arrived from ${type}`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `${rollNo} is Arrived from ${type}`, data?.message);
             } else {
-              if (activeRequestToast?.current) {
-                activeRequestToast?.current.show({
-                  severity: "info",
-                  sticky: true,
-                  summary: `Failed to update Arrival of ${rollNo} ${type}`,
-                  detail: data?.message,
-                });
-              }
+              showToast("info", `Failed to update Arrival of ${rollNo} ${type}`, data?.message);
             }
           })
           .catch((err) => {
@@ -478,7 +418,6 @@ function AdminActiveRequests() {
 
   return (
     <>
-      <Toast ref={activeRequestToast} position="center" />
 
       <div
         className="w-full"

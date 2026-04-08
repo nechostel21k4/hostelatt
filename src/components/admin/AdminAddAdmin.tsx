@@ -23,14 +23,13 @@ function AdminAddAdmin() {
     name: "",
     phoneNo: "",
   });
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [password, setPassword] = useState<string>("");
   const [CPassword, setCPassword] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
 
-  const adminToast = useRef<Toast>(null);
 
   const ValidateForm = useCallback(() => {
     setIsFormValid(false);
@@ -71,13 +70,7 @@ function AdminAddAdmin() {
           };
           createLog(myLog);
 
-          if (adminToast.current) {
-            adminToast.current.show({
-              severity: "success",
-              summary: "Registered Successfully !",
-              detail: "New Admin has been added",
-            });
-          }
+          showToast("success", "Registered Successfully !", "New Admin has been added");
           setNewAdmin({
             eid: "",
             designation: "",
@@ -87,13 +80,7 @@ function AdminAddAdmin() {
           setPassword("");
           setCPassword("");
         } else {
-          if (adminToast.current) {
-            adminToast.current.show({
-              severity: "error",
-              summary: "Register Failed",
-              detail: "Admin already exist",
-            });
-          }
+          showToast("error", "Register Failed", "Admin already exist");
         }
       })
       .catch((err) => {
@@ -111,7 +98,6 @@ function AdminAddAdmin() {
           transform: "translatex(-50%)",
         }}
       >
-      <Toast ref={adminToast} position="center"></Toast>
 
         <Card title="Admin Registration" className="special-font">
           <form

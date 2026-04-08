@@ -21,7 +21,7 @@ import { createLog } from "../../services/AdminService";
 import { LOG } from "../interfaces/Log";
 
 function AdminPendingRequests() {
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const [selectionOption, setSelectionOption] = useState<
     "Permissions" | "Leaves"
@@ -34,8 +34,6 @@ function AdminPendingRequests() {
   >([]);
 
   const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
-
-  const pendingRequestToast = useRef<Toast>(null);
 
   const [isAccepting, setIsAccepting] = useState<boolean>(false);
   const [isRejecting, setIsRejecting] = useState<boolean>(false);
@@ -244,23 +242,9 @@ function AdminPendingRequests() {
             };
             createLog(myLog);
 
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "success",
-                sticky: true,
-                summary: `${rollNo} ${type} is Rejected`,
-                detail: data?.message,
-              });
-            }
+            showToast("success", `${rollNo} ${type} is Rejected`, data?.message);
           } else {
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "error",
-                sticky: true,
-                summary: `Failed to reject ${rollNo} ${type}`,
-                detail: data?.message,
-              });
-            }
+            showToast("error", `Failed to reject ${rollNo} ${type}`, data?.message);
           }
         });
       } else if (type === "PERMISSION") {
@@ -289,23 +273,9 @@ function AdminPendingRequests() {
               action: `Rejected ${rejRequest.rollNo} Permission`,
             };
             createLog(myLog);
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "success",
-                sticky: true,
-                summary: `${rollNo} ${type} is Rejected`,
-                detail: data?.message,
-              });
-            }
+            showToast("success", `${rollNo} ${type} is Rejected`, data?.message);
           } else {
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "error",
-                sticky: true,
-                summary: `Failed to reject ${rollNo} ${type}`,
-                detail: data?.message,
-              });
-            }
+            showToast("error", `Failed to reject ${rollNo} ${type}`, data?.message);
           }
         });
       }
@@ -353,23 +323,9 @@ function AdminPendingRequests() {
             };
             createLog(myLog);
 
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "success",
-                sticky: true,
-                summary: `${rollNo} ${type} is Accepted`,
-                detail: data?.message,
-              });
-            }
+            showToast("success", `${rollNo} ${type} is Accepted`, data?.message);
           } else {
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "error",
-                sticky: true,
-                summary: `Failed to Accept ${rollNo} ${type}`,
-                detail: data?.message,
-              });
-            }
+            showToast("error", `Failed to Accept ${rollNo} ${type}`, data?.message);
           }
         });
       } else if (type === "PERMISSION") {
@@ -400,23 +356,9 @@ function AdminPendingRequests() {
             };
             createLog(myLog);
 
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "success",
-                sticky: true,
-                summary: `${rollNo} ${type} is Accepted`,
-                detail: data?.message,
-              });
-            }
+            showToast("success", `${rollNo} ${type} is Accepted`, data?.message);
           } else {
-            if (pendingRequestToast?.current) {
-              pendingRequestToast?.current.show({
-                severity: "error",
-                sticky: true,
-                summary: `Failed to Accept ${rollNo} ${type}`,
-                detail: data?.message,
-              });
-            }
+            showToast("error", `Failed to Accept ${rollNo} ${type}`, data?.message);
           }
         });
       }
@@ -477,7 +419,6 @@ function AdminPendingRequests() {
 
   return (
     <>
-      <Toast ref={pendingRequestToast} position="center" />
 
       <div
         className="w-full"

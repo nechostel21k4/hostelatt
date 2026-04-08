@@ -17,9 +17,8 @@ function AdminFaculty() {
 
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-  const mytoast = useRef<Toast>(null);
 
-  const admin = useContext(AdminContext);
+  const { admin, showToast } = useContext(AdminContext);
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,21 +35,9 @@ function AdminFaculty() {
         };
         createLog(myLog);
 
-        if (mytoast.current) {
-          mytoast.current.show({
-            severity: "success",
-            summary: "Updated Successfully !",
-            detail: "Faculty data has been Updated",
-          });
-        }
+        showToast("success", "Updated Successfully !", "Faculty data has been Updated");
       } else {
-        if (mytoast.current) {
-          mytoast.current.show({
-            severity: "warn",
-            summary: "Update Failed !",
-            detail: "Failed to update Faculty data",
-          });
-        }
+        showToast("warn", "Update Failed !", "Failed to update Faculty data");
       }
     });
   };
@@ -77,7 +64,6 @@ function AdminFaculty() {
           transform: "translatex(-50%)",
         }}
       >
-        <Toast ref={mytoast} position="center"></Toast>
 
         <Card
           title={"Faculty Login Credentials"}
