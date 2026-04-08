@@ -1,13 +1,12 @@
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   createLog,
   FetchFacultyData,
   UpdateFacultyData,
 } from "../../services/AdminService";
-import { Toast } from "primereact/toast";
 import { LOG } from "../interfaces/Log";
 import { AdminContext } from "./AdminHome";
 
