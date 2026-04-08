@@ -5,14 +5,12 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
-import { Toast } from "primereact/toast";
 import { Image } from "primereact/image";
 
 import React, {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import { Student } from "../interfaces/Student";

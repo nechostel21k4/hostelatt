@@ -6,11 +6,9 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import { Incharge } from "../interfaces/Incharge";
-import { Toast } from "primereact/toast";
 import { confirmDialog } from "primereact/confirmdialog";
 import InchargeCard from "../common/InchargeCard";
 import {
