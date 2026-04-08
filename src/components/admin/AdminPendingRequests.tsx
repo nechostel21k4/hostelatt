@@ -1,5 +1,5 @@
 import { Card } from "primereact/card";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
@@ -10,7 +10,6 @@ import { Button } from "primereact/button";
 import { Leave, Permission } from "../interfaces/Request";
 import { formatDate, formatDateWithTime, formatTime } from "../interfaces/Date";
 import { confirmDialog } from "primereact/confirmdialog";
-import { Toast } from "primereact/toast";
 import {
   AcceptORRejectRequest,
   getPendingRequests,

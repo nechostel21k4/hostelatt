@@ -10,7 +10,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Admin } from "../interfaces/Admin";
 import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import { Dropdown } from "primereact/dropdown";
@@ -20,7 +19,6 @@ import { Column } from "primereact/column";
 
 import {
   createLog,
-  getAdmin,
   GetAllHolidayMsgs,
   SendHolidayMessage,
 } from "../../services/AdminService";
@@ -29,8 +27,6 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { formatDate, formatDateWithTime } from "../interfaces/Date";
 import axios from "axios";
 import { LOG } from "../interfaces/Log";
-import { jwtDecode } from "jwt-decode";
-import { CustomAdminJwtPayload } from "../Login";
 import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 
