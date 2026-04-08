@@ -1,10 +1,9 @@
 import { Card } from "primereact/card";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 import { Button } from "primereact/button";
-import { Toast } from "primereact/toast";
 import { Divider } from "primereact/divider";
 import { AdminStudentRegisteration } from "../../services/RegisterService";
 import { Student } from "../interfaces/Student";
