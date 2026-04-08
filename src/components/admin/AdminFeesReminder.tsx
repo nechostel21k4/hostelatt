@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Dropdown } from "primereact/dropdown";
+import { MultiSelect } from "primereact/multiselect";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { SelectButton } from "primereact/selectbutton";
@@ -36,8 +36,8 @@ interface FeesReminderMessage {
 
 function AdminFeesReminder() {
   const [feesMessage, setFeesMessage] = useState<FeesReminderMessage>({
-    college: "",
-    year: "",
+    college: [],
+    year: [],
     feeAmountNonAC: "",
     feeAmountAC: "",
     templateType: "DEFAULT",
@@ -83,10 +83,8 @@ function AdminFeesReminder() {
 
   const validateForm = useCallback(() => {
     const isBaseValid = 
-      feesMessage.college?.code !== undefined &&
-      feesMessage.college?.code !== "" &&
-      feesMessage.year?.code !== undefined &&
-      feesMessage.year?.code !== "" &&
+      feesMessage.college && feesMessage.college.length > 0 &&
+      feesMessage.year && feesMessage.year.length > 0 &&
       feesMessage.customYearText.trim() !== "";
 
     if (feesMessage.templateType === "SAME_AS_LAST_YEAR") {
@@ -120,8 +118,8 @@ function AdminFeesReminder() {
   
       SendFeesReminder({
         sendBy: admin.name,
-        college: feesMessage.college.code,
-        year: feesMessage.year.code,
+        college: feesMessage.college.map((c: any) => c.code),
+        year: feesMessage.year.map((y: any) => y.code),
         feeAmountNonAC: feesMessage.feeAmountNonAC,
         feeAmountAC: feesMessage.feeAmountAC,
         message: messageToLog,
@@ -137,7 +135,7 @@ function AdminFeesReminder() {
               date: new Date(),
               userId: admin.eid,
               username: admin.name as string,
-              action: `Fees Reminder Sent: ${feesMessage.college.name} - ${feesMessage.year.name} - ${feesMessage.templateType === "SAME_AS_LAST_YEAR" ? "Same as Last Year" : `NonAC:${feesMessage.feeAmountNonAC}, AC:${feesMessage.feeAmountAC}`}`,
+              action: `Fees Reminder Sent: ${feesMessage.college.map((c: any) => c.name).join(", ")} - ${feesMessage.year.map((y: any) => y.name).join(", ")} - ${feesMessage.templateType === "SAME_AS_LAST_YEAR" ? "Same as Last Year" : `NonAC:${feesMessage.feeAmountNonAC}, AC:${feesMessage.feeAmountAC}`}`,
             };
             createLog(myLog);
 
@@ -203,13 +201,18 @@ function AdminFeesReminder() {
     });
   };
 
-  const sendToTemplate = (data: any) => (
-    <>
-      <p><b>College:</b> {data?.college || "ALL"}</p>
-      <p><b>Batch/Year:</b> {data?.customYearText || data?.year}</p>
-      <p><b>Type:</b> {data?.templateType === "SAME_AS_LAST_YEAR" ? "Same as Last Year" : "Default"}</p>
-    </>
-  );
+  const sendToTemplate = (data: any) => {
+    const collegeDisplay = Array.isArray(data?.college) ? data.college.join(", ") : (data?.college || "ALL");
+    const yearDisplay = Array.isArray(data?.year) ? data.year.join(", ") : (data?.year || "ALL");
+    
+    return (
+      <>
+        <p><b>College:</b> {collegeDisplay}</p>
+        <p><b>Batch/Year:</b> {data?.customYearText || yearDisplay}</p>
+        <p><b>Type:</b> {data?.templateType === "SAME_AS_LAST_YEAR" ? "Same as Last Year" : "Default"}</p>
+      </>
+    );
+  };
 
   const amountBodyTemplate = (data: any) => {
     if (data.templateType === "SAME_AS_LAST_YEAR") return <Tag severity="info" value="Same as Last Year" />;
@@ -254,13 +257,14 @@ function AdminFeesReminder() {
 
           <div className="col-12 md:col-6">
             <FloatLabel>
-              <Dropdown
+              <MultiSelect
                 inputId="fees-college"
                 value={feesMessage.college}
                 onChange={(e) => setFeesMessage({ ...feesMessage, college: e.value })}
                 options={colleges}
                 optionLabel="name"
                 className="w-full"
+                display="chip"
               />
               <label htmlFor="fees-college">College Filter</label>
             </FloatLabel>
@@ -268,25 +272,19 @@ function AdminFeesReminder() {
 
           <div className="col-12 md:col-6">
             <FloatLabel>
-              <Dropdown
+              <MultiSelect
                 inputId="fees-year"
                 value={feesMessage.year}
                 onChange={(e) => {
-                  const selectedYear = e.value;
                   setFeesMessage(prev => ({
                     ...prev,
-                    year: selectedYear,
-                    // Auto-fill SMS text only if selecting a specific year AND the text box is empty or was 'ALL'
-                    customYearText: (selectedYear.code !== "ALL" && (prev.customYearText === "" || prev.customYearText === "ALL"))
-                      ? selectedYear.name
-                      : (selectedYear.code === "ALL" && prev.customYearText === "ALL") 
-                        ? "" 
-                        : prev.customYearText
+                    year: e.value
                   }));
                 }}
                 options={years}
                 optionLabel="name"
                 className="w-full"
+                display="chip"
               />
               <label htmlFor="fees-year">Year Filter</label>
             </FloatLabel>
