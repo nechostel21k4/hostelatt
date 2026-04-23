@@ -41,9 +41,7 @@ function InchargeActiveRequest() {
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const [imageURLS, setImageURLS] = useState<
-    { username: string; imagePath: string }[]
-  >([]);
+  const [imageURLS, setImageURLS] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (incharge) {
@@ -61,7 +59,7 @@ function InchargeActiveRequest() {
           });
           setLeaves(leaves);
           setPermissions(permissions);
-          setImageURLS(data?.images);
+          setImageURLS(data?.images || {});
         })
         .catch((err) => {
           console.log(err);
@@ -97,7 +95,7 @@ function InchargeActiveRequest() {
                 });
                 setLeaves(leaves);
                 setPermissions(permissions);
-                setImageURLS(data?.images);
+                setImageURLS(data?.images || {});
                 setIsRefreshing(false);
               })
               .catch((err) => {
@@ -444,14 +442,10 @@ function InchargeActiveRequest() {
   };
 
   const imageBodyTemplate = (request: any) => {
-    let image = imageURLS.find((image) => image.username === request.rollNo);
+    const imagePath = imageURLS[request.rollNo];
     return (
       <img
-        src={
-          image?.imagePath
-            ? image?.imagePath
-            : "/images/Avatar.jpg"
-        }
+        src={imagePath ? imagePath : "/images/Avatar.jpg"}
         className="w-6rem h-6rem shadow-2 border-round"
         alt="Student Profile"
       />
