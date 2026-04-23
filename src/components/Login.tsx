@@ -229,7 +229,13 @@ function Login() {
 
           <TabView
             activeIndex={activeIndex}
-            onTabChange={(e) => setActiveIndex(e.index)}
+            onTabChange={(e) => {
+              if (e.index === 2) {
+                window.location.href = "https://necadminportal.vercel.app";
+              } else {
+                setActiveIndex(e.index);
+              }
+            }}
             className="w-full custom-tabs"
             renderActiveOnly={false}
           >
